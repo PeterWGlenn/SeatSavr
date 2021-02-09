@@ -20,82 +20,82 @@ To follow suit with the Microsoft solutions, we plan on implementing a database 
 
 ## Project Schedule
 For this project to be successful, the following tasks must be completed;
-●	Server Establishment and Resource Set Up (20 hours)
-●	Designing Front End Mockups (10 hours)
-●	Database Design and Implementation with User Accounts (80 hours)
-●	Client and Business Side UI (25 hours)
-●	Reservation Designing Tool Development (25 hours)
-●	Testing (20)
+*	Server Establishment and Resource Set Up (20 hours)
+*	Designing Front End Mockups (10 hours)
+*	Database Design and Implementation with User Accounts (80 hours)
+*	Client and Business Side UI (25 hours)
+*	Reservation Designing Tool Development (25 hours)
+*	Testing (20)
 
 ## Project Calendar
 Intermediate Milestones
 Intermediate Milestone #1
-●	Business Administrators can create accounts, create seating layouts based on an image they provide, and save these layouts to a database. These layouts can be  accessed from a front-facing Client interface using a business-specific link.
+*	Business Administrators can create accounts, create seating layouts based on an image they provide, and save these layouts to a database. These layouts can be  accessed from a front-facing Client interface using a business-specific link.
 Intermediate Milestone #2
-●	Business Administration Accounts can create location blueprints with the web application’s UI. These blueprints allow the administrator to construct their floor plan from scratch. Administrators can move tables and chairs via the editor when necessary. Customers can read and write reservations using the blueprint structure through a front-facing interface. Administrators can visually view reservation data through a simple dashboard.
+*	Business Administration Accounts can create location blueprints with the web application’s UI. These blueprints allow the administrator to construct their floor plan from scratch. Administrators can move tables and chairs via the editor when necessary. Customers can read and write reservations using the blueprint structure through a front-facing interface. Administrators can visually view reservation data through a simple dashboard.
 
 ## Weekly Updates
 ### Weekly Update #1 (week of February 8th)
-●	Github repo set up with basic class structure for project (3 hours)
-●	Azure Cloud free-tier server set up (1 hour)
-●	Research possible libraries / technologies to use (4 hours)
-●	Workflow diagrams (2 hours)
-●	UI form mock-ups (2 hours)
-●	Database requirements and structure planning (4 hours) 
+*	Github repo set up with basic class structure for project (3 hours)
+*	Azure Cloud free-tier server set up (1 hour)
+*	Research possible libraries / technologies to use (4 hours)
+*	Workflow diagrams (2 hours)
+*	UI form mock-ups (2 hours)
+*	Database requirements and structure planning (4 hours) 
 ### Weekly Update #2 (week of February 15th)
-●	More design diagramming and mocking up (4 hours)
-●	Initial backend / front end development (8 hours)
-●	Research into Auth0 (4 hours)
+*	More design diagramming and mocking up (4 hours)
+*	Initial backend / front end development (8 hours)
+*	Research into Auth0 (4 hours)
 ### Weekly Update #3  (week of February 22nd)
-●	Initial database implementation with broad structure (10 hours)
-●	Hookup of simple database to backend (8 hours)
+*	Initial database implementation with broad structure (10 hours)
+*	Hookup of simple database to backend (8 hours)
 ### Weekly Update #4 (week of March 1st)
-●	Implementation of user accounts and Auth0 (6 hours)
-●	Improve frontend to make use of database objects in backend (6 hours)
-●	Allow admins to upload a photo to be the background of floor plans (3 hours)
-●	Allow admins to add seat locations to floor plans (3 hours)
+*	Implementation of user accounts and Auth0 (6 hours)
+*	Improve frontend to make use of database objects in backend (6 hours)
+*	Allow admins to upload a photo to be the background of floor plans (3 hours)
+*	Allow admins to add seat locations to floor plans (3 hours)
 ### Weekly Update #5 (week of March 8th)
-●	Develop robust backend for administrator and customer accounts (if customer accounts are needed) (12 hours)
-●	Create UI to allow customers to access floor plans and reserve seats (4 hours)
-●	Testing and bug fixing (2 hours) 
+*	Develop robust backend for administrator and customer accounts (if customer accounts are needed) (12 hours)
+*	Create UI to allow customers to access floor plans and reserve seats (4 hours)
+*	Testing and bug fixing (2 hours) 
 ### Weekly Update #6 (week of March 15th, 1st Milestone)
-●	Implement more database fields following general structure (6 hours)
-●	Make backend capable of handling more database fields (4 hours)
-●	Develop more robust UI capable of reading and writing several fields to the database (8 hours)
+*	Implement more database fields following general structure (6 hours)
+*	Make backend capable of handling more database fields (4 hours)
+*	Develop more robust UI capable of reading and writing several fields to the database (8 hours)
 ### Weekly Update #7 (week of March 22nd)
-●	Add small improvements (e.g. better validation) (4 hours)
-●	Reservation email confirmation (4 hours)
-●	Reservation deletion (2 hours)
-●	Begin administration editor development (8 hours)
+*	Add small improvements (e.g. better validation) (4 hours)
+*	Reservation email confirmation (4 hours)
+*	Reservation deletion (2 hours)
+*	Begin administration editor development (8 hours)
 ### Weekly Update #8 (week of March 29th)
-●	Continue administration editor development (8 hours)
-●	Administration / customer-facing dashboard exploration (8 hours)
+*	Continue administration editor development (8 hours)
+*	Administration / customer-facing dashboard exploration (8 hours)
 ### Weekly Update #9 (week of April 5th, 2nd Milestone)
-●	Administration editor finalization (2 hours)
-●	Dashboard development (8 hours)
-●	UI improvements (4 hours)
-●	Bug fixes (2 hours)
-●	Maybe buy domain and Azure Cloud paid plan (2 hours)
+*	Administration editor finalization (2 hours)
+*	Dashboard development (8 hours)
+*	UI improvements (4 hours)
+*	Bug fixes (2 hours)
+*	Maybe buy domain and Azure Cloud paid plan (2 hours)
 ### Weekly Update #10 (week of April 12th)
-●	Testing and UI Adjustments (18 hours)
+*	Testing and UI Adjustments (18 hours)
 ### Weekly Update #11 (week of April 19th)
-●	Testing and UI Adjustments (18 hours)
+*	Testing and UI Adjustments (18 hours)
 ### Weekly Update #12 (week of April 26th, Project Due)
-●	Final Presentation
+*	Final Presentation
 
 ## Project Deliverables
-●	System Vision Document: 1-2 page brief description of the vision for this project/system being built
-●	Stakeholder Identification: Discussion of who the target users will be, and potential users in the future if relevant. 
-●	Analysis Results/User Stories: Results of analysis phased in the form of user stories
-●	Database Entity Relationship Diagrams: graphical representation of the normalized database to be implemented
-●	GUI Mockups: initial graphical representations of the graphical user interface to be developed
-●	Architecture Diagrams: graphical representation of the architecture this system will utilize
-●	User Workflow Diagram: graphical representation of the steps each user type takes to utilize the web application
+*	System Vision Document: 1-2 page brief description of the vision for this project/system being built
+*	Stakeholder Identification: Discussion of who the target users will be, and potential users in the future if relevant. 
+*	Analysis Results/User Stories: Results of analysis phased in the form of user stories
+*	Database Entity Relationship Diagrams: graphical representation of the normalized database to be implemented
+*	GUI Mockups: initial graphical representations of the graphical user interface to be developed
+*	Architecture Diagrams: graphical representation of the architecture this system will utilize
+*	User Workflow Diagram: graphical representation of the steps each user type takes to utilize the web application
 ### Technical Deliverables
-●	Link to GIT repo with completed code for project including scripts for creating databases and instructions/readme documentation 
-●	Business Account Creation Link and Sample Business Page Link
+*	Link to GIT repo with completed code for project including scripts for creating databases and instructions/readme documentation 
+*	Business Account Creation Link and Sample Business Page Link
 ### Final Presentation Deliverables
-●	Product demonstration (with audience participation if they are willing)
+*	Product demonstration (with audience participation if they are willing)
 
 ## Conclusion
 We will create a web application to be used by businesses to create a webpage that allows their customers to reserve specific seats or areas. The web application is for any business with facilities where location of reservation matters. Such businesses include restaurants, hotels, movie theaters, schools, and libraries. SeatSavr will help business owners follow COVID-19 regulations and give customers a higher degree of freedom and choice in their reservations. 
