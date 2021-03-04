@@ -3,9 +3,7 @@
     "",
     "\\SeatSavr",
     "\\SeatSavr\\ClientApp",
-    "\\SeatSavr\\ClientApp\\src",
-    "\\SeatSavr\\ClientApp\\src\\components"
+    "\\SeatSavr\\ClientApp\\src"
   ],
-  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
