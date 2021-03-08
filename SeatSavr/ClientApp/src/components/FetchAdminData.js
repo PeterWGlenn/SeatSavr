@@ -17,18 +17,14 @@ export class FetchAdminData extends Component {
             <table className='table table-striped' aria-labelledby="tabelLabel">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th>Email</th>
                         <th>Privilege</th>
                     </tr>
                 </thead>
                 <tbody>
                     {admins.map(admin =>
-                        <tr key={admin.id}>
-                            <td>{admin.id}</td>
-                            <td>{admin.firstName}</td>
-                            <td>{admin.lastName}</td>
+                        <tr key={admin.email}>
+                            <td>{admin.email}</td>
                             <td>{admin.privilege}</td>
                         </tr>
                     )}
