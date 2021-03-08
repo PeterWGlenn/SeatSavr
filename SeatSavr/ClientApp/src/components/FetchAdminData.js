@@ -18,12 +18,18 @@ export class FetchAdminData extends Component {
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Privilege</th>
                     </tr>
                 </thead>
                 <tbody>
                     {admins.map(admin =>
-                        <tr key={admin.Id}>
-                            <td>{admin.Id}</td>
+                        <tr key={admin.id}>
+                            <td>{admin.id}</td>
+                            <td>{admin.firstName}</td>
+                            <td>{admin.lastName}</td>
+                            <td>{admin.privilege}</td>
                         </tr>
                     )}
                 </tbody>

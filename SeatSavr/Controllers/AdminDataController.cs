@@ -17,10 +17,13 @@ namespace SeatSavr.Controllers
         public IEnumerable<Admin> Get()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 50).Select(index => new Admin
+            return Enumerable.Range(1, 200).Select(index => new Admin
             {
                 // TODO PG -> Made this use Database.cs instead of using randomly generated data
-                Id = _idInc++
+                Id = _idInc++,
+                FirstName = "First",
+                LastName = "Last",
+                Privilege = 5
             })
             .ToArray();
         }
