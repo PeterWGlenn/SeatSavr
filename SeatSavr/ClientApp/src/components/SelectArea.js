@@ -7,7 +7,18 @@ export class SelectArea extends Component {
 
     constructor(props) {
         super(props);
+        this.componentDidMount = this.drawLayoutCanvas;
         this.state = { areas: [], loading: true };
+    }
+
+    static drawSeatIcon(context, x, y) {
+        context.beginPath();
+        context.arc(x, y, 12, 0, 2 * Math.PI, false);   
+        context.fillStyle = 'green';
+        context.fill();
+        context.lineWidth = 2;
+        context.strokeStyle = '#003300';
+        context.stroke();
     }
 
     drawLayoutCanvas() {
@@ -16,37 +27,25 @@ export class SelectArea extends Component {
         if (canvas != null) {
             var context = canvas.getContext('2d');
 
-            context.beginPath();
-            context.arc(80, 80, 12, 0, 2 * Math.PI, false);
-            context.fillStyle = 'green';
-            context.fill();
-            context.lineWidth = 2;
-            context.strokeStyle = '#003300';
-            context.stroke();
+            SelectArea.drawSeatIcon(context, 80, 40);
+
+            // Draw border
+            context.lineWidth = 1;
+            context.strokeStyle = "#000000";
+            context.strokeRect(0, 0, canvas.width, canvas.height);
         }
     }
 
     renderAreas(areas) {
-        return (
-            <h1> testing sub html </h1>
-        );
+        this.drawLayoutCanvas();
     }
 
     render() {
 
-        let areaButtons = this.state.loading
-            ? <p><em>Loading Areas...</em></p>
-            : this.renderAreas(this.state.areas);
-
         return (
             <div>
                 <h1>Please select an area to reserve...</h1>
-
-                <button width={200} height={100} onClick={ this.drawLayoutCanvas }> testing button </button>
-
-                <canvas id="layoutCanvas" width={300} height={300}>
-                    { areaButtons }
-                </canvas>
+                <canvas id="layoutCanvas" width={888} height={500}/>
             </div>
         );
     }
