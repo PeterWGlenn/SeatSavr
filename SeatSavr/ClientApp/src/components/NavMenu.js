@@ -3,7 +3,7 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import Button from './Button'
-import AuthNav from './auth-nav'
+
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -38,7 +38,7 @@ export class NavMenu extends Component {
                 <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/fetch-admin-data">Fetch Admin Data</NavLink>
                 </NavItem>
-                <AuthNav /> 
+                
               </ul>
             </Collapse>
           </Container>
