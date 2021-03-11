@@ -43,8 +43,9 @@ export class SelectArea extends Component {
 
                 var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
                 var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
+                var isRes = area.isReserved;
 
-                SelectArea.drawSeatIcon(context, xLoc, yLoc);
+                SelectArea.drawSeatIcon(context, xLoc, yLoc, isRes);
             });
         }
     }
@@ -55,10 +56,17 @@ export class SelectArea extends Component {
         this.setState({ areas: data, loading: false });
     }
 
-    static drawSeatIcon(context, x, y) {
+    static drawSeatIcon(context, x, y, isRes) {
         context.beginPath();
         context.arc(x, y, 12, 0, 2 * Math.PI, false);
-        context.fillStyle = 'green';
+
+        if (isRes) {
+            context.fillStyle = 'gray';
+        }
+        else {
+            context.fillStyle = 'green';
+        }
+
         context.fill();
         context.lineWidth = 1;
         context.strokeStyle = '#000000';

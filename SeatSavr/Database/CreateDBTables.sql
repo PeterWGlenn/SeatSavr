@@ -73,3 +73,7 @@ INSERT INTO Layout VALUES ('SampleLayout', '123 Main Street, Washington');
 INSERT INTO Area VALUES (0, 10, 10, 3, 'Table #2', 'SampleLayout');
 INSERT INTO Area VALUES (0, 20, 20, 2, 'Table #4', 'SampleLayout');
 INSERT INTO Area VALUES (0, 15, 40, 4, 'Table #7', 'SampleLayout');
+
+INSERT INTO Customer (Email, First, Last) VALUES ('sampleCustomer123@gmail.com', 'Bob', 'Saget');
+
+INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY) VALUES (23312, '3/11/2021 11:37:52 AM', 42.1, 'sampleCustomer123@gmail.com', 20, 20);

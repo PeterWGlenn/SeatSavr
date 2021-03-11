@@ -8,21 +8,25 @@ namespace SeatSavr
 {
     public static class Database
     {
+        private static string _dbLocation = "Database/SeatSavrDB.sqlite3";
+
         public static Task<Admin[]> GetAdminDataAsync()
         {
-            Tuple<SqliteConnection, SqliteDataReader> dbTuple = ConnectAndReadFrom("SELECT * FROM Admin");
-            SqliteConnection sqlite_conn = dbTuple.Item1;
-            SqliteDataReader sqlite_datareader = dbTuple.Item2;
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Admin");
 
             List<Admin> list = new List<Admin>();
             while (sqlite_datareader.Read())
             {
-                Admin c = new Admin();
+                Admin a = new Admin();
 
-                c.Email = sqlite_datareader.GetString(0);
-                c.Privilege = sqlite_datareader.GetInt32(1);
+                a.Email = sqlite_datareader.GetString(0);
+                a.Privilege = sqlite_datareader.GetInt32(1);
 
-                list.Add(c);
+                list.Add(a);
             }
             sqlite_conn.Close();
 
@@ -31,47 +35,77 @@ namespace SeatSavr
 
         public static Task<Area[]> GetAreaDataAsync(string layout)
         {
-            Tuple<SqliteConnection, SqliteDataReader> dbTuple = ConnectAndReadFrom("SELECT * FROM Area WHERE LayoutName = \"" + layout + "\";");
-            SqliteConnection sqlite_conn = dbTuple.Item1;
-            SqliteDataReader sqlite_datareader = dbTuple.Item2;
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
 
-            List<Area> list = new List<Area>();
+            // Initialize Areas 
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + layout + "\";");
+            List<Area> areas = new List<Area>();
+
             while (sqlite_datareader.Read())
             {
-                Area c = new Area();
+                Area a = new Area();
 
-                c.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+                a.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
 
                 float x = sqlite_datareader.GetFloat(1);
                 float y = sqlite_datareader.GetFloat(2);
-                c.AreaLocation = new Point((int)x, (int)y);
+                a.AreaLocation = new Point((int)x, (int)y);
 
-                c.NumberOfSeats = sqlite_datareader.GetInt32(3);
-                c.Name = sqlite_datareader.GetString(4);
+                a.NumberOfSeats = sqlite_datareader.GetInt32(3);
+                a.Name = sqlite_datareader.GetString(4);
 
-                list.Add(c);
+                areas.Add(a);
             }
+
+            // Add reservation data to Areas
+            foreach (Area a in areas)
+            {
+                sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Reserves WHERE AreaX = " + a.AreaLocation.X + " AND AreaY = " + a.AreaLocation.Y + ";");
+
+                while (sqlite_datareader.Read())
+                {
+                    Reservation r = new Reservation();
+
+                    r.Id = sqlite_datareader.GetInt32(0);
+                    r.Date = DateTime.Parse(sqlite_datareader.GetString(1));
+                    r.Duration = sqlite_datareader.GetFloat(2);
+
+                    // Customer fetching
+                    string customerEmail = sqlite_datareader.GetString(3);
+                    Customer c = new Customer();
+                    SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                    while (customerReader.Read())
+                    {
+                        c.Email = customerReader.GetString(0);
+                        c.FirstName = customerReader.GetString(1);
+                        c.LastName = customerReader.GetString(2);
+                    }
+
+                    r.Customer = c;
+
+                    a.Reservations.Add(r);
+                }
+            }
+
             sqlite_conn.Close();
 
-            return Task.FromResult(list.ToArray());
+            return Task.FromResult(areas.ToArray());
         }
 
-        private static Tuple<SqliteConnection, SqliteDataReader> ConnectAndReadFrom(string command)
+        private static SqliteDataReader ReadFrom(SqliteConnection conn, string command)
         {
-            // Create a new database connection
-            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=Database/SeatSavrDB.sqlite3;");
-            sqlite_conn.Open();
-
             // Select Table
             SqliteDataReader sqlite_datareader;
             SqliteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd = conn.CreateCommand();
             sqlite_cmd.CommandText = command;
             
             // Convert Table to List of Objects
             sqlite_datareader = sqlite_cmd.ExecuteReader();
 
-            return new Tuple<SqliteConnection, SqliteDataReader>(sqlite_conn, sqlite_datareader);
+            return sqlite_datareader;
         }
     }
 }

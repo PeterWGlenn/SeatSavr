@@ -23,5 +23,7 @@ namespace SeatSavr
         public int NumberOfSeats { get; set; }
 
         public string Name { get; set; }
+
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
