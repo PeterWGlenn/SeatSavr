@@ -37,7 +37,7 @@ export default class App extends Component {
         return <div><p>Starting session...</p></div>;
     }
     render() {
-        this.authService.login();
+        //this.authService.login();
         let logoutButton = this.createLogoutButton();
 
      return (
