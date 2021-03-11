@@ -2,12 +2,33 @@ import React, { Component } from 'react';
 
 
 export class Home extends Component {
+
+    constructor() {
+        super();
+        this.state = { bookList: [] };
+    }
+
+    componentDidMount() {
+        fetch("/api/books", {
+            headers: new Headers({
+                "Accept": "application.json"
+            })
+        })
+            .then(response => response.json())
+            .then(books => this.setState({ bookList: books }))
+            .catch(error => console.log(error))
+    }
   static displayName = Home.name;
 
-  render () {
+    render() {
+        let bookList = this.state.bookList.map((book) =>
+            <li><i>{book.author}</i> -<h3>{book.title}</h3></li>);
     return (
       <div>
-        <h1>Hello, world!</h1>
+            <h1>Hello, world!</h1>
+            <ul>
+                {bookList}
+            </ul>
         <p>Welcome to your new single-page application, built with:</p>
         <ul>
           <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
