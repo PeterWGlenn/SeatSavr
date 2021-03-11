@@ -1,7 +1,7 @@
 CREATE TABLE Admin
 (
-  Privilege INT NOT NULL,
   Email VARCHAR(255) NOT NULL,
+  Privilege INT NOT NULL,
   PRIMARY KEY (Email)
 );
 
@@ -13,7 +13,7 @@ CREATE TABLE Building
 
 CREATE TABLE Layout
 (
-  Name INT NOT NULL,
+  Name VARCHAR(255) NOT NULL,
   BuildingAddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (Name),
   FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
@@ -26,7 +26,7 @@ CREATE TABLE Area
   Y FLOAT NOT NULL,
   Seats INT NOT NULL,
   Name VARCHAR(255),
-  LayoutName INT NOT NULL,
+  LayoutName VARCHAR(255) NOT NULL,
   PRIMARY KEY (X, Y),
   FOREIGN KEY (LayoutName) REFERENCES Layout(Name)
 );
@@ -60,3 +60,16 @@ CREATE TABLE Reserves
   FOREIGN KEY (CustomerEmail) REFERENCES Customer(Email),
   FOREIGN KEY (AreaX, AreaY) REFERENCES Area(X, Y)
 );
+
+/* Insert Sample Data */
+INSERT INTO Admin VALUES ('sampleAdmin123@gmail.com', 23);
+INSERT INTO Admin VALUES ('sampleAdmin456@gmail.com', 25);
+INSERT INTO Admin VALUES ('sampleAdmin789@gmail.com', 75);
+
+INSERT INTO Building VALUES ('123 Main Street, Washington');
+
+INSERT INTO Layout VALUES ('SampleLayout', '123 Main Street, Washington');
+
+INSERT INTO Area VALUES (0, 10, 10, 3, 'Table #2', 'SampleLayout');
+INSERT INTO Area VALUES (0, 20, 20, 2, 'Table #4', 'SampleLayout');
+INSERT INTO Area VALUES (0, 15, 40, 4, 'Table #7', 'SampleLayout');

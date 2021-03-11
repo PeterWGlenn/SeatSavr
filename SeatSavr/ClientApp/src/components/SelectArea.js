@@ -7,52 +7,61 @@ export class SelectArea extends Component {
 
     constructor(props) {
         super(props);
-        this.componentDidMount = this.drawLayoutCanvas;
         this.state = { areas: [], loading: true };
+
+        this.layoutWidth = 888;
+        this.layoutHeight = 500;
     }
 
-    static drawSeatIcon(context, x, y) {
-        context.beginPath();
-        context.arc(x, y, 12, 0, 2 * Math.PI, false);   
-        context.fillStyle = 'green';
-        context.fill();
-        context.lineWidth = 2;
-        context.strokeStyle = '#003300';
-        context.stroke();
+    componentDidMount() {
+        this.renderAreas();
     }
 
-    drawLayoutCanvas() {
+    render() {
+        return (
+            <div>
+                <h1>Please select an area to reserve...</h1>
+                <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight}/>
+            </div>
+        );
+    }
+
+    async renderAreas() {
+        await this.populateAreaData();
+
         var canvas = document.getElementById('layoutCanvas');
-
         if (canvas != null) {
             var context = canvas.getContext('2d');
-
-            SelectArea.drawSeatIcon(context, 80, 40);
 
             // Draw border
             context.lineWidth = 1;
             context.strokeStyle = "#000000";
             context.strokeRect(0, 0, canvas.width, canvas.height);
+
+            // Draw areas
+            this.state.areas.forEach(area => {
+
+                var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
+                var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
+
+                SelectArea.drawSeatIcon(context, xLoc, yLoc);
+            });
         }
     }
 
-    renderAreas(areas) {
-        this.drawLayoutCanvas();
-    }
-
-    render() {
-
-        return (
-            <div>
-                <h1>Please select an area to reserve...</h1>
-                <canvas id="layoutCanvas" width={888} height={500}/>
-            </div>
-        );
-    }
-
     async populateAreaData() {
-        const response = await fetch('areas');
+        const response = await fetch('selectarea'); 
         const data = await response.json();
         this.setState({ areas: data, loading: false });
+    }
+
+    static drawSeatIcon(context, x, y) {
+        context.beginPath();
+        context.arc(x, y, 12, 0, 2 * Math.PI, false);
+        context.fillStyle = 'green';
+        context.fill();
+        context.lineWidth = 2;
+        context.strokeStyle = '#003300';
+        context.stroke();
     }
 }
