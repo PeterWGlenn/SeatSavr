@@ -60,8 +60,8 @@ export class SelectArea extends Component {
         context.arc(x, y, 12, 0, 2 * Math.PI, false);
         context.fillStyle = 'green';
         context.fill();
-        context.lineWidth = 2;
-        context.strokeStyle = '#003300';
+        context.lineWidth = 1;
+        context.strokeStyle = '#000000';
         context.stroke();
     }
 }

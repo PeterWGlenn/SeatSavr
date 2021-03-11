@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -9,18 +10,10 @@ namespace SeatSavr
     {
         public static Task<Admin[]> GetAdminDataAsync()
         {
-            // Create a new database connection
-            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=Database/SeatSavrDB.sqlite3;");
-            sqlite_conn.Open();
+            Tuple<SqliteConnection, SqliteDataReader> dbTuple = ConnectAndReadFrom("SELECT * FROM Admin");
+            SqliteConnection sqlite_conn = dbTuple.Item1;
+            SqliteDataReader sqlite_datareader = dbTuple.Item2;
 
-            // Select Table
-            SqliteDataReader sqlite_datareader;
-            SqliteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Admin";
-
-            // Convert Table to List of Objects
-            sqlite_datareader = sqlite_cmd.ExecuteReader();
             List<Admin> list = new List<Admin>();
             while (sqlite_datareader.Read())
             {
@@ -38,18 +31,10 @@ namespace SeatSavr
 
         public static Task<Area[]> GetAreaDataAsync(string layout)
         {
-            // Create a new database connection
-            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=Database/SeatSavrDB.sqlite3;");
-            sqlite_conn.Open();
+            Tuple<SqliteConnection, SqliteDataReader> dbTuple = ConnectAndReadFrom("SELECT * FROM Area WHERE LayoutName = \"" + layout + "\";");
+            SqliteConnection sqlite_conn = dbTuple.Item1;
+            SqliteDataReader sqlite_datareader = dbTuple.Item2;
 
-            // Select Table
-            SqliteDataReader sqlite_datareader;
-            SqliteCommand sqlite_cmd;
-            sqlite_cmd = sqlite_conn.CreateCommand();
-            sqlite_cmd.CommandText = "SELECT * FROM Area WHERE LayoutName = \"" + layout + "\";";
-
-            // Convert Table to List of Objects
-            sqlite_datareader = sqlite_cmd.ExecuteReader();
             List<Area> list = new List<Area>();
             while (sqlite_datareader.Read())
             {
@@ -69,6 +54,24 @@ namespace SeatSavr
             sqlite_conn.Close();
 
             return Task.FromResult(list.ToArray());
+        }
+
+        private static Tuple<SqliteConnection, SqliteDataReader> ConnectAndReadFrom(string command)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=Database/SeatSavrDB.sqlite3;");
+            sqlite_conn.Open();
+
+            // Select Table
+            SqliteDataReader sqlite_datareader;
+            SqliteCommand sqlite_cmd;
+            sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = command;
+            
+            // Convert Table to List of Objects
+            sqlite_datareader = sqlite_cmd.ExecuteReader();
+
+            return new Tuple<SqliteConnection, SqliteDataReader>(sqlite_conn, sqlite_datareader);
         }
     }
 }
