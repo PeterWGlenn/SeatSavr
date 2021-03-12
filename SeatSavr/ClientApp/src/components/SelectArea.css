@@ -3,7 +3,6 @@
 }
 
 .layout-canvas {
-    color: rebeccapurple;
-    width: 400px;
-    height: 400px;
+    background: url(https://placekitten.com/1000/1000) no-repeat top center; 
+    background-size: cover;
 }

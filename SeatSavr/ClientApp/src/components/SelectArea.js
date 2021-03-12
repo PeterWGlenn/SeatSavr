@@ -27,39 +27,30 @@ export class SelectArea extends Component {
 
     handleDateChanged = (date) => {
         this.setState({ selectedDate: date });
+        this.renderAreas();
     };
 
     componentDidMount() {
         this.renderAreas();
     }
 
-    render() {
+    isAreaReserved(area) {
 
-        return (
-            <div>
-                <h1>Please select an area to reserve...</h1>
-                <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight} />
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date picker inline"
-                        value={this.state.selectedDate}
-                        onChange={this.handleDateChanged}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                        }}
-                    />
-                </MuiPickersUtilsProvider>
-            </div>
-        );
-    }
+        var isReserved = false;
 
-    isAreaReserved() {
-        return false;
+        area.reservations.forEach(r => {
+            var startDate = new Date(r.date);
+            var endDate = new Date(startDate);
+
+            var millisecondsInAnHour = 1000 * 60 * 60;
+            endDate.setTime(endDate.getTime() + (r.duration * millisecondsInAnHour));
+
+            if (this.state.selectedDate >= startDate && this.state.selectedDate <= endDate) {
+                isReserved = true;
+            }
+        });
+
+        return isReserved;
     }
 
     async renderAreas() {
@@ -79,7 +70,7 @@ export class SelectArea extends Component {
 
                 var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
                 var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
-                var isRes = area.isReserved;
+                var isRes = this.isAreaReserved(area);
 
                 SelectArea.drawSeatIcon(context, xLoc, yLoc, isRes);
             });
@@ -93,6 +84,7 @@ export class SelectArea extends Component {
     }
 
     static drawSeatIcon(context, x, y, isRes) {
+
         context.beginPath();
         context.arc(x, y, 12, 0, 2 * Math.PI, false);
 
@@ -107,5 +99,30 @@ export class SelectArea extends Component {
         context.lineWidth = 1;
         context.strokeStyle = '#000000';
         context.stroke();
+    }
+
+    render() {
+        return (
+            <div>
+                <h3>Please select an area to reserve...</h3>
+                <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight} className="layout-canvas" />
+                <h3></h3> { /*PG -> I'm using this to put the date picker below the canvas. There may be a cleaner way to do this.*/ }
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Reservation Date"
+                        value={this.state.selectedDate}
+                        onChange={this.handleDateChanged}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                    />
+                </MuiPickersUtilsProvider>
+            </div>
+        );
     }
 }
