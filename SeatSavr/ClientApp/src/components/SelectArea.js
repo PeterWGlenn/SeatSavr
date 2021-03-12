@@ -1,4 +1,12 @@
 ﻿import React, { Component } from 'react';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
+import Flatpickr from "react-flatpickr";
+
 import './SelectArea.css';
 
 
@@ -7,23 +15,51 @@ export class SelectArea extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { areas: [], loading: true };
+        this.state = {
+            areas: [],
+            loading: true,
+            selectedDate: new Date()
+        };
 
         this.layoutWidth = 888;
         this.layoutHeight = 500;
     }
+
+    handleDateChanged = (date) => {
+        this.setState({ selectedDate: date });
+    };
 
     componentDidMount() {
         this.renderAreas();
     }
 
     render() {
+
         return (
             <div>
                 <h1>Please select an area to reserve...</h1>
-                <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight}/>
+                <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight} />
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="MM/dd/yyyy"
+                        margin="normal"
+                        id="date-picker-inline"
+                        label="Date picker inline"
+                        value={this.state.selectedDate}
+                        onChange={this.handleDateChanged}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change date',
+                        }}
+                    />
+                </MuiPickersUtilsProvider>
             </div>
         );
+    }
+
+    isAreaReserved() {
+        return false;
     }
 
     async renderAreas() {
