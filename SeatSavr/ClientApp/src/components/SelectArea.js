@@ -5,7 +5,6 @@ import {
     KeyboardTimePicker,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
-import Flatpickr from "react-flatpickr";
 
 import './SelectArea.css';
 
