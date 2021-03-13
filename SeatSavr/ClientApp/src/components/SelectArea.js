@@ -99,12 +99,13 @@ export class SelectArea extends Component {
         context.stroke();
     }
 
+    /*PG -> I'm using the empty h3 to put the date picker below the canvas. There may be a cleaner way to do this.*/
     render() {
         return (
             <div>
                 <h3>Please select an area to reserve...</h3>
                 <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight} className="layout-canvas" />
-                <h3></h3> { /*PG -> I'm using this to put the date picker below the canvas. There may be a cleaner way to do this.*/ }
+                <h3></h3>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         disableToolbar
