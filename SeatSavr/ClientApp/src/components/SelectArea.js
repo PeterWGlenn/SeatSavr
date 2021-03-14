@@ -25,7 +25,6 @@ export class SelectArea extends Component {
             areas: [],
             loading: true,
             selectedDate: new Date(),
-            seatCanvasLocations: [],
             reserveAreaDialogOpen: false
         };
 
@@ -74,17 +73,21 @@ export class SelectArea extends Component {
             context.strokeRect(0, 0, canvas.width, canvas.height);
 
             // Draw areas
-            this.state.seatCanvasLocations = []
             this.state.areas.forEach(area => {
 
-                var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
-                var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
+                var cLoc = this.convertAreaLocToCanvasLoc(area);
                 var isRes = this.isAreaReserved(area);
 
-                this.state.seatCanvasLocations.push({ x: xLoc, y: yLoc });
-                SelectArea.drawAreaIcon(context, xLoc, yLoc, isRes);
+                SelectArea.drawAreaIcon(context, cLoc.x, cLoc.y, isRes);
             });
         }
+    }
+
+    convertAreaLocToCanvasLoc(area) {
+        var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
+        var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
+
+        return {x: xLoc, y: yLoc};
     }
 
     async populateAreaData() {
@@ -117,15 +120,25 @@ export class SelectArea extends Component {
         var x = e.clientX - canvasRect.left;
         var y = e.clientY - canvasRect.top;
 
-        this.state.seatCanvasLocations.forEach(seatLoc => {
-            if (this.isNumberWithin(x, seatLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, seatLoc.y, SelectArea.areaRadius)) {
-                this.setState({ reserveAreaDialogOpen: true });
+        this.state.areas.forEach(area => {
+            var areaLoc = this.convertAreaLocToCanvasLoc(area);
+            if (this.isNumberWithin(x, areaLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, areaLoc.y, SelectArea.areaRadius)) {
+                if (!this.isAreaReserved(area)) {
+                    this.openReserveDialog();
+                }
+                else {
+                    // Open alert
+                }
             }
         });
     }
 
     isNumberWithin(x, n, r) {
         return x > (n - r) && x < (n + r); 
+    }
+
+    openReserveDialog() {
+        this.setState({ reserveAreaDialogOpen: true });
     }
 
     handleReserveDialogClose = () => {
