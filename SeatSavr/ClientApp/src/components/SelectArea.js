@@ -4,6 +4,13 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import './SelectArea.css';
 
@@ -18,7 +25,8 @@ export class SelectArea extends Component {
             areas: [],
             loading: true,
             selectedDate: new Date(),
-            seatCanvasLocations: []
+            seatCanvasLocations: [],
+            reserveAreaDialogOpen: false
         };
 
         this.layoutWidth = 888;
@@ -74,7 +82,7 @@ export class SelectArea extends Component {
                 var isRes = this.isAreaReserved(area);
 
                 this.state.seatCanvasLocations.push({ x: xLoc, y: yLoc });
-                SelectArea.drawSeatIcon(context, xLoc, yLoc, isRes);
+                SelectArea.drawAreaIcon(context, xLoc, yLoc, isRes);
             });
         }
     }
@@ -85,7 +93,7 @@ export class SelectArea extends Component {
         this.setState({ areas: data, loading: false });
     }
 
-    static drawSeatIcon(context, x, y, isRes) {
+    static drawAreaIcon(context, x, y, isRes) {
 
         context.beginPath();
         context.arc(x, y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
@@ -111,13 +119,21 @@ export class SelectArea extends Component {
 
         this.state.seatCanvasLocations.forEach(seatLoc => {
             if (this.isNumberWithin(x, seatLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, seatLoc.y, SelectArea.areaRadius)) {
-                console.log('Seat Clicked');
+                this.setState({ reserveAreaDialogOpen: true });
             }
         });
     }
 
     isNumberWithin(x, n, r) {
         return x > (n - r) && x < (n + r); 
+    }
+
+    handleReserveDialogClose = () => {
+        this.setState({ reserveAreaDialogOpen: false });
+    }
+
+    handleReserve = () => {
+        this.setState({ reserveAreaDialogOpen: false });
     }
 
     /*PG -> I'm using the empty h3 to put the date picker below the canvas. There may be a cleaner way to do this.*/
@@ -146,6 +162,35 @@ export class SelectArea extends Component {
                         }}
                     />
                 </MuiPickersUtilsProvider>
+                <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleClose} aria-labelledby="reserveAreaDialog">
+                    <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            To reserve this seat, please enter your email address and full name. 
+                        </DialogContentText>
+                        <TextField
+                            id="email"
+                            label="Email Address"
+                            type="email"
+                        />
+                        <TextField
+                            id="firstName"
+                            label="First Name"
+                        />
+                        <TextField
+                            id="lastName"
+                            label="Last Name"
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleReserveDialogClose} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.handleReserve} color="primary">
+                            Reserve
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }
