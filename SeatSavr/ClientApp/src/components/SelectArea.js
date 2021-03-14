@@ -223,6 +223,14 @@ export class SelectArea extends Component {
     handleReserve = () => {
         this.setState({ reserveAreaDialogOpen: false });
 
+        var email = document.getElementById('email').value;
+        var first = document.getElementById('firstName').value;
+        var last = document.getElementById('lastName').value;
+
+        console.log(email);
+        console.log(first);
+        console.log(last);
+
         this.openReservedAreaSuccess();
     }
 
