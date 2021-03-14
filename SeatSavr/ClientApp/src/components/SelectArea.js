@@ -11,9 +11,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 import './SelectArea.css';
-
 
 export class SelectArea extends Component {
     static displayName = SelectArea.name;
@@ -25,7 +26,9 @@ export class SelectArea extends Component {
             areas: [],
             loading: true,
             selectedDate: new Date(),
-            reserveAreaDialogOpen: false
+            reserveAreaDialogOpen: false,
+            reservedAreaWarningOpen: false,
+            reservedAreaSuccessOpen: false
         };
 
         this.layoutWidth = 888;
@@ -127,7 +130,7 @@ export class SelectArea extends Component {
                     this.openReserveDialog();
                 }
                 else {
-                    // Open alert
+                    this.openReservedAreaWarning();
                 }
             }
         });
@@ -135,18 +138,6 @@ export class SelectArea extends Component {
 
     isNumberWithin(x, n, r) {
         return x > (n - r) && x < (n + r); 
-    }
-
-    openReserveDialog() {
-        this.setState({ reserveAreaDialogOpen: true });
-    }
-
-    handleReserveDialogClose = () => {
-        this.setState({ reserveAreaDialogOpen: false });
-    }
-
-    handleReserve = () => {
-        this.setState({ reserveAreaDialogOpen: false });
     }
 
     /*PG -> I'm using the empty h3 to put the date picker below the canvas. There may be a cleaner way to do this.*/
@@ -177,7 +168,7 @@ export class SelectArea extends Component {
                 </MuiPickersUtilsProvider>
                 <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
-                    <DialogContent>
+                    <DialogContent orientation='vertical'>
                         <DialogContentText>
                             To reserve this seat, please enter your email address and full name. 
                         </DialogContentText>
@@ -185,14 +176,17 @@ export class SelectArea extends Component {
                             id="email"
                             label="Email Address"
                             type="email"
+                            fullWidth
                         />
                         <TextField
                             id="firstName"
                             label="First Name"
+                            fullWidth
                         />
                         <TextField
                             id="lastName"
                             label="Last Name"
+                            fullWidth
                         />
                     </DialogContent>
                     <DialogActions>
@@ -204,7 +198,47 @@ export class SelectArea extends Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Snackbar open={this.state.reservedAreaWarningOpen} autoHideDuration={3000} onClose={this.handleReservedAreaWarningClose}>
+                    <Alert onClose={this.handleReservedAreaWarningClose} severity="warning">
+                        This area has already been reserved at this time!
+                    </Alert>
+                </Snackbar>
+                <Snackbar open={this.state.reservedAreaSuccessOpen} autoHideDuration={6000} onClose={this.handleReservedAreaSuccessClose}>
+                    <Alert onClose={this.handleReservedAreaSuccessClose} severity="success">
+                        You have successfully reserved an area! Be on the lookout for a confirmation email shortly.
+                    </Alert>
+                </Snackbar>
             </div>
         );
+    }
+
+    openReserveDialog() {
+        this.setState({ reserveAreaDialogOpen: true });
+    }
+
+    handleReserveDialogClose = () => {
+        this.setState({ reserveAreaDialogOpen: false });
+    }
+
+    handleReserve = () => {
+        this.setState({ reserveAreaDialogOpen: false });
+
+        this.openReservedAreaSuccess();
+    }
+
+    openReservedAreaWarning() {
+        this.setState({ reservedAreaWarningOpen: true });
+    }
+
+    handleReservedAreaWarningClose = () => {
+        this.setState({ reservedAreaWarningOpen: false });
+    }
+
+    openReservedAreaSuccess() {
+        this.setState({ reservedAreaSuccessOpen: true });
+    }
+
+    handleReservedAreaSuccessClose = () => {
+        this.setState({ reservedAreaSuccessOpen: false });
     }
 }
