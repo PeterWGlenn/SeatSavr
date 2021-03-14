@@ -10,6 +10,7 @@ namespace SeatSavr
     {
         private static string _dbLocation = "Database/SeatSavrDB.sqlite3";
 
+        #region Read From Database
         public static Task<Admin[]> GetAdminDataAsync()
         {
             // Create a new database connection
@@ -107,5 +108,10 @@ namespace SeatSavr
 
             return sqlite_datareader;
         }
+        #endregion
+
+        #region Write to Database
+
+        #endregion
     }
 }
