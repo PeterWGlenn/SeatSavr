@@ -10,13 +10,15 @@ import './SelectArea.css';
 
 export class SelectArea extends Component {
     static displayName = SelectArea.name;
+    static areaRadius = 12;
 
     constructor(props) {
         super(props);
         this.state = {
             areas: [],
             loading: true,
-            selectedDate: new Date()
+            selectedDate: new Date(),
+            seatCanvasLocations: []
         };
 
         this.layoutWidth = 888;
@@ -64,12 +66,14 @@ export class SelectArea extends Component {
             context.strokeRect(0, 0, canvas.width, canvas.height);
 
             // Draw areas
+            this.state.seatCanvasLocations = []
             this.state.areas.forEach(area => {
 
                 var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
                 var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
                 var isRes = this.isAreaReserved(area);
 
+                this.state.seatCanvasLocations.push({ x: xLoc, y: yLoc });
                 SelectArea.drawSeatIcon(context, xLoc, yLoc, isRes);
             });
         }
@@ -84,7 +88,7 @@ export class SelectArea extends Component {
     static drawSeatIcon(context, x, y, isRes) {
 
         context.beginPath();
-        context.arc(x, y, 12, 0, 2 * Math.PI, false);
+        context.arc(x, y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
 
         if (isRes) {
             context.fillStyle = 'gray';
@@ -99,12 +103,33 @@ export class SelectArea extends Component {
         context.stroke();
     }
 
+    canvasClick = (e) => {
+        var canvasRect = document.getElementById('layoutCanvas').getBoundingClientRect();
+
+        var x = e.clientX - canvasRect.left;
+        var y = e.clientY - canvasRect.top;
+
+        this.state.seatCanvasLocations.forEach(seatLoc => {
+            if (this.isNumberWithin(x, seatLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, seatLoc.y, SelectArea.areaRadius)) {
+                console.log('Seat Clicked');
+            }
+        });
+    }
+
+    isNumberWithin(x, n, r) {
+        return x > (n - r) && x < (n + r); 
+    }
+
     /*PG -> I'm using the empty h3 to put the date picker below the canvas. There may be a cleaner way to do this.*/
     render() {
         return (
             <div>
                 <h3>Please select an area to reserve...</h3>
-                <canvas id="layoutCanvas" width={this.layoutWidth} height={this.layoutHeight} className="layout-canvas" />
+                <canvas id="layoutCanvas"
+                        width={this.layoutWidth}
+                        height={this.layoutHeight}
+                        className="layout-canvas"
+                        onClick={this.canvasClick} />
                 <h3></h3>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
