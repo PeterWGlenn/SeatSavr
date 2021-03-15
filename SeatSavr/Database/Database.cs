@@ -34,6 +34,33 @@ namespace SeatSavr
             return Task.FromResult(list.ToArray());
         }
 
+        public static Task<Layout> GetLayoutAsync(string layout)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Layout WHERE Name = \"" + layout + "\";");
+            Layout l = new Layout();
+
+            while (sqlite_datareader.Read())
+            {
+                l.Name = sqlite_datareader.GetString(0);
+                l.Address = sqlite_datareader.GetString(1);
+
+                // TODO PG -> use images instead of encoding strings to make this more memory efficient
+                string base64Enoding = sqlite_datareader.GetString(2);
+                l.DecodeLayoutImage(base64Enoding);
+            }
+
+            if (!l.IsDefined())
+                l = null;
+
+            sqlite_conn.Close();
+
+            return Task.FromResult(l);
+        }
+
         public static Task<Area[]> GetAreaDataAsync(string layout)
         {
             // Create a new database connection
@@ -136,6 +163,21 @@ namespace SeatSavr
         #endregion
 
         #region Write to Database
+        public static bool UpdateLayout(Layout l)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string layoutImageEncoding = Convert.ToBase64String(l.ConvertImageToBytes());
+
+            string sql = "UPDATE Layout SET Name = \'" + l.Name + "\', Image = \'" + layoutImageEncoding + "\' WHERE Address = \'" + l.Address + "\'";
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
         public static bool AddCustomer(Customer c)
         {
             // Create a new database connection

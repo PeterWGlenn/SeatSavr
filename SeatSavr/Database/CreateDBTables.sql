@@ -15,6 +15,7 @@ CREATE TABLE Layout
 (
   Name VARCHAR(255) NOT NULL,
   BuildingAddress VARCHAR(255) NOT NULL,
+  LayoutImage VARCHAR(255),
   PRIMARY KEY (Name),
   FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
 );
@@ -68,7 +69,7 @@ INSERT INTO Admin VALUES ('sampleAdmin789@gmail.com', 75);
 
 INSERT INTO Building VALUES ('123 Main Street, Washington');
 
-INSERT INTO Layout VALUES ('SampleLayout', '123 Main Street, Washington');
+INSERT INTO Layout VALUES ('SampleLayout', '123 Main Street, Washington', null);
 
 INSERT INTO Area VALUES (0, 10, 10, 3, 'Table #2', 'SampleLayout');
 INSERT INTO Area VALUES (0, 20, 20, 2, 'Table #4', 'SampleLayout');
