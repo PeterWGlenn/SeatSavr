@@ -54,6 +54,9 @@ export class NavMenu extends Component {
                 <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/fetch-admin-data">Fetch Admin Data</NavLink>
                             </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} className="text-dark" to="/editorLayout">Edit Layout</NavLink>
+                            </NavItem>
                             <div>
                                     <button onClick={() => this.authService.login()}>Login</button>
                                     <button onClick={() => this.authService.logout()}>Logout</button>

@@ -1,5 +1,5 @@
 # SeatSavr
-A link to a hosted version of this application [can be found here](https://seatsavr.azurewebsites.net/).
+A link to a hosted version of this application [can be found here](https://seatsavr.azurewebsites.net/). (Currently broken due to dependency errors)
 
 ## Introduction
 Movie theatres often use a seat reservation web or mobile application to allow customers to see which seats are available and select specific seats. Although many institutions also use reservation software, they seldom allow the customer to select specific seats to reserve. This is the problem our web application would solve.
