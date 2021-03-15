@@ -15,19 +15,13 @@ export default class App extends Component {
   static displayName = App.name;
     constructor() {
         super();
-        //this.authService = new AuthService();
+        this.authService = new AuthService();
     }
 
-
-    
     render() {
-        //this.authService.login();
-        //let logoutButton = this.createLogoutButton();
-
-     return (
+      return (
          <Layout>
              <Switch>
-                 
                  <Route exact path='/' component={Home} />
                  <Route path='/select-area' component={SelectArea} />
                  <Route path='/editorLayout' component={EditorLayout} />
