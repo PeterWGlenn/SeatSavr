@@ -16,6 +16,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import Box from '@material-ui/core/Box';
 
 import './SelectArea.css';
 
@@ -186,50 +187,53 @@ export class SelectArea extends Component {
                         className="layout-canvas"
                         onClick={this.canvasClick} />
                 <h3></h3>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Reservation Date"
-                        value={this.state.selectedDate}
-                        onChange={this.handleDateChanged}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                        }}
-                    />
-                    <KeyboardTimePicker
-                        id="time-picker-inline"
-                        label="Reservation Time"
-                        variant="inline"
-                        margin="normal"
-                        value={this.state.selectedTime}
-                        onChange={this.handleTimeChanged}
-                        KeyboardButtonProps={{
-                            'aria-label': 'change time',
-                        }}
-                    />
-                </MuiPickersUtilsProvider>
-                <Typography id="sliderLabel" className="duration-slider-label">
-                    Duration
-                        </Typography>
-                <Slider
-                    className="duration-slider"
-                    id="durationSlider"
-                    aria-label="sliderLabel"
-                    defaultValue={SelectArea.defaultDuration}
-                    step={0.25}
-                    marks
-                    min={0.25}
-                    max={4.0}
-                    valueLabelDisplay="auto"
-                    onChange={(e, value) => {
-                        this.setState({ selectedDuration: value });
-                        this.renderAreas();
-                    }}
-                />
+                <Box maxWidth={this.layoutWidth}>
+                    <Box maxWidth={this.layoutWidth}>
+                        <Typography id="sliderLabel" className="duration-slider-label">
+                            Duration (hours)
+                                </Typography>
+                        <Slider
+                            className="duration-slider"
+                            id="durationSlider"
+                            aria-label="sliderLabel"
+                            defaultValue={SelectArea.defaultDuration}
+                            step={0.25}
+                            marks
+                            min={0.25}
+                            max={4.0}
+                            valueLabelDisplay="auto"
+                            onChange={(e, value) => {
+                                this.setState({ selectedDuration: value });
+                                this.renderAreas();
+                            }}
+                            width={100}
+                        />
+                    </Box>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="MM/dd/yyyy"
+                            id="date-picker-inline"
+                            label="Reservation Date"
+                            value={this.state.selectedDate}
+                            onChange={this.handleDateChanged}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                        <KeyboardTimePicker
+                            id="time-picker-inline"
+                            label="Reservation Time"
+                            variant="inline"
+                            value={this.state.selectedTime}
+                            onChange={this.handleTimeChanged}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change time',
+                            }}
+                        />
+                    </MuiPickersUtilsProvider>
+                </Box>
                 <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
                     <DialogContent orientation='vertical'>
