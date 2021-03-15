@@ -52,15 +52,12 @@ export class NavMenu extends Component {
                     <NavLink tag={Link} className="text-dark" to="/select-area">Select Area </NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/fetch-admin-data">Fetch Admin Data</NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink tag={Link} className="text-dark" to="/editorLayout">Edit Layout</NavLink>
-                            </NavItem>
-                            <div>
-                                    <button onClick={() => this.authService.login()}>Login</button>
-                                    <button onClick={() => this.authService.logout()}>Logout</button>
-                            </div>
+                    <NavLink tag={Link} className="text-dark" to="/editorLayout">Edit Layout</NavLink>
+                </NavItem>
+                <div>
+                        <button onClick={() => this.authService.login()}>Login</button>
+                        <button onClick={() => this.authService.logout()}>Logout</button>
+                </div>
               </ul>
             </Collapse>
           </Container>

@@ -43,19 +43,13 @@ export class EditorLayout extends Component {
     }
 
     async postLayoutImage() {
-        await fetch('selectarea', {
+        await fetch('editorupload', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                duration: duration,
-                date: dateString,
-                areaLocX: areaX,
-                areaLocY: areaY
+                image: this.state.pictures[0]
             })
         });
         this.renderAreas();
