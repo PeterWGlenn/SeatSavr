@@ -39,13 +39,7 @@ export class NavMenu extends Component {
     }
 
     render() {
-        const isLoggedIn = this.isAuthenticated;
-        let button = <button onClick={() => this.authService.login()}>Login</button>;
-        if (isLoggedIn) {
-            let button = <button onClick={() => this.authService.logout()}>Logout</button>;
-        } else {
-            let button = <button onClick={() => this.authService.login()}>Login</button>;
-        }
+        
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
@@ -61,13 +55,8 @@ export class NavMenu extends Component {
                     <NavLink tag={Link} className="text-dark" to="/fetch-admin-data">Fetch Admin Data</NavLink>
                             </NavItem>
                             <div>
-                                {this.isAuthenticated && (
-                                    <button onClick={() => this.authService.logout()}>Logout</button>
-                                )}
-
-                                {!this.isAuthenticated && (
                                     <button onClick={() => this.authService.login()}>Login</button>
-                                )}
+                                    <button onClick={() => this.authService.logout()}>Logout</button>
                             </div>
               </ul>
             </Collapse>

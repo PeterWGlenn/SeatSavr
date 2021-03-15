@@ -42,6 +42,6 @@ export default class AuthService {
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
-        window.location.href = '/';
+        window.location.href = '/home';
     }
 }

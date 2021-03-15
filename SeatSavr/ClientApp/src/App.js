@@ -7,7 +7,7 @@ import { FetchAdminData } from './components/FetchAdminData';
 
 import './custom.css'
 import AuthService from './AuthService';
-import NavBar from './components/NavBar';
+
 
 export default class App extends Component {
   static displayName = App.name;
