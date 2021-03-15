@@ -33,11 +33,7 @@ export class NavMenu extends Component {
     }
 
   
-    startSession(history) {
-        this.authService.handleAuthentication(history);
-        return <div><p>Starting session...</p></div>;
-    }
-
+    
     render() {
         
     return (
@@ -47,18 +43,6 @@ export class NavMenu extends Component {
             <NavbarBrand tag={Link} to="/">SeatSavr</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/select-area">Select Area </NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/editorLayout">Edit Layout</NavLink>
-                </NavItem>
-                <div>
-                        <button onClick={() => this.authService.login()}>Login</button>
-                        <button onClick={() => this.authService.logout()}>Logout</button>
-                </div>
-              </ul>
             </Collapse>
           </Container>
         </Navbar>

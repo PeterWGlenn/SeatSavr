@@ -16,10 +16,12 @@ export class Home extends Component {
     
     static displayName = Home.name;
 
-    
-    LoginButton() {
-        return <button onClick={() => this.authService.login()}>Login</button>;
+    startSession(history) {
+        this.authService.handleAuthentication(history);
+        return <div><p>Starting session...</p></div>;
     }
+    
+    
 
     render() {
         
