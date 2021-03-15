@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import AuthService from '../AuthService';
 
 
 export class NavMenu extends Component {
@@ -13,16 +14,38 @@ export class NavMenu extends Component {
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
       collapsed: true
-    };
+      };
+      this.authService = new AuthService();
   }
 
   toggleNavbar () {
     this.setState({
       collapsed: !this.state.collapsed
     });
-  }
+    }
 
-  render () {
+    LogoutButton() {
+        return <button onClick={() => this.authService.logout()}>Logout</button>;
+    }
+
+    LoginButton() {
+        return <button onClick={() => this.authService.login()}>Login</button>;
+    }
+
+  
+    startSession(history) {
+        this.authService.handleAuthentication(history);
+        return <div><p>Starting session...</p></div>;
+    }
+
+    render() {
+        const isLoggedIn = this.isAuthenticated;
+        let button = <button onClick={() => this.authService.login()}>Login</button>;
+        if (isLoggedIn) {
+            let button = <button onClick={() => this.authService.logout()}>Logout</button>;
+        } else {
+            let button = <button onClick={() => this.authService.login()}>Login</button>;
+        }
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
@@ -32,12 +55,20 @@ export class NavMenu extends Component {
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
               <ul className="navbar-nav flex-grow">
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/select-area">Select Area</NavLink>
+                    <NavLink tag={Link} className="text-dark" to="/select-area">Select Area </NavLink>
                 </NavItem>
                 <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/fetch-admin-data">Fetch Admin Data</NavLink>
-                </NavItem>
-                
+                            </NavItem>
+                            <div>
+                                {this.isAuthenticated && (
+                                    <button onClick={() => this.authService.logout()}>Logout</button>
+                                )}
+
+                                {!this.isAuthenticated && (
+                                    <button onClick={() => this.authService.login()}>Login</button>
+                                )}
+                            </div>
               </ul>
             </Collapse>
           </Container>
