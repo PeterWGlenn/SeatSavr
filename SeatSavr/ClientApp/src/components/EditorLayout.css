@@ -1,0 +1,14 @@
+﻿html {
+    font-size: 14px;
+}
+
+.layout-canvas {
+    background: url(https://placekitten.com/1000/1000) no-repeat top center;
+    background-size: cover;
+}
+
+.last-dialog-text-field {
+    margin-bottom: 50px;
+}
+
+
