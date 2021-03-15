@@ -12,41 +12,18 @@ namespace SeatSavr.Controllers
     public class SelectAreaController
     {
         [HttpGet]
-        public IEnumerable<AreaViewModel> Get()
+        public IEnumerable<Area> Get()
         {
-            List<AreaViewModel> areaViewModels = new List<AreaViewModel>();
-
-            foreach (Area a in Database.GetAreaDataAsync("SampleLayout").Result)
-            {
-                AreaViewModel aViewModel = new AreaViewModel(a);
-
-                foreach (Reservation r in a.Reservations)
-                {
-                    DateTime startDate = r.Date;
-                    DateTime endDate = startDate.AddHours(r.Duration);
-                    DateTime selectedDate = DateTime.Now; // TODO PG -> change this from now to actually selected datetime
-
-                    aViewModel.IsReserved = selectedDate >= startDate && selectedDate <= endDate;
-                }
-
-                areaViewModels.Add(aViewModel);
-            }
-
-            return areaViewModels;
-        }
-    }
-
-    public class AreaViewModel : Area
-    {
-        public AreaViewModel(Area a)
-        {
-            AreaType = a.AreaType;
-            AreaLocation = a.AreaLocation;
-            NumberOfSeats = a.NumberOfSeats;
-            Name = a.Name;
-            Reservations = a.Reservations;
+            return Database.GetAreaDataAsync("SampleLayout").Result;
         }
 
-        public bool IsReserved { get; set; }
+        [HttpPost]
+        public bool Create([FromBody] Customer customer)
+        {
+            if (customer == null || customer.Email == null || customer.Email == string.Empty)
+                return false;
+
+            return Database.AddCustomer(customer.Email, customer.FirstName, customer.LastName);
+        }
     }
 }

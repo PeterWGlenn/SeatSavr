@@ -111,7 +111,27 @@ namespace SeatSavr
         #endregion
 
         #region Write to Database
+        public static bool AddCustomer(string email, string firstName, string lastName)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
 
+            string sql = "INSERT INTO Customer (Email, First, Last) VALUES(\'" + email + "\', \'" + firstName + "\', \'" + lastName + "\');";
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
+        private static bool InsertData(SqliteConnection conn, string command, int expectedExReturn)
+        {
+            SqliteCommand sqlite_cmd;
+            sqlite_cmd = conn.CreateCommand();
+            sqlite_cmd.CommandText = command;
+
+            return sqlite_cmd.ExecuteNonQuery() == expectedExReturn;
+        }
         #endregion
     }
 }

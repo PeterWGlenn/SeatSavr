@@ -99,6 +99,22 @@ export class SelectArea extends Component {
         this.setState({ areas: data, loading: false });
     }
 
+    async postCustomerData(email, firstName, lastName) {
+        const response = await fetch('selectarea', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                firstName: firstName,
+                lastName: lastName
+            })
+        });
+        const data = await response.json();
+        console.log(data);
+    }
+
     static drawAreaIcon(context, x, y, isRes) {
 
         context.beginPath();
@@ -230,6 +246,8 @@ export class SelectArea extends Component {
         console.log(email);
         console.log(first);
         console.log(last);
+
+        this.postCustomerData(email, first, last);
 
         this.openReservedAreaSuccess();
     }
