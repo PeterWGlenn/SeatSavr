@@ -95,6 +95,31 @@ namespace SeatSavr
             return Task.FromResult(areas.ToArray());
         }
 
+        public static Task<Customer> GetCustomer(string email)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            // Initialize Areas 
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + email + "\";");
+            Customer retrievedCustomer = new Customer();
+
+            while (sqlite_datareader.Read())
+            {
+                retrievedCustomer.Email = sqlite_datareader.GetString(0);
+                retrievedCustomer.FirstName = sqlite_datareader.GetString(1);
+                retrievedCustomer.LastName = sqlite_datareader.GetString(2);
+            }
+
+            if (!retrievedCustomer.isDefined())
+                retrievedCustomer = null;
+
+            sqlite_conn.Close();
+
+            return Task.FromResult(retrievedCustomer);
+        }
+
         private static SqliteDataReader ReadFrom(SqliteConnection conn, string command)
         {
             // Select Table
@@ -118,6 +143,19 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             string sql = "INSERT INTO Customer (Email, First, Last) VALUES(\'" + c.Email + "\', \'" + c.FirstName + "\', \'" + c.LastName + "\');";
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
+        public static bool UpdateCustomer(Customer c)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string sql = "UPDATE Customer SET First = \'" + c.FirstName + "\', Last = \'" + c.LastName + "\' WHERE Email = \'" + c.Email + "\'";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();

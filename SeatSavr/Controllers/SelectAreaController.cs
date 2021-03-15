@@ -20,33 +20,32 @@ namespace SeatSavr.Controllers
         [HttpPost]
         public bool Create([FromBody] ReservationData d)
         {
-            if (!d.isValid())
+            if (!d.IsValid())
                 return false;
 
-            Customer c = new Customer()
+            Customer c = Database.GetCustomer(d.Email).Result;
+
+            // Add new customer if one doesn't exist with this email
+            if (c == null)
             {
-                Email = d.Email,
-                FirstName = d.FirstName,
-                LastName = d.LastName
-            };
+                c = new Customer()
+                {
+                    Email = d.Email,
+                    FirstName = d.FirstName,
+                    LastName = d.LastName
+                };
 
-            if (!Database.AddCustomer(c))
-                return false;
-
-            Reservation r = new Reservation()
+                if (!Database.AddCustomer(c))
+                    return false;
+            }
+            // If customer already exists, update the name values
+            else
             {
-                Id = Reservation.GenerateId(),
-                Date = DateTime.Parse(d.Date),
-                Duration = d.Duration,
-                Customer = c
-            };
+                Database.UpdateCustomer(d.ToCustomer());
+                c = Database.GetCustomer(d.Email).Result;
+            }
 
-            Area a = new Area()
-            {
-                AreaLocation = new PointF(d.AreaLocX, d.AreaLocY)
-            };
-
-            return Database.AddReservation(r, a);
+            return Database.AddReservation(d.ToReservation(c), d.ToArea());
         }
 
         public class ReservationData
@@ -59,7 +58,32 @@ namespace SeatSavr.Controllers
             public float AreaLocX { get; set; }
             public float AreaLocY { get; set; }
 
-            public bool isValid()
+            public Customer ToCustomer()
+            {
+                return new Customer()
+                {
+                    Email = Email,
+                    FirstName = FirstName,
+                    LastName = LastName
+                };
+            }
+            public Reservation ToReservation(Customer c)
+            {
+                return new Reservation()
+                {
+                    Id = Reservation.GenerateId(),
+                    Date = DateTime.Parse(Date),
+                    Duration = Duration,
+                    Customer = c
+                };
+            }
+
+            public Area ToArea()
+            {
+                return new Area() { AreaLocation = new PointF(AreaLocX, AreaLocY) };
+            }
+
+            public bool IsValid()
             {
                 return Email != null && Email != string.Empty;
             }
