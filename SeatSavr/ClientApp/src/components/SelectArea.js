@@ -3,6 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -21,6 +22,7 @@ import './SelectArea.css';
 export class SelectArea extends Component {
     static displayName = SelectArea.name;
     static areaRadius = 12;
+    static defaultDuration = 1.0;
 
     constructor(props) {
         super(props);
@@ -28,8 +30,9 @@ export class SelectArea extends Component {
             areas: [],
             loading: true,
             selectedDate: new Date(),
+            selectedTime: new Date(),
             selectedArea: null,
-            selectedDuration: null,
+            selectedDuration: SelectArea.defaultDuration,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
             reservedAreaSuccessOpen: false
@@ -38,11 +41,6 @@ export class SelectArea extends Component {
         this.layoutWidth = 888;
         this.layoutHeight = 500;
     }
-
-    handleDateChanged = (date) => {
-        this.setState({ selectedDate: date });
-        this.renderAreas();
-    };
 
     componentDidMount() {
         this.renderAreas();
@@ -60,11 +58,19 @@ export class SelectArea extends Component {
             var endDate = new Date(startDate);
             endDate.setTime(endDate.getTime() + (r.duration * millisecondsInAnHour));
 
+            var selectedTime = this.state.selectedTime;
             var selectedStartDate = this.state.selectedDate;
+
+            // Set selected date time to selected time
+            selectedStartDate.setHours(selectedTime.getHours());
+            selectedStartDate.setMinutes(selectedTime.getMinutes());
+            selectedStartDate.setSeconds(0.0);
+            selectedStartDate.setMilliseconds(0.0);
+
             var selectedEndDate = new Date(selectedStartDate);
             selectedEndDate.setTime(selectedEndDate.getTime() + (this.state.selectedDuration * millisecondsInAnHour));
 
-            if ((selectedStartDate >= startDate && selectedStartDate <= endDate) || (selectedEndDate >= startDate && selectedEndDate <= endDate)) {
+            if (selectedStartDate <= endDate && selectedEndDate >= startDate) {
                 isReserved = true;
             }
         });
@@ -194,6 +200,17 @@ export class SelectArea extends Component {
                             'aria-label': 'change date',
                         }}
                     />
+                    <KeyboardTimePicker
+                        id="time-picker-inline"
+                        label="Reservation Time"
+                        variant="inline"
+                        margin="normal"
+                        value={this.state.selectedTime}
+                        onChange={this.handleTimeChanged}
+                        KeyboardButtonProps={{
+                            'aria-label': 'change time',
+                        }}
+                    />
                 </MuiPickersUtilsProvider>
                 <Typography id="sliderLabel" className="duration-slider-label">
                     Duration
@@ -202,7 +219,7 @@ export class SelectArea extends Component {
                     className="duration-slider"
                     id="durationSlider"
                     aria-label="sliderLabel"
-                    defaultValue={1.0}
+                    defaultValue={SelectArea.defaultDuration}
                     step={0.25}
                     marks
                     min={0.25}
@@ -299,4 +316,14 @@ export class SelectArea extends Component {
     handleReservedAreaSuccessClose = () => {
         this.setState({ reservedAreaSuccessOpen: false });
     }
+
+    handleDateChanged = (date) => {
+        this.setState({ selectedDate: date });
+        this.renderAreas();
+    };
+
+    handleTimeChanged = (time) => {
+        this.setState({ selectedTime: time });
+        this.renderAreas();
+    };
 }
