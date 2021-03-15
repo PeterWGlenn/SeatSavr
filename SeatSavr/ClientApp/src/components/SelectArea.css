@@ -6,3 +6,15 @@
     background: url(https://placekitten.com/1000/1000) no-repeat top center; 
     background-size: cover;
 }
+
+.last-dialog-text-field {
+    margin-bottom: 50px;
+}
+
+.duration-slider {
+    margin-top: 0px;
+}
+
+.duration-slider-label {
+    margin-top: 50px;
+}

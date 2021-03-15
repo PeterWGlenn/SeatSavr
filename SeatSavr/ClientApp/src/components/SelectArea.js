@@ -13,6 +13,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider';
 
 import './SelectArea.css';
 
@@ -190,7 +192,7 @@ export class SelectArea extends Component {
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
                     <DialogContent orientation='vertical'>
                         <DialogContentText>
-                            To reserve this seat, please enter your email address and full name. 
+                            To reserve this area, please enter your email address and full name. 
                         </DialogContentText>
                         <TextField
                             id="email"
@@ -204,9 +206,23 @@ export class SelectArea extends Component {
                             fullWidth
                         />
                         <TextField
+                            className="last-dialog-text-field"
                             id="lastName"
                             label="Last Name"
                             fullWidth
+                        />
+                        <Typography id="sliderLabel" className="duration-slider-label">
+                            Duration
+                        </Typography>
+                        <Slider
+                            className="duration-slider"
+                            aria-label="sliderLabel"
+                            defaultValue={1.0}
+                            step={0.25}
+                            marks
+                            min={0.25}
+                            max={4.0}
+                            valueLabelDisplay="auto"
                         />
                     </DialogContent>
                     <DialogActions>
