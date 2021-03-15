@@ -18,7 +18,7 @@ namespace SeatSavr
 
         public Type AreaType { get; set; }
 
-        public Point AreaLocation { get; set; }
+        public PointF AreaLocation { get; set; }
 
         public int NumberOfSeats { get; set; }
 

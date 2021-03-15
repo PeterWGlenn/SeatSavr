@@ -111,13 +111,32 @@ namespace SeatSavr
         #endregion
 
         #region Write to Database
-        public static bool AddCustomer(string email, string firstName, string lastName)
+        public static bool AddCustomer(Customer c)
         {
             // Create a new database connection
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string sql = "INSERT INTO Customer (Email, First, Last) VALUES(\'" + email + "\', \'" + firstName + "\', \'" + lastName + "\');";
+            string sql = "INSERT INTO Customer (Email, First, Last) VALUES(\'" + c.Email + "\', \'" + c.FirstName + "\', \'" + c.LastName + "\');";
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
+        public static bool AddReservation(Reservation r, Area a)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string sql = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY) VALUES(\'" + 
+                r.Id + "\', \'" + 
+                r.Date.ToString() + "\', \'" +
+                r.Duration.ToString() + "\', \'" +
+                r.Customer.Email.ToString() + "\', \'" +
+                a.AreaLocation.X + "\', \'" +
+                a.AreaLocation.Y + "\');";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();

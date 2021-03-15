@@ -26,6 +26,7 @@ export class SelectArea extends Component {
             areas: [],
             loading: true,
             selectedDate: new Date(),
+            selectedArea: null,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
             reservedAreaSuccessOpen: false
@@ -99,8 +100,8 @@ export class SelectArea extends Component {
         this.setState({ areas: data, loading: false });
     }
 
-    async postCustomerData(email, firstName, lastName) {
-        const response = await fetch('selectarea', {
+    async postCustomerData(email, firstName, lastName, dateString, areaX, areaY) {
+        await fetch('selectarea', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,11 +109,13 @@ export class SelectArea extends Component {
             body: JSON.stringify({
                 email: email,
                 firstName: firstName,
-                lastName: lastName
+                lastName: lastName,
+                date: dateString,
+                areaLocX: areaX,
+                areaLocY: areaY
             })
         });
-        const data = await response.json();
-        console.log(data);
+        this.renderAreas();
     }
 
     static drawAreaIcon(context, x, y, isRes) {
@@ -143,6 +146,7 @@ export class SelectArea extends Component {
             var areaLoc = this.convertAreaLocToCanvasLoc(area);
             if (this.isNumberWithin(x, areaLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, areaLoc.y, SelectArea.areaRadius)) {
                 if (!this.isAreaReserved(area)) {
+                    this.setState({ selectedArea: area });
                     this.openReserveDialog();
                 }
                 else {
@@ -243,11 +247,10 @@ export class SelectArea extends Component {
         var first = document.getElementById('firstName').value;
         var last = document.getElementById('lastName').value;
 
-        console.log(email);
-        console.log(first);
-        console.log(last);
+        var dateStr = this.state.selectedDate.toUTCString();
+        var areaLoc = this.state.selectedArea.areaLocation;
 
-        this.postCustomerData(email, first, last);
+        this.postCustomerData(email, first, last, dateStr, areaLoc.x, areaLoc.y);
 
         this.openReservedAreaSuccess();
     }

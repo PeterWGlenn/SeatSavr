@@ -18,12 +18,50 @@ namespace SeatSavr.Controllers
         }
 
         [HttpPost]
-        public bool Create([FromBody] Customer customer)
+        public bool Create([FromBody] ReservationData d)
         {
-            if (customer == null || customer.Email == null || customer.Email == string.Empty)
+            if (!d.isValid())
                 return false;
 
-            return Database.AddCustomer(customer.Email, customer.FirstName, customer.LastName);
+            Customer c = new Customer()
+            {
+                Email = d.Email,
+                FirstName = d.FirstName,
+                LastName = d.LastName
+            };
+
+            if (!Database.AddCustomer(c))
+                return false;
+
+            Reservation r = new Reservation()
+            {
+                Id = Reservation.GenerateId(),
+                Date = DateTime.Parse(d.Date),
+                Duration = 40.0f, // TODO PG -> Default, change later
+                Customer = c
+            };
+
+            Area a = new Area()
+            {
+                AreaLocation = new PointF(d.AreaLocX, d.AreaLocY)
+            };
+
+            return Database.AddReservation(r, a);
+        }
+
+        public class ReservationData
+        {
+            public string Email { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Date { get; set; }
+            public float AreaLocX { get; set; }
+            public float AreaLocY { get; set; }
+
+            public bool isValid()
+            {
+                return Email != null && Email != string.Empty;
+            }
         }
     }
 }
