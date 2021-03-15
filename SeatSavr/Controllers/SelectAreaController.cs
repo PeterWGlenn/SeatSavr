@@ -37,7 +37,7 @@ namespace SeatSavr.Controllers
             {
                 Id = Reservation.GenerateId(),
                 Date = DateTime.Parse(d.Date),
-                Duration = 40.0f, // TODO PG -> Default, change later
+                Duration = d.Duration,
                 Customer = c
             };
 
@@ -54,6 +54,7 @@ namespace SeatSavr.Controllers
             public string Email { get; set; }
             public string FirstName { get; set; }
             public string LastName { get; set; }
+            public float Duration { get; set; }
             public string Date { get; set; }
             public float AreaLocX { get; set; }
             public float AreaLocY { get; set; }

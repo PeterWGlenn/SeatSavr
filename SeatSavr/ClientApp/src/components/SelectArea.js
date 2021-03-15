@@ -29,6 +29,7 @@ export class SelectArea extends Component {
             loading: true,
             selectedDate: new Date(),
             selectedArea: null,
+            selectedDuration: null,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
             reservedAreaSuccessOpen: false
@@ -52,13 +53,18 @@ export class SelectArea extends Component {
         var isReserved = false;
 
         area.reservations.forEach(r => {
-            var startDate = new Date(r.date);
-            var endDate = new Date(startDate);
 
             var millisecondsInAnHour = 1000 * 60 * 60;
+
+            var startDate = new Date(r.date);
+            var endDate = new Date(startDate);
             endDate.setTime(endDate.getTime() + (r.duration * millisecondsInAnHour));
 
-            if (this.state.selectedDate >= startDate && this.state.selectedDate <= endDate) {
+            var selectedStartDate = this.state.selectedDate;
+            var selectedEndDate = new Date(selectedStartDate);
+            selectedEndDate.setTime(selectedEndDate.getTime() + (this.state.selectedDuration * millisecondsInAnHour));
+
+            if ((selectedStartDate >= startDate && selectedStartDate <= endDate) || (selectedEndDate >= startDate && selectedEndDate <= endDate)) {
                 isReserved = true;
             }
         });
@@ -102,7 +108,7 @@ export class SelectArea extends Component {
         this.setState({ areas: data, loading: false });
     }
 
-    async postCustomerData(email, firstName, lastName, dateString, areaX, areaY) {
+    async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
         await fetch('selectarea', {
             method: 'POST',
             headers: {
@@ -112,6 +118,7 @@ export class SelectArea extends Component {
                 email: email,
                 firstName: firstName,
                 lastName: lastName,
+                duration: duration,
                 date: dateString,
                 areaLocX: areaX,
                 areaLocY: areaY
@@ -188,6 +195,24 @@ export class SelectArea extends Component {
                         }}
                     />
                 </MuiPickersUtilsProvider>
+                <Typography id="sliderLabel" className="duration-slider-label">
+                    Duration
+                        </Typography>
+                <Slider
+                    className="duration-slider"
+                    id="durationSlider"
+                    aria-label="sliderLabel"
+                    defaultValue={1.0}
+                    step={0.25}
+                    marks
+                    min={0.25}
+                    max={4.0}
+                    valueLabelDisplay="auto"
+                    onChange={(e, value) => {
+                        this.setState({ selectedDuration: value });
+                        this.renderAreas();
+                    }}
+                />
                 <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
                     <DialogContent orientation='vertical'>
@@ -210,19 +235,6 @@ export class SelectArea extends Component {
                             id="lastName"
                             label="Last Name"
                             fullWidth
-                        />
-                        <Typography id="sliderLabel" className="duration-slider-label">
-                            Duration
-                        </Typography>
-                        <Slider
-                            className="duration-slider"
-                            aria-label="sliderLabel"
-                            defaultValue={1.0}
-                            step={0.25}
-                            marks
-                            min={0.25}
-                            max={4.0}
-                            valueLabelDisplay="auto"
                         />
                     </DialogContent>
                     <DialogActions>
@@ -263,10 +275,11 @@ export class SelectArea extends Component {
         var first = document.getElementById('firstName').value;
         var last = document.getElementById('lastName').value;
 
+        var duration = this.state.selectedDuration;
         var dateStr = this.state.selectedDate.toUTCString();
         var areaLoc = this.state.selectedArea.areaLocation;
 
-        this.postCustomerData(email, first, last, dateStr, areaLoc.x, areaLoc.y);
+        this.postCustomerData(email, first, last, duration, dateStr, areaLoc.x, areaLoc.y);
 
         this.openReservedAreaSuccess();
     }
