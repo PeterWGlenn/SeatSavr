@@ -5,7 +5,7 @@ import { Home } from './components/Home';
 import { SelectArea } from './components/SelectArea';
 import { EditorLayout } from "./components/EditorLayout";
 import { Profile } from "./components/Profile";
-import { FetchAdminData } from './components/FetchAdminData';
+
 
 import './custom.css'
 import AuthService from './AuthService';
@@ -25,8 +25,7 @@ export default class App extends Component {
                  <Route exact path='/' component={Home} />
                  <Route path='/select-area' component={SelectArea} />
                  <Route path='/editorLayout' component={EditorLayout} />
-                  <Route path='/fetch-admin-data' component={FetchAdminData} />
-                  <Route path='/profile' component={Profile} />
+                 <Route path='/profile' component={Profile} />
              </Switch>
       </Layout>
     );
