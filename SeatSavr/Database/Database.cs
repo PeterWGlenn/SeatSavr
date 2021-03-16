@@ -69,7 +69,7 @@ namespace SeatSavr
 
                 float x = sqlite_datareader.GetFloat(1);
                 float y = sqlite_datareader.GetFloat(2);
-                a.AreaLocation = new Point((int)x, (int)y);
+                a.AreaLocation = new PointF(x, y);
 
                 a.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 a.Name = sqlite_datareader.GetString(4);
@@ -177,6 +177,38 @@ namespace SeatSavr
             return Task.FromResult(areas.ToArray());
         }
 
+        public static Area GetArea(Layout l, Area a)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            // Initialize Areas 
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\" AND X = \'" + a.AreaLocation.X + "\' AND Y = \'" + a.AreaLocation.Y + "\';");
+            Area retrievedArea = new Area();
+
+            while (sqlite_datareader.Read())
+            {
+                retrievedArea.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+
+                float x = sqlite_datareader.GetFloat(1);
+                float y = sqlite_datareader.GetFloat(2);
+                retrievedArea.AreaLocation = new Point((int)x, (int)y);
+
+                retrievedArea.NumberOfSeats = sqlite_datareader.GetInt32(3);
+                retrievedArea.Name = sqlite_datareader.GetString(4);
+            }
+
+            // TODO -> Reservation data
+
+            sqlite_conn.Close();
+
+            if (!retrievedArea.IsDefined())
+                return null;
+
+            return retrievedArea;
+        }
+
         public static Task<Customer> GetCustomer(string email)
         {
             // Create a new database connection
@@ -224,8 +256,15 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string sql = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
-            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+            string sqlLayout = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
+            bool didSucceed = InsertData(sqlite_conn, sqlLayout, 1);
+
+            // Insert Areas
+            foreach (Area a in l.Areas)
+            {
+                if (GetArea(l, a) == null)
+                    didSucceed = didSucceed && AddArea(l, a);
+            }
 
             sqlite_conn.Close();
             return didSucceed;
@@ -270,6 +309,25 @@ namespace SeatSavr
                 r.Customer.Email.ToString() + "\', \'" +
                 a.AreaLocation.X + "\', \'" +
                 a.AreaLocation.Y + "\');";
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
+        public static bool AddArea(Layout l, Area a)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string sql = "INSERT INTO Area (Type, X, Y, Seats, Name, LayoutName) VALUES(\'" +
+                (int)a.AreaType + "\', \'" +
+                a.AreaLocation.X + "\', \'" +
+                a.AreaLocation.Y + "\', \'" +
+                a.NumberOfSeats + "\', \'" +
+                a.Name + "\', \'" +
+                l.Name + "\');";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();

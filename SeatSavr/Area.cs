@@ -25,5 +25,10 @@ namespace SeatSavr
         public string Name { get; set; }
 
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
+
+        public bool IsDefined()
+        {
+            return Name != null;
+        }
     }
 }

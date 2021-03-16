@@ -30,6 +30,11 @@ namespace SeatSavr.Controllers
             };
             l.LayoutImage = d.CleanedLayoutImageString();
 
+            foreach(Area a in d.GetNewAreas())
+            {
+                l.Areas.Add(a);
+            }
+
             return Database.UpdateLayout(l);
         }
 
@@ -38,6 +43,7 @@ namespace SeatSavr.Controllers
             public string Name { get; set; }
             public string Address { get; set; }
             public string LayoutImage { get; set; }
+            public List<PointF> NewAreaLocations { get; set; } = new List<PointF>();
 
             public bool IsValid()
             {
@@ -46,8 +52,26 @@ namespace SeatSavr.Controllers
 
             public string CleanedLayoutImageString()
             {
-                string[] parts = LayoutImage.Split(',');
-                return parts[1];
+                return LayoutImage.Split(',')[1];
+            }
+
+            public List<Area> GetNewAreas()
+            {
+                List<Area> areas = new List<Area>();
+
+                // Note: The areas generated here are new and thus have no reservations associated with them
+                foreach (PointF loc in NewAreaLocations)
+                {
+                    areas.Add(new Area()
+                    {
+                        AreaType = Area.Type.Chair,
+                        AreaLocation = new PointF(loc.X, loc.Y),
+                        NumberOfSeats = 1,
+                        Name = "Generated Seat"
+                    });
+                }
+
+                return areas;
             }
         }
     }

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import ImageUploader from 'react-images-upload';
 import Box from '@material-ui/core/Box';
+import { Button } from '@material-ui/core';
 
 import './EditorLayout.css'
 
@@ -41,8 +42,6 @@ export class EditorLayout extends Component {
                 context.drawImage(img, 0, 0, EditorLayout.layoutWidth, EditorLayout.layoutHeight);
 
                 thisObject.state.canvasImageDataURL = canvas.toDataURL();
-                thisObject.postLayout();
-
                 thisObject.renderAreas();
             }
             img.src = event.target.result;
@@ -188,17 +187,42 @@ export class EditorLayout extends Component {
                         imgExtension={['.jpg', '.gif', '.png']}
                         maxFileSize={2000000}
                         singleImage={true} />
+                    <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
+                    <Button onClick={this.onClearEdits} className="form-buttons">Clear Edits</Button>
                 </Box>
             </div>
         );
 
     }
 
+    onSaveLayout = () => {
+        this.saveLayout();
+    }
+
+    onClearEdits = () => {
+        this.clearEdits();
+    }
+
+    async saveLayout() {
+        await this.postLayout();
+        this.renderAreas();
+    }
+
+    async clearEdits() {
+        await this.setState({ newAreaLocations: [] });
+        this.renderAreas();
+    }
+
     async populateLayout() {
         const response = await fetch('editorupload');
         const data = await response.json();
 
-        this.setState({ layout: data, currentAreas: data.areas, canvasImageDataURL: "data:image/png;base64," + data.layoutImage, loading: false });
+        this.setState({
+            layout: data,
+            currentAreas: data.areas,
+            canvasImageDataURL: "data:image/png;base64," + data.layoutImage,
+            loading: false
+        });
     }
 
     async postLayout() {
@@ -216,7 +240,8 @@ export class EditorLayout extends Component {
             body: JSON.stringify({
                 name: layout.name,
                 address: layout.address,
-                layoutImage: this.state.canvasImageDataURL
+                layoutImage: this.state.canvasImageDataURL,
+                newAreaLocations: this.state.newAreaLocations
             })
         }).then(function (response) {                      
             if (response.ok) {
