@@ -57,7 +57,7 @@ CREATE TABLE Reserves
   CustomerEmail VARCHAR(255) NOT NULL,
   AreaX FLOAT NOT NULL,
   AreaY FLOAT NOT NULL,
-  PRIMARY KEY (CustomerEmail, AreaX, AreaY),
+  PRIMARY KEY (Id),
   FOREIGN KEY (CustomerEmail) REFERENCES Customer(Email),
   FOREIGN KEY (AreaX, AreaY) REFERENCES Area(X, Y)
 );
