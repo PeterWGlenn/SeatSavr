@@ -15,6 +15,8 @@ namespace SeatSavr
 
         public Bitmap LayoutImage { get; set; }
 
+        public List<Area> Areas { get; set; } = new List<Area>();
+
         public bool IsDefined()
         {
             return Address != null;

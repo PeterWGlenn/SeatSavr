@@ -36,7 +36,8 @@ export class SelectArea extends Component {
             selectedDuration: SelectArea.defaultDuration,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
-            reservedAreaSuccessOpen: false
+            reservedAreaSuccessOpen: false,
+            layoutImage: null
         };
 
         this.layoutWidth = 888;
@@ -111,8 +112,10 @@ export class SelectArea extends Component {
 
     async populateAreaData() {
         const response = await fetch('selectarea'); 
-        const data = await response.json();
-        this.setState({ areas: data, loading: false });
+        const layout = await response.json();
+        this.setState({ areas: layout.areas, layoutImage: layout.layoutImage, loading: false });
+
+        console.log(this.state.layoutImage);
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {

@@ -12,9 +12,9 @@ namespace SeatSavr.Controllers
     public class SelectAreaController
     {
         [HttpGet]
-        public IEnumerable<Area> Get()
+        public Layout Get()
         {
-            return Database.GetAreaDataAsync("SampleLayout").Result;
+            return Database.GetLayoutAsync("SampleLayout").Result;
         }
 
         [HttpPost]

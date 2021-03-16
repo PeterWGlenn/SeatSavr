@@ -43,6 +43,7 @@ namespace SeatSavr
             SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Layout WHERE Name = \"" + layout + "\";");
             Layout l = new Layout();
 
+            // Initialize Layout Data
             while (sqlite_datareader.Read())
             {
                 l.Name = sqlite_datareader.GetString(0);
@@ -55,6 +56,27 @@ namespace SeatSavr
                     l.DecodeLayoutImage(base64Enoding);
                 }
             }
+
+            // Initialize Areas 
+            sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + layout + "\";");
+            List<Area> areas = new List<Area>();
+
+            while (sqlite_datareader.Read())
+            {
+                Area a = new Area();
+
+                a.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+
+                float x = sqlite_datareader.GetFloat(1);
+                float y = sqlite_datareader.GetFloat(2);
+                a.AreaLocation = new Point((int)x, (int)y);
+
+                a.NumberOfSeats = sqlite_datareader.GetInt32(3);
+                a.Name = sqlite_datareader.GetString(4);
+
+                areas.Add(a);
+            }
+            l.Areas = areas;
 
             if (!l.IsDefined())
                 l = null;
