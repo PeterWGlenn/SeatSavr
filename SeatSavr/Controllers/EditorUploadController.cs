@@ -28,7 +28,7 @@ namespace SeatSavr.Controllers
                 Name = d.Name,
                 Address = d.Address
             };
-            l.DecodeLayoutImage(d.CleanedLayoutImageString());
+            l.LayoutImage = d.CleanedLayoutImageString();
 
             return Database.UpdateLayout(l);
         }

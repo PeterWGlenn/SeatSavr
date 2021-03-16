@@ -24,6 +24,8 @@ export class SelectArea extends Component {
     static displayName = SelectArea.name;
     static areaRadius = 12;
     static defaultDuration = 1.0;
+    static layoutWidth = 888;
+    static layoutHeight = 500;
 
     constructor(props) {
         super(props);
@@ -39,9 +41,6 @@ export class SelectArea extends Component {
             reservedAreaSuccessOpen: false,
             layoutImage: null
         };
-
-        this.layoutWidth = 888;
-        this.layoutHeight = 500;
     }
 
     componentDidMount() {
@@ -87,25 +86,36 @@ export class SelectArea extends Component {
         if (canvas != null) {
             var context = canvas.getContext('2d');
 
-            // Draw border
-            context.lineWidth = 1;
-            context.strokeStyle = "#000000";
-            context.strokeRect(0, 0, canvas.width, canvas.height);
+            var areas = this.state.areas;
+            var saveThisObject = this;
 
-            // Draw areas
-            this.state.areas.forEach(area => {
+            var image = new Image();
+            image.onload = function () {
 
-                var cLoc = this.convertAreaLocToCanvasLoc(area);
-                var isRes = this.isAreaReserved(area);
+                // Draw Background Image
+                context.drawImage(image, 0, 0, SelectArea.layoutWidth, SelectArea.layoutHeight);
 
-                SelectArea.drawAreaIcon(context, cLoc.x, cLoc.y, isRes);
-            });
+                // Draw border
+                context.lineWidth = 1;
+                context.strokeStyle = "#000000";
+                context.strokeRect(0, 0, canvas.width, canvas.height);
+
+                // Draw areas
+                areas.forEach(area => {
+                    var isRes = saveThisObject.isAreaReserved(area);
+                    SelectArea.drawAreaIcon(context, area, isRes);
+                });
+            };
+
+            if (this.state.layoutImage != null) {
+                image.src = "data:image/png;base64," + this.state.layoutImage;
+            }
         }
     }
 
-    convertAreaLocToCanvasLoc(area) {
-        var xLoc = (area.areaLocation.x / 100) * this.layoutWidth;
-        var yLoc = (area.areaLocation.y / 100) * this.layoutHeight;
+    static convertAreaLocToCanvasLoc(area) {
+        var xLoc = (area.areaLocation.x / 100) * SelectArea.layoutWidth;
+        var yLoc = (area.areaLocation.y / 100) * SelectArea.layoutHeight;
 
         return {x: xLoc, y: yLoc};
     }
@@ -114,8 +124,6 @@ export class SelectArea extends Component {
         const response = await fetch('selectarea'); 
         const layout = await response.json();
         this.setState({ areas: layout.areas, layoutImage: layout.layoutImage, loading: false });
-
-        console.log(this.state.layoutImage);
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
@@ -137,10 +145,12 @@ export class SelectArea extends Component {
         this.renderAreas();
     }
 
-    static drawAreaIcon(context, x, y, isRes) {
+    static drawAreaIcon(context, area, isRes) {
+
+        var cLoc = SelectArea.convertAreaLocToCanvasLoc(area);
 
         context.beginPath();
-        context.arc(x, y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
+        context.arc(cLoc.x, cLoc.y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
 
         if (isRes) {
             context.fillStyle = 'gray';
@@ -162,7 +172,7 @@ export class SelectArea extends Component {
         var y = e.clientY - canvasRect.top;
 
         this.state.areas.forEach(area => {
-            var areaLoc = this.convertAreaLocToCanvasLoc(area);
+            var areaLoc = SelectArea.convertAreaLocToCanvasLoc(area);
             if (this.isNumberWithin(x, areaLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, areaLoc.y, SelectArea.areaRadius)) {
                 if (!this.isAreaReserved(area)) {
                     this.setState({ selectedArea: area });
@@ -185,13 +195,12 @@ export class SelectArea extends Component {
             <div>
                 <h3>Please select an area to reserve...</h3>
                 <canvas id="layoutCanvas"
-                        width={this.layoutWidth}
-                        height={this.layoutHeight}
-                        className="layout-canvas"
+                        width={SelectArea.layoutWidth}
+                        height={SelectArea.layoutHeight}
                         onClick={this.canvasClick} />
                 <h3></h3>
-                <Box maxWidth={this.layoutWidth}>
-                    <Box maxWidth={this.layoutWidth}>
+                <Box maxWidth={SelectArea.layoutWidth}>
+                    <Box maxWidth={SelectArea.layoutWidth}>
                         <Typography id="sliderLabel" className="duration-slider-label">
                             Duration (hours)
                                 </Typography>

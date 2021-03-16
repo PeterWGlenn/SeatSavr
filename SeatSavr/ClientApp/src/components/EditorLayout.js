@@ -1,14 +1,15 @@
 ﻿
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Snackbar from '@material-ui/core/Snackbar';
 import ImageUploader from 'react-images-upload';
+import Box from '@material-ui/core/Box';
+
 import './EditorLayout.css'
 
 export class EditorLayout extends Component {
     static displayName = EditorLayout.name;
     static areaRadius = 12;
+    static layoutWidth = 888;
+    static layoutHeight = 500;
 
     constructor(props) {
         super(props);
@@ -23,6 +24,14 @@ export class EditorLayout extends Component {
 
     componentDidMount() {
         this.populateLayout();
+
+        var canvas = document.getElementById('layoutEditorCanvas');
+        var context = canvas.getContext('2d');
+
+        // Draw border
+        context.lineWidth = 1;
+        context.strokeStyle = "#000000";
+        context.strokeRect(0, 0, canvas.width, canvas.height);
     }
 
     onDrop = (files) => {
@@ -30,40 +39,41 @@ export class EditorLayout extends Component {
         var canvas = document.getElementById('layoutEditorCanvas');
         var context = canvas.getContext('2d');
 
+        var thisObject = this;
+
         var reader = new FileReader();
         reader.onload = function (event) {
             var img = new Image();
             img.onload = function () {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                context.drawImage(img, 0, 0);
+                context.drawImage(img, 0, 0, EditorLayout.layoutWidth, EditorLayout.layoutHeight);
+
+                thisObject.state.canvasImageDataURL = canvas.toDataURL();
+                thisObject.postLayout();
             }
             img.src = event.target.result;
         }
-        reader.readAsDataURL(files[0]); 
 
-        this.state.canvasImageDataURL = canvas.toDataURL();
+        if (files != null && files.length > 0) {
+            reader.readAsDataURL(files[0]);
+        }
     }
-
-    pushToDatabase = () => {
-        this.postLayout();
-    };
 
     render() {
         return (
             <div>
-                <canvas id="layoutEditorCanvas"/>
-                <ImageUploader
-                    withIcon={true}
-                    label="Accepted file types: .jpg, .gif, .png"
-                    buttonText='Upload Layout'
-                    onChange={this.onDrop}
-                    withPreview={true}
-                    imgExtension={['.jpg', '.gif', '.png']}
-                    maxFileSize={2000000} />
-                <div>
-                    <button onClick={() => this.pushToDatabase()}>Push to Database</button>
-                </div>
+                <canvas id="layoutEditorCanvas" width={EditorLayout.layoutWidth} height={EditorLayout.layoutHeight} />
+                <Box maxWidth={EditorLayout.layoutWidth}>
+                    <ImageUploader
+                        width={EditorLayout.layoutWidth}
+                        withIcon={false}
+                        label="Accepted file types: .jpg, .gif, .png"
+                        buttonText='Upload Layout Background'
+                        onChange={this.onDrop}
+                        withPreview={false}
+                        imgExtension={['.jpg', '.gif', '.png']}
+                        maxFileSize={2000000}
+                        singleImage={true} />
+                </Box>
             </div>
         );
 
@@ -98,7 +108,7 @@ export class EditorLayout extends Component {
             }
             throw new Error('Something went wrong.');
         }).then(function (text) {                         
-            console.log('Request successful', text);
+            //console.log('Request successful', text);
         }).catch(function (error) {                        
             console.log('Request failed', error);
         });

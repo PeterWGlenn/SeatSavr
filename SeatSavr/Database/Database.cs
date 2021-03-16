@@ -53,7 +53,7 @@ namespace SeatSavr
                 if (!sqlite_datareader.IsDBNull(2))
                 {
                     string base64Enoding = sqlite_datareader.GetString(2);
-                    l.DecodeLayoutImage(base64Enoding);
+                    l.LayoutImage = base64Enoding;
                 }
             }
 
@@ -194,9 +194,7 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string layoutImageEncoding = Convert.ToBase64String(l.ConvertImageToBytes());
-
-            string sql = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + layoutImageEncoding + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
+            string sql = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();
