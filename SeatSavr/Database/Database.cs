@@ -49,8 +49,11 @@ namespace SeatSavr
                 l.Address = sqlite_datareader.GetString(1);
 
                 // TODO PG -> use images instead of encoding strings to make this more memory efficient
-                string base64Enoding = sqlite_datareader.GetString(2);
-                l.DecodeLayoutImage(base64Enoding);
+                if (!sqlite_datareader.IsDBNull(2))
+                {
+                    string base64Enoding = sqlite_datareader.GetString(2);
+                    l.DecodeLayoutImage(base64Enoding);
+                }
             }
 
             if (!l.IsDefined())
@@ -171,7 +174,7 @@ namespace SeatSavr
 
             string layoutImageEncoding = Convert.ToBase64String(l.ConvertImageToBytes());
 
-            string sql = "UPDATE Layout SET Name = \'" + l.Name + "\', Image = \'" + layoutImageEncoding + "\' WHERE Address = \'" + l.Address + "\'";
+            string sql = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + layoutImageEncoding + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();
