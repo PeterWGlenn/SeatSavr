@@ -74,6 +74,12 @@ INSERT INTO Layout VALUES ('SampleLayout', '123 Main Street, Washington', null);
 INSERT INTO Area VALUES (0, 10, 10, 3, 'Table #2', 'SampleLayout');
 INSERT INTO Area VALUES (0, 20, 20, 2, 'Table #4', 'SampleLayout');
 INSERT INTO Area VALUES (0, 15, 40, 4, 'Table #7', 'SampleLayout');
+INSERT INTO Area VALUES (0, 5, 50, 2, 'Table #8', 'SampleLayout');
+INSERT INTO Area VALUES (0, 6, 70, 4, 'Table #9', 'SampleLayout');
+INSERT INTO Area VALUES (0, 90, 90, 1, 'Table #10', 'SampleLayout');
+INSERT INTO Area VALUES (0, 90, 5, 3, 'Table #11', 'SampleLayout');
+INSERT INTO Area VALUES (0, 80, 60, 9, 'Table #12', 'SampleLayout');
+INSERT INTO Area VALUES (0, 60, 60, 3, 'Table #13', 'SampleLayout');
 
 INSERT INTO Customer (Email, First, Last) VALUES ('sampleCustomer123@gmail.com', 'Bob', 'Saget');
 
