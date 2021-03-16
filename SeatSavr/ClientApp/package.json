@@ -41,7 +41,7 @@
     "extends": "react-app"
   },
   "scripts": {
-    "start": "NODE_PATH=./src npm-run-all -p watch-css start-js",
+    "start": "rimraf ./build && react-scripts start",
     "build": "NODE_PATH=./src react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
