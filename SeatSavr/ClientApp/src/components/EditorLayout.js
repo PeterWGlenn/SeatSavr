@@ -14,7 +14,8 @@ export class EditorLayout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pictures: [],
+            currentAreas: [],
+            newAreaLocations: [],
             layout: null,
             canvasImageDataURL: null,
             loading: true
@@ -23,15 +24,7 @@ export class EditorLayout extends Component {
     }
 
     componentDidMount() {
-        this.populateLayout();
-
-        var canvas = document.getElementById('layoutEditorCanvas');
-        var context = canvas.getContext('2d');
-
-        // Draw border
-        context.lineWidth = 1;
-        context.strokeStyle = "#000000";
-        context.strokeRect(0, 0, canvas.width, canvas.height);
+        this.renderAreas();
     }
 
     onDrop = (files) => {
@@ -49,6 +42,8 @@ export class EditorLayout extends Component {
 
                 thisObject.state.canvasImageDataURL = canvas.toDataURL();
                 thisObject.postLayout();
+
+                thisObject.renderAreas();
             }
             img.src = event.target.result;
         }
@@ -58,10 +53,130 @@ export class EditorLayout extends Component {
         }
     }
 
+    static convertAreaLocToCanvasLoc(x, y) {
+        var xLoc = (x / 100) * EditorLayout.layoutWidth;
+        var yLoc = (y / 100) * EditorLayout.layoutHeight;
+
+        return { x: xLoc, y: yLoc };
+    }
+
+    static convertCanvasLocToAreaLoc(x, y) {
+        var xLoc = (x / EditorLayout.layoutWidth) * 100;
+        var yLoc = (y / EditorLayout.layoutHeight) * 100;
+
+        return { x: xLoc, y: yLoc };
+    }
+
+    async renderAreas() {
+
+        if (this.state.loading == true) {
+            await this.populateLayout();
+        }
+
+        var canvas = document.getElementById('layoutEditorCanvas');
+        if (canvas != null) {
+            var context = canvas.getContext('2d');
+
+            var areas = this.state.currentAreas;
+            var newAreaLocs = this.state.newAreaLocations;
+
+            var image = new Image();
+            image.onload = function () {
+                // Draw Background Image
+                context.drawImage(image, 0, 0, EditorLayout.layoutWidth, EditorLayout.layoutHeight);
+
+                // Draw border
+                context.lineWidth = 1;
+                context.strokeStyle = "#000000";
+                context.strokeRect(0, 0, canvas.width, canvas.height);
+
+                // Draw current areas
+                areas.forEach(area => {
+                    var cLoc = EditorLayout.convertAreaLocToCanvasLoc(area.areaLocation.x, area.areaLocation.y);
+                    EditorLayout.drawAreaIcon(context, cLoc.x, cLoc.y, false);
+                });
+
+                // Draw new areas
+                newAreaLocs.forEach(areaLoc => {
+                    var cLoc = EditorLayout.convertAreaLocToCanvasLoc(areaLoc.x, areaLoc.y);
+                    EditorLayout.drawAreaIcon(context, cLoc.x, cLoc.y, true);
+                });
+            };
+
+            if (this.state.canvasImageDataURL != null) {
+                image.src = this.state.canvasImageDataURL;
+            }
+        }
+    }
+
+    canvasClick = (e) => {
+        var canvasRect = document.getElementById('layoutEditorCanvas').getBoundingClientRect();
+
+        var x = e.clientX - canvasRect.left;
+        var y = e.clientY - canvasRect.top;
+
+        var collision = false;
+
+        this.state.currentAreas.forEach((area) => {
+            var canLoc = EditorLayout.convertAreaLocToCanvasLoc(area.areaLocation.x, area.areaLocation.y);
+
+            if (EditorLayout.isNumberWithin(x, canLoc.x, EditorLayout.areaRadius * 2) && EditorLayout.isNumberWithin(y, canLoc.y, EditorLayout.areaRadius * 2)) {
+                // Can't place areas on other areas
+                collision = true;
+            }
+        });
+
+        this.state.newAreaLocations.forEach((aLoc) => {
+            var canLoc = EditorLayout.convertAreaLocToCanvasLoc(aLoc.x, aLoc.y);
+
+            if (EditorLayout.isNumberWithin(x, canLoc.x, EditorLayout.areaRadius * 2) && EditorLayout.isNumberWithin(y, canLoc.y, EditorLayout.areaRadius * 2)) {
+                // Can't place areas on other areas
+                collision = true;
+            } 
+        });
+
+        // Add area to areas
+        if (!collision) {
+
+            var areaLoc = EditorLayout.convertCanvasLocToAreaLoc(x, y);
+
+            this.state.newAreaLocations.push({
+                x: areaLoc.x,
+                y: areaLoc.y
+            });
+
+            EditorLayout.drawAreaIcon(document.getElementById('layoutEditorCanvas').getContext('2d'), x, y, true);
+        }
+    }
+
+    static isNumberWithin(x, n, r) {
+        return x > (n - r) && x < (n + r);
+    }
+
+    static drawAreaIcon(context, x, y, isNew) {
+        context.beginPath();
+        context.arc(x, y, EditorLayout.areaRadius, 0, 2 * Math.PI, false);
+
+        if (isNew) {
+            context.fillStyle = '#34eba8';
+        }
+        else {
+            context.fillStyle = 'green';
+        }
+
+        context.fill();
+        context.lineWidth = 1;
+        context.strokeStyle = '#000000';
+        context.stroke();
+    }
+
     render() {
         return (
             <div>
-                <canvas id="layoutEditorCanvas" width={EditorLayout.layoutWidth} height={EditorLayout.layoutHeight} />
+                <canvas id="layoutEditorCanvas"
+                        width={EditorLayout.layoutWidth}
+                        height={EditorLayout.layoutHeight}
+                        onClick={this.canvasClick}/>
                 <Box maxWidth={EditorLayout.layoutWidth}>
                     <ImageUploader
                         width={EditorLayout.layoutWidth}
@@ -82,7 +197,8 @@ export class EditorLayout extends Component {
     async populateLayout() {
         const response = await fetch('editorupload');
         const data = await response.json();
-        this.setState({ layout: data, loading: false });
+
+        this.setState({ layout: data, currentAreas: data.areas, canvasImageDataURL: "data:image/png;base64," + data.layoutImage, loading: false });
     }
 
     async postLayout() {
