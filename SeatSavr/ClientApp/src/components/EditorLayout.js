@@ -68,7 +68,7 @@ export class EditorLayout extends Component {
 
     async renderAreas() {
 
-        if (this.state.loading == true) {
+        if (this.state.loading === true) {
             await this.populateLayout();
         }
 

@@ -198,7 +198,7 @@ export class SelectArea extends Component {
                         width={SelectArea.layoutWidth}
                         height={SelectArea.layoutHeight}
                         onClick={this.canvasClick} />
-                <h3></h3>
+                <h3>_</h3>
                 <Box maxWidth={SelectArea.layoutWidth}>
                     <Box maxWidth={SelectArea.layoutWidth}>
                         <Typography id="sliderLabel" className="duration-slider-label">
