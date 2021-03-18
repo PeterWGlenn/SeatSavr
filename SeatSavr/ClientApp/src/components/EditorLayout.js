@@ -235,7 +235,8 @@ export class EditorLayout extends Component {
         await fetch('editorupload', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: layout.name,
