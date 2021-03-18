@@ -121,7 +121,12 @@ export class SelectArea extends Component {
     }
 
     async populateAreaData() {
-        const response = await fetch('selectarea'); 
+        const response = await fetch('selectarea', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
 
         console.log("response:");
         console.log(response);
@@ -138,7 +143,8 @@ export class SelectArea extends Component {
         await fetch('selectarea', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 email: email,
@@ -206,7 +212,7 @@ export class SelectArea extends Component {
                         width={SelectArea.layoutWidth}
                         height={SelectArea.layoutHeight}
                         onClick={this.canvasClick} />
-                <h3></h3>
+                <h3>_</h3>
                 <Box maxWidth={SelectArea.layoutWidth}>
                     <Box maxWidth={SelectArea.layoutWidth}>
                         <Typography id="sliderLabel" className="duration-slider-label">

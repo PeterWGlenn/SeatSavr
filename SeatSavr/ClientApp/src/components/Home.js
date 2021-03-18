@@ -1,27 +1,21 @@
-import { Button } from 'bootstrap';
 import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import AuthService from '../AuthService';
 import { Link } from 'react-router-dom';
 
 
 export class Home extends Component {
+    static displayName = Home.name;
 
     constructor() {
         super();
         this.state = { bookList: [] };
-        this.authService = new AuthService;
+        this.authService = new AuthService();
     }
-
-    
-    static displayName = Home.name;
 
     startSession(history) {
         this.authService.handleAuthentication(history);
         return <div><p>Starting session...</p></div>;
     }
-    
-    
 
     render() {
         

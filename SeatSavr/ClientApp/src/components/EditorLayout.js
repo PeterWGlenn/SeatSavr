@@ -68,7 +68,7 @@ export class EditorLayout extends Component {
 
     async renderAreas() {
 
-        if (this.state.loading == true) {
+        if (this.state.loading === true) {
             await this.populateLayout();
         }
 
@@ -214,7 +214,12 @@ export class EditorLayout extends Component {
     }
 
     async populateLayout() {
-        const response = await fetch('editorupload');
+        const response = await fetch('editorupload', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
         const data = await response.json();
 
         this.setState({
@@ -235,7 +240,8 @@ export class EditorLayout extends Component {
         await fetch('editorupload', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: layout.name,
