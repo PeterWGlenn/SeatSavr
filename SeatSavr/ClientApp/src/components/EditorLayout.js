@@ -214,7 +214,12 @@ export class EditorLayout extends Component {
     }
 
     async populateLayout() {
-        const response = await fetch('editorupload');
+        const response = await fetch('editorupload', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
         const data = await response.json();
 
         this.setState({

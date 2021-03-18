@@ -121,7 +121,12 @@ export class SelectArea extends Component {
     }
 
     async populateAreaData() {
-        const response = await fetch('selectarea'); 
+        const response = await fetch('selectarea', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        }); 
         const layout = await response.json();
         this.setState({ areas: layout.areas, layoutImage: layout.layoutImage, loading: false });
     }
