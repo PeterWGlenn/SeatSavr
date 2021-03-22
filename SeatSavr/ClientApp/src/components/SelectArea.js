@@ -128,14 +128,7 @@ export class SelectArea extends Component {
             }
         });
 
-        console.log("response:");
-        console.log(response);
-
         const layout = await response.json();
-
-        console.log("layout:");
-        console.log(layout);
-
         this.setState({ areas: layout.areas, layoutImage: layout.layoutImage, loading: false });
     }
 

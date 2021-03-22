@@ -33,14 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\components\TestingDeploymentFetch.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\components\TestingDeploymentFetch.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Database\SeatSavrDB.sqlite3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
