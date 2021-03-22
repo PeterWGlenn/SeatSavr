@@ -26,7 +26,7 @@ export class TestingDeploymentFetch extends Component {
         });
 
         const dataObj = await response.json();
-        this.setState({ data: dataObj, loading: false });
+        this.setState({ data: dataObj });
     }
 
     async populateAdminData() {
@@ -38,10 +38,19 @@ export class TestingDeploymentFetch extends Component {
         });
 
         const dataObj = await response.json();
-        this.setState({ admins: dataObj});
+        this.setState({ admins: dataObj, loading: false});
     }
 
     render() {
+
+        if (this.state.loading) {
+            return (
+                <div>
+                    <h3>LOADING!</h3>
+                </div>
+                );
+        }
+
         return (
             <div>
                 <h3>Testing this!</h3>
