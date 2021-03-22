@@ -5,6 +5,7 @@ import { Home } from './components/Home';
 import { SelectArea } from './components/SelectArea';
 import { EditorLayout } from "./components/EditorLayout";
 import { Profile } from "./components/Profile";
+import { TestingDeploymentFetch } from "./components/TestingDeploymentFetch";
 
 
 import './custom.css'
@@ -26,6 +27,7 @@ export default class App extends Component {
                  <Route path='/select-area' component={SelectArea} />
                  <Route path='/editorLayout' component={EditorLayout} />
                  <Route path='/profile' component={Profile} />
+                 <Route path='/testingdeploymentfetch' component={TestingDeploymentFetch} />
              </Switch>
       </Layout>
     );
