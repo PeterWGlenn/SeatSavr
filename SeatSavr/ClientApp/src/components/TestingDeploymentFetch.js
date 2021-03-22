@@ -42,15 +42,6 @@ export class TestingDeploymentFetch extends Component {
     }
 
     render() {
-
-        if (this.state.loading) {
-            return (
-                <div>
-                    <h3>LOADING!</h3>
-                </div>
-                );
-        }
-
         return (
             <div>
                 <h3>Testing this!</h3>

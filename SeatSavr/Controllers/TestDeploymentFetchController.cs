@@ -14,6 +14,9 @@ namespace SeatSavr.Controllers
         [HttpGet]
         public TestObject Get()
         {
+            // Call the database
+            Admin[] adminds = Database.GetAdminDataAsync().Result;
+
             return new TestObject();
         }
     }
