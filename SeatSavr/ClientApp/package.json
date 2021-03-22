@@ -47,6 +47,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
   },
+  "proxy": "https://seatsavr.azurewebsites.net",
   "browserslist": {
     "production": [
       ">0.2%",
