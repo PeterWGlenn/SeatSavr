@@ -45,7 +45,7 @@ export class TestingDeploymentFetch extends Component {
         return (
             <div>
                 <h3>Testing this!</h3>
-                <h1>{this.state.data}</h1>
+                <h1>{this.state.data.number}</h1>
                 <table>
                     <thead>
                         <tr>

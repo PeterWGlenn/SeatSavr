@@ -12,9 +12,21 @@ namespace SeatSavr.Controllers
     public class TestDeploymentFetchController : ControllerBase
     {
         [HttpGet]
-        public int Get()
+        public TestObject Get()
         {
-            return 42;
+            return new TestObject();
+        }
+    }
+
+    public class TestObject
+    {
+        public int Number { get; set; }
+        public string String { get; set; }
+
+        public TestObject()
+        {
+            Number = 42;
+            String = "Testing";
         }
     }
 }
