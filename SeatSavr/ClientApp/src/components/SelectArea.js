@@ -151,6 +151,7 @@ export class SelectArea extends Component {
             })
         });
         const didSucceed = await response.json();
+        console.log(didSucceed);
 
         this.renderAreas();
     }
