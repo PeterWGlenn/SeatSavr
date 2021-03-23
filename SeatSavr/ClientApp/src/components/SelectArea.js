@@ -136,7 +136,9 @@ export class SelectArea extends Component {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
             },
             body: JSON.stringify({
                 email: email,
@@ -149,7 +151,6 @@ export class SelectArea extends Component {
             })
         });
         const didSucceed = await response.json();
-        console.log(didSucceed);
 
         this.renderAreas();
     }
