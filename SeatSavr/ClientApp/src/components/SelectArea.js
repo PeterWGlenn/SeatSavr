@@ -30,7 +30,7 @@ export class SelectArea extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            areas: [],
+            layout: null,
             loading: true,
             selectedDate: new Date(),
             selectedTime: new Date(),
@@ -38,8 +38,7 @@ export class SelectArea extends Component {
             selectedDuration: SelectArea.defaultDuration,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
-            reservedAreaSuccessOpen: false,
-            layoutImage: null
+            reservedAreaSuccessOpen: false
         };
     }
 
@@ -86,7 +85,7 @@ export class SelectArea extends Component {
         if (canvas != null) {
             var context = canvas.getContext('2d');
 
-            var areas = this.state.areas;
+            var areas = this.state.layout.areas;
             var saveThisObject = this;
 
             var image = new Image();
@@ -107,8 +106,8 @@ export class SelectArea extends Component {
                 });
             };
 
-            if (this.state.layoutImage != null) {
-                image.src = "data:image/png;base64," + this.state.layoutImage;
+            if (this.state.layout.layoutImage != null) {
+                image.src = "data:image/png;base64," + this.state.layout.layoutImage;
             }
         }
     }
@@ -129,7 +128,7 @@ export class SelectArea extends Component {
         });
 
         const layout = await response.json();
-        this.setState({ areas: layout.areas, layoutImage: layout.layoutImage, loading: false });
+        this.setState({ layout: layout, loading: false });
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
@@ -178,7 +177,7 @@ export class SelectArea extends Component {
         var x = e.clientX - canvasRect.left;
         var y = e.clientY - canvasRect.top;
 
-        this.state.areas.forEach(area => {
+        this.state.layout.areas.forEach(area => {
             var areaLoc = SelectArea.convertAreaLocToCanvasLoc(area);
             if (this.isNumberWithin(x, areaLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, areaLoc.y, SelectArea.areaRadius)) {
                 if (!this.isAreaReserved(area)) {
@@ -196,16 +195,23 @@ export class SelectArea extends Component {
         return x > (n - r) && x < (n + r); 
     }
 
-    /*PG -> I'm using the empty h3 to put the date picker below the canvas. There may be a cleaner way to do this.*/
     render() {
+
+        var name = "No layout selected";
+        var address = "";
+        if (this.state.layout != null) {
+            name = this.state.layout.name;
+            address = this.state.layout.address;
+        }
+
         return (
             <div>
-                <h3>Please select an area to reserve...</h3>
+                <h2>{name}</h2>
+                <h5>{address}</h5>
                 <canvas id="layoutCanvas"
                         width={SelectArea.layoutWidth}
                         height={SelectArea.layoutHeight}
                         onClick={this.canvasClick} />
-                <h3>_</h3>
                 <Box maxWidth={SelectArea.layoutWidth}>
                     <Box maxWidth={SelectArea.layoutWidth}>
                         <Typography id="sliderLabel" className="duration-slider-label">

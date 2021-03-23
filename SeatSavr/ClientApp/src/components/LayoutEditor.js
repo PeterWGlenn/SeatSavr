@@ -170,8 +170,18 @@ export class LayoutEditor extends Component {
     }
 
     render() {
+
+        var name = "No layout selected";
+        var address = "";
+        if (this.state.layout != null) {
+            name = this.state.layout.name;
+            address = this.state.layout.address;
+        }
+
         return (
             <div>
+                <h2>{name}</h2>
+                <h5>{address}</h5>
                 <canvas id="layoutEditorCanvas"
                         width={LayoutEditor.layoutWidth}
                         height={LayoutEditor.layoutHeight}
