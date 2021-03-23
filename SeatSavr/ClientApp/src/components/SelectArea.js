@@ -121,7 +121,7 @@ export class SelectArea extends Component {
     }
 
     async populateAreaData() {
-        const response = await fetch('selectarea', {
+        const response = await fetch('selectarea/getlayout', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -133,7 +133,7 @@ export class SelectArea extends Component {
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
-        await fetch('selectarea', {
+        await fetch('selectarea/savereservation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

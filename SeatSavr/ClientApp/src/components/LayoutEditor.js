@@ -192,7 +192,6 @@ export class LayoutEditor extends Component {
                 </Box>
             </div>
         );
-
     }
 
     onSaveLayout = () => {
@@ -214,7 +213,7 @@ export class LayoutEditor extends Component {
     }
 
     async populateLayout() {
-        const response = await fetch('editorupload', {
+        const response = await fetch('layouteditor/getlayout', {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -237,7 +236,7 @@ export class LayoutEditor extends Component {
 
         var layout = this.state.layout;
 
-        await fetch('editorupload', {
+        await fetch('layouteditor/savelayout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

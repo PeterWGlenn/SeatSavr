@@ -11,14 +11,14 @@ namespace SeatSavr.Controllers
     [Route("[controller]")]
     public class SelectAreaController
     {
-        [HttpGet]
-        public Layout Get()
+        [HttpGet("[action]")]
+        public Layout GetLayout()
         {
             return Database.GetLayoutAsync("SampleLayout").Result;
         }
 
-        [HttpPost]
-        public bool Create([FromBody] ReservationData d)
+        [HttpPost("[action]")]
+        public bool SaveReservation([FromBody] ReservationData d)
         {
             if (!d.IsValid())
                 return false;

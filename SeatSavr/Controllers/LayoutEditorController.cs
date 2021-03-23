@@ -9,16 +9,16 @@ namespace SeatSavr.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class EditorUploadController
+    public class LayoutEditorController
     {
-        [HttpGet]
-        public Layout Get()
+        [HttpGet("[action]")]
+        public Layout GetLayout()
         {
             return Database.GetLayoutAsync("SampleLayout").Result;
         }
 
-        [HttpPost]
-        public bool Create([FromBody] LayoutData d)
+        [HttpPost("[action]")]
+        public bool SaveLayout([FromBody] LayoutData d)
         {
             if (!d.IsValid())
                 return false;

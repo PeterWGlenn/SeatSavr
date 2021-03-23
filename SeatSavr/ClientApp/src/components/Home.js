@@ -20,14 +20,14 @@ export class Home extends Component {
     render() {
         
     return (
-      <div>
+        <div>
             <h1>Welcome to SeatSavr</h1>
             <p>Managing your reservations in the modern world</p>
             <p>
                 <button onClick={() => this.authService.login()}>Login for Administrators</button>
                 <Link to="/select-area" type= "btn btn=primary"> Continue as Guest</Link>
                 </p>
-      </div>
+        </div>
     );
   }
 }
