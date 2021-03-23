@@ -132,7 +132,7 @@ export class SelectArea extends Component {
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
-        await fetch('selectarea/savereservation', {
+        const response = await fetch('selectarea/savereservation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -148,6 +148,9 @@ export class SelectArea extends Component {
                 areaLocY: areaY
             })
         });
+        const didSucceed = await response.json();
+        console.log(didSucceed);
+
         this.renderAreas();
     }
 
