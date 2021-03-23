@@ -4,10 +4,10 @@ import ImageUploader from 'react-images-upload';
 import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
 
-import './EditorLayout.css'
+import './LayoutEditor.css'
 
-export class EditorLayout extends Component {
-    static displayName = EditorLayout.name;
+export class LayoutEditor extends Component {
+    static displayName = LayoutEditor.name;
     static areaRadius = 12;
     static layoutWidth = 888;
     static layoutHeight = 500;
@@ -39,7 +39,7 @@ export class EditorLayout extends Component {
         reader.onload = function (event) {
             var img = new Image();
             img.onload = function () {
-                context.drawImage(img, 0, 0, EditorLayout.layoutWidth, EditorLayout.layoutHeight);
+                context.drawImage(img, 0, 0, LayoutEditor.layoutWidth, LayoutEditor.layoutHeight);
 
                 thisObject.state.canvasImageDataURL = canvas.toDataURL();
                 thisObject.renderAreas();
@@ -53,15 +53,15 @@ export class EditorLayout extends Component {
     }
 
     static convertAreaLocToCanvasLoc(x, y) {
-        var xLoc = (x / 100) * EditorLayout.layoutWidth;
-        var yLoc = (y / 100) * EditorLayout.layoutHeight;
+        var xLoc = (x / 100) * LayoutEditor.layoutWidth;
+        var yLoc = (y / 100) * LayoutEditor.layoutHeight;
 
         return { x: xLoc, y: yLoc };
     }
 
     static convertCanvasLocToAreaLoc(x, y) {
-        var xLoc = (x / EditorLayout.layoutWidth) * 100;
-        var yLoc = (y / EditorLayout.layoutHeight) * 100;
+        var xLoc = (x / LayoutEditor.layoutWidth) * 100;
+        var yLoc = (y / LayoutEditor.layoutHeight) * 100;
 
         return { x: xLoc, y: yLoc };
     }
@@ -82,7 +82,7 @@ export class EditorLayout extends Component {
             var image = new Image();
             image.onload = function () {
                 // Draw Background Image
-                context.drawImage(image, 0, 0, EditorLayout.layoutWidth, EditorLayout.layoutHeight);
+                context.drawImage(image, 0, 0, LayoutEditor.layoutWidth, LayoutEditor.layoutHeight);
 
                 // Draw border
                 context.lineWidth = 1;
@@ -91,14 +91,14 @@ export class EditorLayout extends Component {
 
                 // Draw current areas
                 areas.forEach(area => {
-                    var cLoc = EditorLayout.convertAreaLocToCanvasLoc(area.areaLocation.x, area.areaLocation.y);
-                    EditorLayout.drawAreaIcon(context, cLoc.x, cLoc.y, false);
+                    var cLoc = LayoutEditor.convertAreaLocToCanvasLoc(area.areaLocation.x, area.areaLocation.y);
+                    LayoutEditor.drawAreaIcon(context, cLoc.x, cLoc.y, false);
                 });
 
                 // Draw new areas
                 newAreaLocs.forEach(areaLoc => {
-                    var cLoc = EditorLayout.convertAreaLocToCanvasLoc(areaLoc.x, areaLoc.y);
-                    EditorLayout.drawAreaIcon(context, cLoc.x, cLoc.y, true);
+                    var cLoc = LayoutEditor.convertAreaLocToCanvasLoc(areaLoc.x, areaLoc.y);
+                    LayoutEditor.drawAreaIcon(context, cLoc.x, cLoc.y, true);
                 });
             };
 
@@ -117,18 +117,18 @@ export class EditorLayout extends Component {
         var collision = false;
 
         this.state.currentAreas.forEach((area) => {
-            var canLoc = EditorLayout.convertAreaLocToCanvasLoc(area.areaLocation.x, area.areaLocation.y);
+            var canLoc = LayoutEditor.convertAreaLocToCanvasLoc(area.areaLocation.x, area.areaLocation.y);
 
-            if (EditorLayout.isNumberWithin(x, canLoc.x, EditorLayout.areaRadius * 2) && EditorLayout.isNumberWithin(y, canLoc.y, EditorLayout.areaRadius * 2)) {
+            if (LayoutEditor.isNumberWithin(x, canLoc.x, LayoutEditor.areaRadius * 2) && LayoutEditor.isNumberWithin(y, canLoc.y, LayoutEditor.areaRadius * 2)) {
                 // Can't place areas on other areas
                 collision = true;
             }
         });
 
         this.state.newAreaLocations.forEach((aLoc) => {
-            var canLoc = EditorLayout.convertAreaLocToCanvasLoc(aLoc.x, aLoc.y);
+            var canLoc = LayoutEditor.convertAreaLocToCanvasLoc(aLoc.x, aLoc.y);
 
-            if (EditorLayout.isNumberWithin(x, canLoc.x, EditorLayout.areaRadius * 2) && EditorLayout.isNumberWithin(y, canLoc.y, EditorLayout.areaRadius * 2)) {
+            if (LayoutEditor.isNumberWithin(x, canLoc.x, LayoutEditor.areaRadius * 2) && LayoutEditor.isNumberWithin(y, canLoc.y, LayoutEditor.areaRadius * 2)) {
                 // Can't place areas on other areas
                 collision = true;
             } 
@@ -137,14 +137,14 @@ export class EditorLayout extends Component {
         // Add area to areas
         if (!collision) {
 
-            var areaLoc = EditorLayout.convertCanvasLocToAreaLoc(x, y);
+            var areaLoc = LayoutEditor.convertCanvasLocToAreaLoc(x, y);
 
             this.state.newAreaLocations.push({
                 x: areaLoc.x,
                 y: areaLoc.y
             });
 
-            EditorLayout.drawAreaIcon(document.getElementById('layoutEditorCanvas').getContext('2d'), x, y, true);
+            LayoutEditor.drawAreaIcon(document.getElementById('layoutEditorCanvas').getContext('2d'), x, y, true);
         }
     }
 
@@ -154,7 +154,7 @@ export class EditorLayout extends Component {
 
     static drawAreaIcon(context, x, y, isNew) {
         context.beginPath();
-        context.arc(x, y, EditorLayout.areaRadius, 0, 2 * Math.PI, false);
+        context.arc(x, y, LayoutEditor.areaRadius, 0, 2 * Math.PI, false);
 
         if (isNew) {
             context.fillStyle = '#34eba8';
@@ -173,12 +173,12 @@ export class EditorLayout extends Component {
         return (
             <div>
                 <canvas id="layoutEditorCanvas"
-                        width={EditorLayout.layoutWidth}
-                        height={EditorLayout.layoutHeight}
+                        width={LayoutEditor.layoutWidth}
+                        height={LayoutEditor.layoutHeight}
                         onClick={this.canvasClick}/>
-                <Box maxWidth={EditorLayout.layoutWidth}>
+                <Box maxWidth={LayoutEditor.layoutWidth}>
                     <ImageUploader
-                        width={EditorLayout.layoutWidth}
+                        width={LayoutEditor.layoutWidth}
                         withIcon={false}
                         label="Accepted file types: .jpg, .gif, .png"
                         buttonText='Upload Layout Background'
@@ -249,15 +249,6 @@ export class EditorLayout extends Component {
                 layoutImage: this.state.canvasImageDataURL,
                 newAreaLocations: this.state.newAreaLocations
             })
-        }).then(function (response) {                      
-            if (response.ok) {
-                return response.text();
-            }
-            throw new Error('Something went wrong.');
-        }).then(function (text) {                         
-            //console.log('Request successful', text);
-        }).catch(function (error) {                        
-            console.log('Request failed', error);
         });
     }
               
