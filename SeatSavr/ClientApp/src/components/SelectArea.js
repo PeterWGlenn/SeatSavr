@@ -150,8 +150,14 @@ export class SelectArea extends Component {
                 areaLocY: areaY
             })
         });
-        const didSucceed = await response.json();
-        console.log(didSucceed);
+
+        console.log(response);
+
+        const didSucceedText = await response.text();
+        console.log(didSucceedText);
+
+        //const didSucceed = await response.json();
+        //console.log(didSucceed);
 
         this.renderAreas();
     }
