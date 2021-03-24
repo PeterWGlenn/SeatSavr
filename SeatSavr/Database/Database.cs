@@ -263,7 +263,7 @@ namespace SeatSavr
             foreach (Area a in l.Areas)
             {
                 if (GetArea(l, a) == null)
-                    didSucceed = didSucceed && AddArea(l, a);
+                    didSucceed = didSucceed && AddArea(l, a); // TODO PG -> This code locks the database
             }
 
             sqlite_conn.Close();

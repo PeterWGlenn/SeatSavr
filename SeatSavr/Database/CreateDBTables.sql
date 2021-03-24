@@ -1,3 +1,5 @@
+PRAGMA journal_mode=WAL;
+
 CREATE TABLE Admin
 (
   Email VARCHAR(255) NOT NULL,
