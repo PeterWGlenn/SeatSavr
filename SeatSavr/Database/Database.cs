@@ -10,6 +10,9 @@ namespace SeatSavr
     {
         private static string _dbLocation = "Database/SeatSavrDB.sqlite3";
 
+        private static string _startTransaction = "BEGIN TRANSACTION;";
+        private static string _commit = "COMMIT;";
+
         #region Read From Database
         public static Task<Admin[]> GetAdminDataAsync()
         {
@@ -296,23 +299,30 @@ namespace SeatSavr
             return didSucceed;
         }
 
-        public static bool AddReservation(Reservation r, Area a)
+        public static bool AddReservation(Reservation r, Area a, Customer c)
         {
-            // Create a new database connection
-            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
-            sqlite_conn.Open();
+            // Add customer if needed
+            string sqlCustomer = $"INSERT OR REPLACE INTO Customer (Email, First, Last) VALUES(\'{c.Email}\', \'{c.FirstName}\', \'{c.LastName}\');";
 
-            string sql = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY) VALUES(\'" + 
-                r.Id + "\', \'" + 
+            string sqlReservation = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY) VALUES(\'" +
+                r.Id + "\', \'" +
                 r.Date.ToString() + "\', \'" +
                 r.Duration.ToString() + "\', \'" +
                 r.Customer.Email.ToString() + "\', \'" +
                 a.AreaLocation.X + "\', \'" +
                 a.AreaLocation.Y + "\');";
-            bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
-            sqlite_conn.Close();
-            return didSucceed;
+            int rowsModified = 0;
+            using (SqliteConnection conn = new SqliteConnection("Data Source=" + _dbLocation + ";"))
+            {
+                conn.Open();
+                using (SqliteCommand cmd = new SqliteCommand(sqlCustomer + sqlReservation, conn))
+                {
+                    rowsModified = cmd.ExecuteNonQuery();
+                }
+            }
+
+            return rowsModified != 0;
         }
 
         public static bool AddArea(Layout l, Area a)

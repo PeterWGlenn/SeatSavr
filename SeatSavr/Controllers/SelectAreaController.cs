@@ -23,29 +23,9 @@ namespace SeatSavr.Controllers
             if (!d.IsValid())
                 return false;
 
-            Customer c = Database.GetCustomer(d.Email).Result;
+            Customer c = d.ToCustomer();
 
-            // Add new customer if one doesn't exist with this email
-            if (c == null)
-            {
-                c = new Customer()
-                {
-                    Email = d.Email,
-                    FirstName = d.FirstName,
-                    LastName = d.LastName
-                };
-
-                if (!Database.AddCustomer(c))
-                    return false;
-            }
-            // If customer already exists, update the name values
-            else
-            {
-                Database.UpdateCustomer(d.ToCustomer());
-                c = Database.GetCustomer(d.Email).Result;
-            }
-
-            return Database.AddReservation(d.ToReservation(c), d.ToArea());
+            return Database.AddReservation(d.ToReservation(c), d.ToArea(), c);
         }
 
         public class ReservationData
