@@ -273,32 +273,6 @@ namespace SeatSavr
             return didSucceed;
         }
 
-        public static bool AddCustomer(Customer c)
-        {
-            // Create a new database connection
-            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
-            sqlite_conn.Open();
-
-            string sql = "INSERT INTO Customer (Email, First, Last) VALUES(\'" + c.Email + "\', \'" + c.FirstName + "\', \'" + c.LastName + "\');";
-            bool didSucceed = InsertData(sqlite_conn, sql, 1);
-
-            sqlite_conn.Close();
-            return didSucceed;
-        }
-
-        public static bool UpdateCustomer(Customer c)
-        {
-            // Create a new database connection
-            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
-            sqlite_conn.Open();
-
-            string sql = "UPDATE Customer SET First = \'" + c.FirstName + "\', Last = \'" + c.LastName + "\' WHERE Email = \'" + c.Email + "\'";
-            bool didSucceed = InsertData(sqlite_conn, sql, 1);
-
-            sqlite_conn.Close();
-            return didSucceed;
-        }
-
         public static bool AddReservation(Reservation r, Area a, Customer c)
         {
             // Add customer if needed
