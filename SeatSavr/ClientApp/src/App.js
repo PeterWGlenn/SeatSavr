@@ -20,17 +20,16 @@ export default class App extends Component {
         
     }
     
-    
     render() {
-      return (
-        <Layout>
-            <Switch>
-                <Route exact path='/' component={Home} />
-                <Route path='/select-area' component={SelectArea} />
-                <Route path='/layout-editor' component={LayoutEditor} />
-                <Route path='/admin-profile' component={AdminProfile} />
-            </Switch>
-        </Layout>
-    );
-  }
+        return (
+            <Layout>
+                <Switch>
+                    <Route exact path='/' component={Home} />
+                    <Route path='/select-area' component={SelectArea} />
+                    <Route path='/layout-editor' component={LayoutEditor} />
+                    <Route path='/admin-profile' component={AdminProfile} />
+                </Switch>
+            </Layout>
+        );
+    }
 }

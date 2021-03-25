@@ -102,6 +102,9 @@ export class SelectArea extends Component {
                 // Draw areas
                 areas.forEach(area => {
                     var isRes = saveThisObject.isAreaReserved(area);
+
+                    console.log(area.areaLocation.x + ", " + area.areaLocation.y + " is reserved: " + isRes);
+
                     SelectArea.drawAreaIcon(context, area, isRes);
                 });
             };
@@ -152,12 +155,6 @@ export class SelectArea extends Component {
         });
 
         console.log(response);
-
-        const didSucceedText = await response.text();
-        console.log(didSucceedText);
-
-        //const didSucceed = await response.json();
-        //console.log(didSucceed);
 
         this.renderAreas();
     }
