@@ -104,6 +104,7 @@ export class SelectArea extends Component {
                     var isRes = saveThisObject.isAreaReserved(area);
 
                     console.log(area.areaLocation.x + ", " + area.areaLocation.y + " is reserved: " + isRes);
+                    console.log(area.reservations);
 
                     SelectArea.drawAreaIcon(context, area, isRes);
                 });
