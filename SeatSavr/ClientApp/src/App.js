@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { SelectArea } from './components/SelectArea';
@@ -8,6 +8,8 @@ import { AdminProfile } from "./components/AdminProfile";
 
 import './custom.css'
 import AuthService from './AuthService';
+import { useAuth0 } from '@auth0/auth0-react';
+import PrivateRoute from "./components/PrivateRoute"
 
 
 export default class App extends Component {
@@ -15,7 +17,9 @@ export default class App extends Component {
     constructor() {
         super();
         this.authService = new AuthService();
+        
     }
+    
     
     render() {
       return (

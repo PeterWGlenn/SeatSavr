@@ -2,20 +2,21 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const AdminProfile = () => {
-    const { user, isAuthenticated, isLoading } = useAuth0();
+    const { loading, user } = useAuth0();
 
-    if (isLoading) {
+    if (loading || !user) {
         return <div>Loading ...</div>;
     }
 
     return (
-        isAuthenticated && (
-            <div>
-                <img src={user.picture} alt={user.name} />
-                <h2>{user.name}</h2>
-                <p>{user.email}</p>
-            </div>
-        )
+        <>
+            <img src={user.picture} alt="Profile Picture" />
+
+            <h2>{user.name}</h2>
+            <p>{user.email}</p>
+            <code>{JSON.stringify(user, null, 2)}</code>
+        </>
     );
 };
+
 
