@@ -70,6 +70,13 @@ export class SelectArea extends Component {
             var selectedEndDate = new Date(selectedStartDate);
             selectedEndDate.setTime(selectedEndDate.getTime() + (this.state.selectedDuration * millisecondsInAnHour));
 
+            console.log("BEGIN");
+            console.log(selectedStartDate);
+            console.log(selectedEndDate);
+            console.log(startDate);
+            console.log(endDate);
+            console.log("END");
+
             if (selectedStartDate <= endDate && selectedEndDate >= startDate) {
                 isReserved = true;
             }
