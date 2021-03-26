@@ -34,15 +34,29 @@ export class UserSelectLayout extends Component {
         this.setState({ availableLayouts: layouts, loading: false });
     }
 
+    getWelcomeHTML() {
+        return (
+            <div>
+                <h1>Welcome to SeatSavr!</h1>
+                <p>SeatSavr manages your reservations in the modern world. Please select a layout below to set started! If you want to create your own layouts, login as an administrator.</p>
+            </div>
+        );
+    }
+
     render() {
         if (this.state.loading) {
-            return (<h3>Loading layouts...</h3>);
+            return (
+                <div>
+                    {this.getWelcomeHTML()}
+                    <h3>Loading layouts...</h3>
+                </div>
+            );
         }
 
         if (this.state.selectedLayout == null) {
             return (
                 <div>
-                <h3>Please select a layout:</h3>
+                    {this.getWelcomeHTML()}
                     <List id='layoutList'>
                         {this.state.availableLayouts.map(layout =>
                             <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>

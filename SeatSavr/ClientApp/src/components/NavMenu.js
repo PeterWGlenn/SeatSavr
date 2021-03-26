@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import AuthService from '../AuthService';
 
+import { Button } from '@material-ui/core';
+
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -16,12 +18,17 @@ export class NavMenu extends Component {
       collapsed: true
       };
       this.authService = new AuthService();
-  }
+    }
 
-  toggleNavbar () {
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
+    startSession(history) {
+        this.authService.handleAuthentication(history);
+        return <div><p>Starting session...</p></div>;
+    }
+
+    toggleNavbar () {
+        this.setState({
+          collapsed: !this.state.collapsed
+        });
     }
 
     LogoutButton() {
@@ -32,8 +39,6 @@ export class NavMenu extends Component {
         return <button onClick={() => this.authService.login()}>Login</button>;
     }
 
-  
-    
     render() {
         
     return (
@@ -43,6 +48,7 @@ export class NavMenu extends Component {
             <NavbarBrand tag={Link} to="/">SeatSavr</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
+                <Button onClick={() => this.authService.login()}>Login to Admin Account</Button>
             </Collapse>
           </Container>
         </Navbar>
