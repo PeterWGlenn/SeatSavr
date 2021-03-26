@@ -4,6 +4,7 @@ import { SelectArea } from './SelectArea';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { Button } from '@material-ui/core';
 
 export class UserSelectLayout extends Component {
     static displayName = UserSelectLayout.name;
@@ -53,8 +54,20 @@ export class UserSelectLayout extends Component {
             );
         }
 
+        var name = "No layout selected";
+        var address = "";
+        if (this.state.selectedLayout != null) {
+            name = this.state.selectedLayout.name;
+            address = this.state.selectedLayout.address;
+        }
+
         return (
             <div>
+                <h2>
+                    {name}
+                    <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                </h2>
+                <h5>{address}</h5>
                 <SelectArea selectedLayoutAddress={this.state.selectedLayout.address}/>
             </div>
         );
