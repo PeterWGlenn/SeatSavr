@@ -54,12 +54,12 @@ export class SelectArea extends Component {
 
             var millisecondsInAnHour = 1000 * 60 * 60;
 
-            var startDate = new Date(r.date);
+            var startDate = new Date(r.date + "Z");
             var endDate = new Date(startDate);
             endDate.setTime(endDate.getTime() + (r.duration * millisecondsInAnHour));
 
             var selectedTime = this.state.selectedTime;
-            var selectedStartDate = new Date(this.state.selectedDate.toUTCString());
+            var selectedStartDate = this.state.selectedDate;
 
             // Set selected date time to selected time
             selectedStartDate.setHours(selectedTime.getHours());

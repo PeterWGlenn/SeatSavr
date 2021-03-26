@@ -52,7 +52,7 @@ namespace SeatSavr.Controllers
                 return new Reservation()
                 {
                     Id = Reservation.GenerateId(),
-                    Date = DateTime.Parse(Date),
+                    Date = DateTime.Parse(Date).ToUniversalTime(),
                     Duration = Duration,
                     Customer = c
                 };
