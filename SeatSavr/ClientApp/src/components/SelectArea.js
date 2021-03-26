@@ -79,7 +79,8 @@ export class SelectArea extends Component {
     }
 
     async renderAreas() {
-        await this.populateAreaData();
+        if (!(await this.populateAreaData()))
+            return;
 
         var canvas = document.getElementById('layoutCanvas');
         if (canvas != null) {
@@ -120,15 +121,22 @@ export class SelectArea extends Component {
     }
 
     async populateAreaData() {
-        const response = await fetch('selectarea/getlayout', {
+
+        var selectedAddress = this.props.selectedLayoutAddress;
+        if (selectedAddress == null)
+            return false;
+
+        var fetchString = 'selectarea/getlayout/?address=' + selectedAddress;
+        const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
         });
-
+            
         const layout = await response.json();
         this.setState({ layout: layout, loading: false });
+        return true;
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {

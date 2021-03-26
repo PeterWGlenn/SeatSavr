@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import AuthService from '../AuthService';
-import { Link } from 'react-router-dom';
-
+import { UserSelectLayout } from './UserSelectLayout';
 
 export class Home extends Component {
     static displayName = Home.name;
@@ -25,8 +24,8 @@ export class Home extends Component {
             <p>Managing your reservations in the modern world</p>
             <p>
                 <button onClick={() => this.authService.login()}>Login for Administrators</button>
-                <Link to="/select-area" type= "btn btn=primary"> Continue as Guest</Link>
-                </p>
+            </p>
+            <UserSelectLayout/>
         </div>
     );
   }

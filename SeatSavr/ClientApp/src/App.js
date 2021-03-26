@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { SelectArea } from './components/SelectArea';
 import { LayoutEditor } from "./components/LayoutEditor";
 import { AdminProfile } from "./components/AdminProfile";
 
@@ -25,7 +24,6 @@ export default class App extends Component {
             <Layout>
                 <Switch>
                     <Route exact path='/' component={Home} />
-                    <Route path='/select-area' component={SelectArea} />
                     <Route path='/layout-editor' component={LayoutEditor} />
                     <Route path='/admin-profile' component={AdminProfile} />
                 </Switch>
