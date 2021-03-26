@@ -70,13 +70,6 @@ export class SelectArea extends Component {
             var selectedEndDate = new Date(selectedStartDate);
             selectedEndDate.setTime(selectedEndDate.getTime() + (this.state.selectedDuration * millisecondsInAnHour));
 
-            console.log("BEGIN");
-            console.log(selectedStartDate);
-            console.log(selectedEndDate);
-            console.log(startDate);
-            console.log(endDate);
-            console.log("END");
-
             if (selectedStartDate <= endDate && selectedEndDate >= startDate) {
                 isReserved = true;
             }
@@ -109,10 +102,6 @@ export class SelectArea extends Component {
                 // Draw areas
                 areas.forEach(area => {
                     var isRes = saveThisObject.isAreaReserved(area);
-
-                    console.log(area.areaLocation.x + ", " + area.areaLocation.y + " is reserved: " + isRes);
-                    console.log(area.reservations);
-
                     SelectArea.drawAreaIcon(context, area, isRes);
                 });
             };
@@ -143,7 +132,7 @@ export class SelectArea extends Component {
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
-        const response = await fetch('selectarea/savereservation', {
+        var response = await fetch('selectarea/savereservation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +151,9 @@ export class SelectArea extends Component {
             })
         });
 
-        console.log(response);
+        if (await response.json()) {
+            this.openReservedAreaSuccess();
+        }
 
         this.renderAreas();
     }
@@ -275,7 +266,7 @@ export class SelectArea extends Component {
                         />
                     </MuiPickersUtilsProvider>
                 </Box>
-                <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleClose} aria-labelledby="reserveAreaDialog">
+                <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
                     <DialogContent orientation='vertical'>
                         <DialogContentText>
@@ -331,8 +322,6 @@ export class SelectArea extends Component {
     }
 
     handleReserve = () => {
-        this.setState({ reserveAreaDialogOpen: false });
-
         var email = document.getElementById('email').value;
         var first = document.getElementById('firstName').value;
         var last = document.getElementById('lastName').value;
@@ -342,8 +331,7 @@ export class SelectArea extends Component {
         var areaLoc = this.state.selectedArea.areaLocation;
 
         this.postCustomerData(email, first, last, duration, dateStr, areaLoc.x, areaLoc.y);
-
-        this.openReservedAreaSuccess();
+        this.setState({ reserveAreaDialogOpen: false });
     }
 
     openReservedAreaWarning() {
