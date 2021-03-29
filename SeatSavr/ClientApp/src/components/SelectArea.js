@@ -38,7 +38,10 @@ export class SelectArea extends Component {
             selectedDuration: SelectArea.defaultDuration,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
-            reservedAreaSuccessOpen: false
+            reservedAreaSuccessOpen: false,
+            emailHasError: false,
+            firstHasError: false,
+            lastHasError: false
         };
     }
 
@@ -274,19 +277,24 @@ export class SelectArea extends Component {
                         <TextField
                             id="email"
                             label="Email Address"
-                            type="email"
                             fullWidth
+                            error={this.state.emailHasError}
+                            onChange={() => { this.setState({ emailHasError: false }) }}
                         />
                         <TextField
                             id="firstName"
                             label="First Name"
                             fullWidth
+                            error={this.state.firstHasError}
+                            onChange={() => { this.setState({ firstHasError: false }) }}
                         />
                         <TextField
                             className="last-dialog-text-field"
                             id="lastName"
                             label="Last Name"
                             fullWidth
+                            error={this.state.lastHasError}
+                            onChange={() => { this.setState({ lastHasError: false }) }}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -321,13 +329,34 @@ export class SelectArea extends Component {
     }
 
     handleReserve = () => {
-        var email = document.getElementById('email').value;
-        var first = document.getElementById('firstName').value;
-        var last = document.getElementById('lastName').value;
+        var emailElem = document.getElementById('email');
+        var firstElem = document.getElementById('firstName');
+        var lastElem = document.getElementById('lastName');
+
+        var email = emailElem.value;
+        var first = firstElem.value;
+        var last = lastElem.value;
 
         var duration = this.state.selectedDuration;
         var dateStr = this.state.selectedDate.toUTCString();
         var areaLoc = this.state.selectedArea.areaLocation;
+
+        // Validate text fields
+        var validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+        var eHasError = email == null || email === "" || !email.match(validEmailRegex);
+        var fHasError = first == null || first === "";
+        var lHasError = last == null || last === "";
+
+        // Do not post or close form if errors exist!
+        if (eHasError || fHasError || lHasError) {
+            this.setState({
+                emailHasError: eHasError,
+                firstHasError: fHasError,
+                lastHasError: lHasError
+            });
+            return;
+        }
 
         this.postCustomerData(email, first, last, duration, dateStr, areaLoc.x, areaLoc.y);
         this.setState({ reserveAreaDialogOpen: false });
