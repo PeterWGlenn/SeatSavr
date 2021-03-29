@@ -39,9 +39,8 @@ export class SelectArea extends Component {
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
             reservedAreaSuccessOpen: false,
-            emailHasError: false,
-            firstHasError: false,
-            lastHasError: false
+            errors: { email: false, first: false, last: false },
+            errorMessages: { email: '', first: '', last: '' }
         };
     }
 
@@ -278,23 +277,44 @@ export class SelectArea extends Component {
                             id="email"
                             label="Email Address"
                             fullWidth
-                            error={this.state.emailHasError}
-                            onChange={() => { this.setState({ emailHasError: false }) }}
+                            error={this.state.errors.email}
+                            helperText={ this.state.errorMessages.email }
+                            onChange={() => {
+                                var newErrors = this.state.errors
+                                var newErrorMessages = this.state.errorMessages;
+                                newErrors.email = false;
+                                newErrorMessages.email = '';
+                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                            }}
                         />
                         <TextField
                             id="firstName"
                             label="First Name"
                             fullWidth
-                            error={this.state.firstHasError}
-                            onChange={() => { this.setState({ firstHasError: false }) }}
+                            error={this.state.errors.first}
+                            helperText={this.state.errorMessages.first}
+                            onChange={() => {
+                                var newErrors = this.state.errors;
+                                var newErrorMessages = this.state.errorMessages;
+                                newErrors.first = false;
+                                newErrorMessages.first = '';
+                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                            }}
                         />
                         <TextField
                             className="last-dialog-text-field"
                             id="lastName"
                             label="Last Name"
                             fullWidth
-                            error={this.state.lastHasError}
-                            onChange={() => { this.setState({ lastHasError: false }) }}
+                            error={this.state.errors.last}
+                            helperText={this.state.errorMessages.last}
+                            onChange={() => {
+                                var newErrors = this.state.errors;
+                                var newErrorMessages = this.state.errorMessages;
+                                newErrors.last = false;
+                                newErrorMessages.last = '';
+                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                            }}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -351,9 +371,12 @@ export class SelectArea extends Component {
         // Do not post or close form if errors exist!
         if (eHasError || fHasError || lHasError) {
             this.setState({
-                emailHasError: eHasError,
-                firstHasError: fHasError,
-                lastHasError: lHasError
+                errors: { email: eHasError, first: fHasError, last: lHasError },
+                errorMessages: {
+                    email: eHasError ? 'Please enter a valid email.' : '',
+                    first: fHasError ? 'First name is a required field.' : '',
+                    last: lHasError ? 'Last name is a required field.' : ''
+                }
             });
             return;
         }
