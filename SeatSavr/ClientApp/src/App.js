@@ -8,7 +8,10 @@ import { AdminSelectLayout } from "./components/AdminSelectLayout";
 
 import './custom.css'
 import AuthService from './AuthService';
-//import { useAuth0 } from '@auth0/auth0-react';
+import {  withAuth0 } from '@auth0/auth0-react';
+import ProtectedRoute from './components/protected-route';
+import { NavBar } from "./components/NavBar"
+
 
 
 
@@ -21,15 +24,17 @@ class App extends Component {
     }
     
     render() {
+        const { isLoading } = this.props.auth0;
         return (
             <Layout>
+                <NavBar />
                 <Switch>
                     <Route exact path='/' component={Home} />
-                    <Route path='/admin-profile' component={AdminProfile} />
                     <Route path='/admin-layouts' component={AdminSelectLayout} />
+                    <ProtectedRoute path='/admin-profile' component={AdminProfile} />
                 </Switch>
             </Layout>
         );
     }
 }
-export default App;
+export default withAuth0( App);

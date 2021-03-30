@@ -3,7 +3,7 @@ import { withAuth0 } from "@auth0/auth0-react";
 
 export class AdminProfile extends React.Component {
     render() {
-        const { user } = this.props.auth0;
+        const { user } = this.props.withAuth0;
         const { name, picture, email } = user;
 
         return (
