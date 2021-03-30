@@ -11,7 +11,7 @@ import AuthService from './AuthService';
 
 
 
-export default class App extends Component {
+class App extends Component {
   static displayName = App.name;
     constructor() {
         super();
@@ -31,3 +31,4 @@ export default class App extends Component {
         );
     }
 }
+export default App;

@@ -7,6 +7,8 @@ import registerServiceWorker from './registerServiceWorker';
 
 import { Auth0Provider } from "@auth0/auth0-react"
 import { AUTH_CONFIG } from "./Auth0Config"
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Auth0ProviderWithHistory } from "./auth0-provider-with-history";
 
 //const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 //const rootElement = document.getElementById('root');
@@ -23,17 +25,16 @@ const onRedirectCallback = appstate => {
 
 
 ReactDOM.render(
-    <Auth0Provider
-        domain={AUTH_CONFIG.domain}
-        client_id={AUTH_CONFIG.clientId}
-        redirect_uri={AUTH_CONFIG.redirectUri}
-        onRedirectCallback={onRedirectCallback}
-    >
-        <BrowserRouter>
+    <BrowserRouter>
+        <Auth0ProviderWithHistory
+        >
+        
 
             <App />
-        </BrowserRouter>
-    </Auth0Provider>,
+        
+        </Auth0ProviderWithHistory>
+
+    </BrowserRouter>,
     document.getElementById('root')
  );
 
