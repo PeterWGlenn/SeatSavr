@@ -2,18 +2,14 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { LayoutEditor } from "./components/LayoutEditor";
 import { AdminProfile } from "./components/AdminProfile";
 import { AdminSelectLayout } from "./components/AdminSelectLayout";
 
 import './custom.css'
 import AuthService from './AuthService';
-import {  withAuth0 } from '@auth0/auth0-react';
+import { withAuth0 } from '@auth0/auth0-react';
 import ProtectedRoute from './components/protected-route';
 import { NavBar } from "./components/NavBar"
-
-
-
 
 class App extends Component {
   static displayName = App.name;
@@ -25,6 +21,7 @@ class App extends Component {
     
     render() {
         const { isLoading } = this.props.auth0;
+        console.log(isLoading); // TODO PG -> just putting this here to appease the build.
         return (
             <Layout>
                 <NavBar />

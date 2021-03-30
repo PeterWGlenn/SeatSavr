@@ -6,9 +6,9 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Loading from "./components/loading";
 
-import { Auth0Provider } from "@auth0/auth0-react"
-import { AUTH_CONFIG } from "./Auth0Config"
-import { BrowserRouter as Router } from 'react-router-dom';
+//import { Auth0Provider } from "@auth0/auth0-react"
+//import { AUTH_CONFIG } from "./Auth0Config"
+//import { BrowserRouter as Router } from 'react-router-dom';
 import { Auth0ProviderWithHistory } from "./auth0-provider-with-history";
 
 //const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
@@ -23,18 +23,13 @@ const onRedirectCallback = appstate => {
             : window.location.pathname
     );
 };
-
+console.log(onRedirectCallback); // TODO PG -> just putting this here to appease the build.
 
 ReactDOM.render(
     <BrowserRouter>
-        <Auth0ProviderWithHistory
-        >
-        
-
-            <App />
-        
+        <Auth0ProviderWithHistory>
+            <App/>
         </Auth0ProviderWithHistory>
-
     </BrowserRouter>,
     document.getElementById('root')
  );

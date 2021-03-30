@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import { withAuth0 } from "@auth0/auth0-react";
+//import { withAuth0 } from "@auth0/auth0-react";
 
 export class AdminProfile extends React.Component {
     render() {

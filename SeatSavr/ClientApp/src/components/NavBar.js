@@ -1,6 +1,5 @@
 ﻿// src/components/NavBar.js
 import React from 'react';
-import { useAuth0 } from '../react-auth0-spa';
 import { AuthNav } from "./auth-nav"
 
 export class NavBar extends React.Component {
