@@ -170,18 +170,8 @@ export class LayoutEditor extends Component {
     }
 
     render() {
-
-        var name = "No layout selected";
-        var address = "";
-        if (this.state.layout != null) {
-            name = this.state.layout.name;
-            address = this.state.layout.address;
-        }
-
         return (
             <div>
-                <h2>{name}</h2>
-                <h5>{address}</h5>
                 <canvas id="layoutEditorCanvas"
                         width={LayoutEditor.layoutWidth}
                         height={LayoutEditor.layoutHeight}
@@ -223,20 +213,27 @@ export class LayoutEditor extends Component {
     }
 
     async populateLayout() {
-        const response = await fetch('layouteditor/getlayout', {
+
+        var selectedAddress = this.props.selectedLayoutAddress;
+        if (selectedAddress == null)
+            return false;
+
+        var fetchString = 'layouteditor/getlayout/?address=' + selectedAddress;
+        const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
         });
-        const data = await response.json();
+        const layout = await response.json();
 
         this.setState({
-            layout: data,
-            currentAreas: data.areas,
-            canvasImageDataURL: "data:image/png;base64," + data.layoutImage,
+            layout: layout,
+            currentAreas: layout.areas,
+            canvasImageDataURL: "data:image/png;base64," + layout.layoutImage,
             loading: false
         });
+        return true;
     }
 
     async postLayout() {

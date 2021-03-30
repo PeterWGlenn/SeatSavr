@@ -123,7 +123,6 @@ export class SelectArea extends Component {
     }
 
     async populateAreaData() {
-
         var selectedAddress = this.props.selectedLayoutAddress;
         if (selectedAddress == null)
             return false;
