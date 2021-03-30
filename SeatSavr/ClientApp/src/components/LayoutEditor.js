@@ -8,7 +8,7 @@ import './LayoutEditor.css'
 
 export class LayoutEditor extends Component {
     static displayName = LayoutEditor.name;
-    static areaRadius = 12;
+    static areaRadius = 16;
     static layoutWidth = 888;
     static layoutHeight = 500;
 
@@ -157,10 +157,10 @@ export class LayoutEditor extends Component {
         context.arc(x, y, LayoutEditor.areaRadius, 0, 2 * Math.PI, false);
 
         if (isNew) {
-            context.fillStyle = '#34eba8';
+            context.fillStyle = 'rgba(52, 235, 168, 0.75)';
         }
         else {
-            context.fillStyle = 'green';
+            context.fillStyle = 'rgba(0, 100, 0, 0.75)';
         }
 
         context.fill();

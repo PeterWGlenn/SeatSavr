@@ -14,7 +14,7 @@ namespace SeatSavr.Controllers
         [HttpGet("[action]")]
         public Layout GetLayout()
         {
-            return Database.GetLayoutAsync("SampleLayout").Result;
+            return Database.GetLayoutAsync("123 Main Street, Washington").Result;
         }
 
         [HttpPost("[action]")]

@@ -22,7 +22,7 @@ import './SelectArea.css';
 
 export class SelectArea extends Component {
     static displayName = SelectArea.name;
-    static areaRadius = 12;
+    static areaRadius = 16;
     static defaultDuration = 1.0;
     static layoutWidth = 888;
     static layoutHeight = 500;
@@ -176,10 +176,10 @@ export class SelectArea extends Component {
         context.arc(cLoc.x, cLoc.y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
 
         if (isRes) {
-            context.fillStyle = 'gray';
+            context.fillStyle = 'rgba(100, 100, 100, 0.75)';
         }
         else {
-            context.fillStyle = 'green';
+            context.fillStyle = 'rgba(0, 100, 0, 0.75)';
         }
 
         context.fill();
