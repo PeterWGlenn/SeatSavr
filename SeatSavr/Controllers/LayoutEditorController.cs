@@ -12,9 +12,9 @@ namespace SeatSavr.Controllers
     public class LayoutEditorController
     {
         [HttpGet("[action]")]
-        public Layout GetLayout()
+        public Layout GetLayout(string address)
         {
-            return Database.GetLayoutAsync("SampleLayout").Result;
+            return Database.GetLayoutAsync(address).Result;
         }
 
         [HttpPost("[action]")]

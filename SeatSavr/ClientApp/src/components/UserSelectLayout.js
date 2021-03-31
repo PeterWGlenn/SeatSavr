@@ -4,7 +4,7 @@ import { SelectArea } from './SelectArea';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Button } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 export class UserSelectLayout extends Component {
     static displayName = UserSelectLayout.name;
@@ -12,6 +12,7 @@ export class UserSelectLayout extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            allLayouts: [],
             availableLayouts: [],
             loading: true,
             selectedLayout: null
@@ -31,7 +32,7 @@ export class UserSelectLayout extends Component {
         });
 
         const layouts = await response.json();
-        this.setState({ availableLayouts: layouts, loading: false });
+        this.setState({ allLayouts: layouts, availableLayouts: layouts, loading: false });
     }
 
     getWelcomeHTML() {
@@ -57,6 +58,22 @@ export class UserSelectLayout extends Component {
             return (
                 <div>
                     {this.getWelcomeHTML()}
+                    <TextField
+                        id='layoutListFilter'
+                        label="Search Layouts"
+                        variant="outlined"
+                        fullWidth
+                        onChange={() => {
+                            var newLayouts = [];
+                            var filter = document.getElementById('layoutListFilter').value.toLowerCase();
+
+                            this.state.allLayouts.forEach((layout) => {
+                                if (layout.address.toLowerCase().includes(filter) || layout.name.toLowerCase().includes(filter)) {
+                                    newLayouts.push(layout);
+                                }
+                            });
+                            this.setState({ availableLayouts: newLayouts });
+                        }}/>
                     <List id='layoutList'>
                         {this.state.availableLayouts.map(layout =>
                             <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>

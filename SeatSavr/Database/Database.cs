@@ -125,40 +125,40 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Layout;");
+            SqliteDataReader layoutDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Layout;");
             List<Layout> layoutList = new List<Layout>();
 
             // Initialize Layout Data
-            while (sqlite_datareader.Read())
+            while (layoutDatareader.Read())
             {
                 Layout l = new Layout();
 
-                l.Name = sqlite_datareader.GetString(0);
-                l.Address = sqlite_datareader.GetString(1);
+                l.Name = layoutDatareader.GetString(0);
+                l.Address = layoutDatareader.GetString(1);
 
                 // TODO PG -> use images instead of encoding strings to make this more memory efficient
-                if (!sqlite_datareader.IsDBNull(2))
+                if (!layoutDatareader.IsDBNull(2))
                 {
-                    string base64Enoding = sqlite_datareader.GetString(2);
+                    string base64Enoding = layoutDatareader.GetString(2);
                     l.LayoutImage = base64Enoding;
                 }
 
                 // Initialize Areas 
-                sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\";");
+                SqliteDataReader areaDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\";");
                 List<Area> areas = new List<Area>();
 
-                while (sqlite_datareader.Read())
+                while (areaDatareader.Read())
                 {
                     Area a = new Area();
 
-                    a.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+                    a.AreaType = (Area.Type)areaDatareader.GetInt32(0);
 
-                    float x = sqlite_datareader.GetFloat(1);
-                    float y = sqlite_datareader.GetFloat(2);
+                    float x = areaDatareader.GetFloat(1);
+                    float y = areaDatareader.GetFloat(2);
                     a.AreaLocation = new PointF(x, y);
 
-                    a.NumberOfSeats = sqlite_datareader.GetInt32(3);
-                    a.Name = sqlite_datareader.GetString(4);
+                    a.NumberOfSeats = areaDatareader.GetInt32(3);
+                    a.Name = areaDatareader.GetString(4);
 
                     areas.Add(a);
                 }
@@ -167,18 +167,102 @@ namespace SeatSavr
                 // Add reservation data to Areas
                 foreach (Area a in areas)
                 {
-                    sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Reserves WHERE AreaX = " + a.AreaLocation.X + " AND AreaY = " + a.AreaLocation.Y + ";");
+                    areaDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Reserves WHERE AreaX = " + a.AreaLocation.X + " AND AreaY = " + a.AreaLocation.Y + ";");
 
-                    while (sqlite_datareader.Read())
+                    while (areaDatareader.Read())
                     {
                         Reservation r = new Reservation();
 
-                        r.Id = sqlite_datareader.GetInt32(0);
-                        r.Date = DateTime.Parse(sqlite_datareader.GetString(1));
-                        r.Duration = sqlite_datareader.GetFloat(2);
+                        r.Id = areaDatareader.GetInt32(0);
+                        r.Date = DateTime.Parse(areaDatareader.GetString(1));
+                        r.Duration = areaDatareader.GetFloat(2);
 
                         // Customer fetching
-                        string customerEmail = sqlite_datareader.GetString(3);
+                        string customerEmail = areaDatareader.GetString(3);
+                        Customer c = new Customer();
+                        SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                        while (customerReader.Read())
+                        {
+                            c.Email = customerReader.GetString(0);
+                            c.FirstName = customerReader.GetString(1);
+                            c.LastName = customerReader.GetString(2);
+                        }
+
+                        r.Customer = c;
+
+                        a.Reservations.Add(r);
+                    }
+                }
+
+                layoutList.Add(l);
+            }
+
+            sqlite_conn.Close();
+
+            return Task.FromResult(layoutList.ToArray());
+        }
+
+        public static Task<Layout[]> GetAdminLayoutsAsync(string adminEmail)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            List<Layout> layoutList = new List<Layout>();
+            SqliteDataReader layoutsDatareader = ReadFrom(sqlite_conn, $"SELECT * FROM Layout l, Manages m WHERE l.BuildingAddress = m.BuildingAddress AND m.Email = \'{adminEmail}\';");
+
+            // Initialize Layout Data
+            while (layoutsDatareader.Read())
+            {
+                Layout l = new Layout();
+
+                l.Name = layoutsDatareader.GetString(0);
+                l.Address = layoutsDatareader.GetString(1);
+
+                // TODO PG -> use images instead of encoding strings to make this more memory efficient
+                if (!layoutsDatareader.IsDBNull(2))
+                {
+                    string base64Enoding = layoutsDatareader.GetString(2);
+                    l.LayoutImage = base64Enoding;
+                }
+
+                // Initialize Areas 
+                SqliteDataReader areasDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\";");
+                List<Area> areas = new List<Area>();
+
+                while (areasDatareader.Read())
+                {
+                    Area a = new Area();
+
+                    a.AreaType = (Area.Type)areasDatareader.GetInt32(0);
+
+                    float x = areasDatareader.GetFloat(1);
+                    float y = areasDatareader.GetFloat(2);
+                    a.AreaLocation = new PointF(x, y);
+
+                    a.NumberOfSeats = areasDatareader.GetInt32(3);
+                    a.Name = areasDatareader.GetString(4);
+
+                    areas.Add(a);
+                }
+                l.Areas = areas;
+
+                // Add reservation data to Areas
+                foreach (Area a in areas)
+                {
+                    // TODO PG -> These areas are not layout specific! 
+                    areasDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Reserves WHERE AreaX = " + a.AreaLocation.X + " AND AreaY = " + a.AreaLocation.Y + ";");
+
+                    while (areasDatareader.Read())
+                    {
+                        Reservation r = new Reservation();
+
+                        r.Id = areasDatareader.GetInt32(0);
+                        r.Date = DateTime.Parse(areasDatareader.GetString(1));
+                        r.Duration = areasDatareader.GetFloat(2);
+
+                        // Customer fetching
+                        string customerEmail = areasDatareader.GetString(3);
                         Customer c = new Customer();
                         SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
                         while (customerReader.Read())
@@ -396,6 +480,28 @@ namespace SeatSavr
                 a.Name + "\', \'" +
                 l.Name + "\');";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
+        public static bool AddLayout(Layout l, Admin a)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string buildingSql = $"INSERT INTO Building (Address) VALUES(\'{l.Address}\');";
+
+            string layoutSql = "INSERT INTO Layout (Name, BuildingAddress) VALUES(\'" +
+                l.Name + "\', \'" +
+                l.Address + "\');";
+
+            string managesSql = "INSERT INTO Manages (Email, BuildingAddress) VALUES(\'" +
+                a.Email + "\', \'" +
+                l.Address + "\');";
+
+            bool didSucceed = InsertData(sqlite_conn, buildingSql, 1) && InsertData(sqlite_conn, layoutSql, 1) && InsertData(sqlite_conn, managesSql, 1);
 
             sqlite_conn.Close();
             return didSucceed;

@@ -8,7 +8,7 @@ import './LayoutEditor.css'
 
 export class LayoutEditor extends Component {
     static displayName = LayoutEditor.name;
-    static areaRadius = 12;
+    static areaRadius = 16;
     static layoutWidth = 888;
     static layoutHeight = 500;
 
@@ -157,10 +157,10 @@ export class LayoutEditor extends Component {
         context.arc(x, y, LayoutEditor.areaRadius, 0, 2 * Math.PI, false);
 
         if (isNew) {
-            context.fillStyle = '#34eba8';
+            context.fillStyle = 'rgba(52, 235, 168, 0.75)';
         }
         else {
-            context.fillStyle = 'green';
+            context.fillStyle = 'rgba(0, 100, 0, 0.75)';
         }
 
         context.fill();
@@ -170,18 +170,8 @@ export class LayoutEditor extends Component {
     }
 
     render() {
-
-        var name = "No layout selected";
-        var address = "";
-        if (this.state.layout != null) {
-            name = this.state.layout.name;
-            address = this.state.layout.address;
-        }
-
         return (
             <div>
-                <h2>{name}</h2>
-                <h5>{address}</h5>
                 <canvas id="layoutEditorCanvas"
                         width={LayoutEditor.layoutWidth}
                         height={LayoutEditor.layoutHeight}
@@ -223,20 +213,27 @@ export class LayoutEditor extends Component {
     }
 
     async populateLayout() {
-        const response = await fetch('layouteditor/getlayout', {
+
+        var selectedAddress = this.props.selectedLayoutAddress;
+        if (selectedAddress == null)
+            return false;
+
+        var fetchString = 'layouteditor/getlayout/?address=' + selectedAddress;
+        const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
         });
-        const data = await response.json();
+        const layout = await response.json();
 
         this.setState({
-            layout: data,
-            currentAreas: data.areas,
-            canvasImageDataURL: "data:image/png;base64," + data.layoutImage,
+            layout: layout,
+            currentAreas: layout.areas,
+            canvasImageDataURL: "data:image/png;base64," + layout.layoutImage,
             loading: false
         });
+        return true;
     }
 
     async postLayout() {
