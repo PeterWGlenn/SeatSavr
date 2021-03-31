@@ -4,7 +4,16 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Button, TextField } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 import { LayoutEditor } from './LayoutEditor';
+
+import './AdminSelectLayout.css';
 
 export class AdminSelectLayout extends Component {
     static displayName = AdminSelectLayout.name;
@@ -15,7 +24,11 @@ export class AdminSelectLayout extends Component {
             allLayouts: [],
             displayedLayouts: [],
             loading: true,
-            selectedLayout: null
+            selectedLayout: null,
+            createLayoutDialogOpen: false,
+            layoutCreatedOpen: false,
+            errors: { layoutName: false, layoutAddress: false },
+            errorMessages: { layoutName: '', layoutAddress: '' }
         };
     }
 
@@ -24,11 +37,11 @@ export class AdminSelectLayout extends Component {
     }
 
     async populateLayoutData() {
-        var selectedAddress = '123 Main Street, Washington';
-        if (selectedAddress == null)
+        var selectedEmail = 'sampleAdmin123@gmail.com';
+        if (selectedEmail == null)
             return false;
 
-        var fetchString = 'adminselectlayout/getlayouts/?address=' + selectedAddress;
+        var fetchString = 'adminselectlayout/getlayouts/?email=' + selectedEmail;
         const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
@@ -49,6 +62,11 @@ export class AdminSelectLayout extends Component {
     }
 
     render() {
+
+        console.log("disp layouts");
+        console.log(this.state.displayedLayouts);
+        console.log(this.state.allLayouts);
+
         if (this.state.loading) {
             return (
                 <div>
@@ -62,6 +80,7 @@ export class AdminSelectLayout extends Component {
             return (
                 <div>
                     {this.getListTitleHTML()}
+                    <Button className="layout-buttons" onClick={() => { this.setState({ createLayoutDialogOpen: true }); }}>Create Layout</Button>
                     <TextField
                         id='layoutListFilter'
                         label="Search Layouts"
@@ -85,6 +104,69 @@ export class AdminSelectLayout extends Component {
                             </ListItem>
                         )}
                     </List>
+                    <Dialog
+                        open={this.state.createLayoutDialogOpen}
+                        onClose={() => {
+                            this.setState({ createLayoutDialogOpen: false });
+                        }}
+                        aria-labelledby="createLayoutDialog">
+                        <DialogTitle id="createLayoutDialog">Create Layout</DialogTitle>
+                        <DialogContent orientation='vertical'>
+                            <DialogContentText>
+                                Please enter the new layout's name and the address where the layout's building is located. 
+                            </DialogContentText>
+                            <TextField
+                                id="name"
+                                label="Name"
+                                fullWidth
+                                error={this.state.errors.layoutName}
+                                helperText={this.state.errorMessages.layoutName}
+                                onChange={() => {
+                                    var newErrors = this.state.errors
+                                    var newErrorMessages = this.state.errorMessages;
+                                    newErrors.layoutName = false;
+                                    newErrorMessages.layoutName = '';
+                                    this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                                }}
+                            />
+                            <TextField
+                                id="address"
+                                label="Address"
+                                fullWidth
+                                error={this.state.errors.layoutAddress}
+                                helperText={this.state.errorMessages.layoutAddress}
+                                onChange={() => {
+                                    var newErrors = this.state.errors
+                                    var newErrorMessages = this.state.errorMessages;
+                                    newErrors.layoutAddress = false;
+                                    newErrorMessages.layoutAddress = '';
+                                    this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                                }}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={() => {
+                                    this.setState({ createLayoutDialogOpen: false });
+                                }}
+                                color="primary">
+                                Cancel
+                        </Button>
+                            <Button onClick={this.handleCreateLayout} color="primary">
+                                Create
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Snackbar
+                        open={this.state.layoutCreatedOpen}
+                        autoHideDuration={3000}
+                        onClose={() => {
+                            this.setState({ layoutCreatedOpen: false });
+                        }}>
+                        <Alert severity="success">
+                            Layout successfully created!
+                        </Alert>
+                    </Snackbar>
                 </div>
             );
         }
@@ -106,5 +188,53 @@ export class AdminSelectLayout extends Component {
                 <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
             </div>
         );
+    }
+
+    handleCreateLayout = () => {
+        var nameElem = document.getElementById('name');
+        var addressElem = document.getElementById('address');
+
+        var name = nameElem.value;
+        var address = addressElem.value;
+
+        var nHasError = name == null || name === "";
+        var aHasError = address == null || address === "";
+
+        // Do not post or close form if errors exist!
+        if (nHasError || aHasError) {
+            this.setState({
+                errors: { layoutName: nHasError, layoutAddress: aHasError },
+                errorMessages: {
+                    layoutName: nHasError ? 'Layout name is a required field.' : '',
+                    layoutAddress: aHasError ? 'Layout address is a required field.' : ''
+                }
+            });
+            return;
+        }
+
+        this.postLayoutData(name, address);
+        this.setState({ createLayoutDialogOpen: false });
+    }
+
+    async postLayoutData(name, address) {
+        var response = await fetch('adminselectlayout/createlayout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
+            },
+            body: JSON.stringify({
+                name: name,
+                address: address
+            })
+        });
+
+        if (await response.json()) {
+            this.setState({ layoutCreatedOpen: true });
+        }
+
+        this.populateLayoutData();
     }
 }
