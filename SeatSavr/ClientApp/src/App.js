@@ -5,22 +5,20 @@ import { Home } from './components/Home';
 import { AdminProfile } from "./components/AdminProfile";
 import { AdminSelectLayout } from "./components/AdminSelectLayout";
 
-import './custom.css'
-import AuthService from './AuthService';
+import './custom.css';
+
 import { withAuth0 } from '@auth0/auth0-react';
 import ProtectedRoute from './components/protected-route';
-import { NavBar } from "./components/NavBar"
+import { NavBar } from "./components/NavBar";
+import Loading from './components/loading';
 
-class App extends Component {
-  static displayName = App.name;
-    constructor() {
-        super();
-        this.authService = new AuthService();
-        
-    }
-    
+class App extends React.Component {
+            
     render() {
         const { isLoading } = this.props.auth0;
+        if (isLoading) {
+            return <Loading />;
+        }
         console.log(isLoading); // TODO PG -> just putting this here to appease the build.
         return (
             <Layout>
