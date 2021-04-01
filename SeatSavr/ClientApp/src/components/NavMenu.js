@@ -32,14 +32,17 @@ class NavMenu extends Component {
         });
     }
 
-    getCorrectLoginButton() {
+    getCorrectNavMenuButtons() {
         const auth0 = this.props.auth0;
 
         return auth0.isAuthenticated ?
-            <><Button onClick={() => auth0.logout({
-                returnTo: window.location.origin,
-            })}>Logout of Admin Account</Button>
-                <Button onClick={event => window.location.href = "/admin-profile"}> Profile </Button></>:
+            <>
+                <Button onClick={() => auth0.logout({
+                    returnTo: window.location.origin,
+                })}>Logout of Admin Account</Button>
+                <Button onClick={() => window.location.href = "/admin-profile"}>Profile</Button>
+                <Button onClick={() => window.location.href = "/admin-layouts"}>My Layouts</Button>
+            </> :
             <Button onClick={() => auth0.loginWithRedirect()}>Login to Admin Account</Button>
     }
 
@@ -51,7 +54,7 @@ class NavMenu extends Component {
                     <NavbarBrand tag={Link} to="/">SeatSavr</NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-                            {this.getCorrectLoginButton()}
+                            {this.getCorrectNavMenuButtons()}
                         </Collapse>
                     </Container>
                 </Navbar>

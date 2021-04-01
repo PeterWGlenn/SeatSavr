@@ -507,6 +507,22 @@ namespace SeatSavr
             return didSucceed;
         }
 
+        public static bool AddAdmin(Admin a)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string sql = "INSERT INTO Admin (Email, Privilege) VALUES(\'" +
+                a.Email + "\', \'" +
+                a.Privilege + "\');";
+
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
         private static bool InsertData(SqliteConnection conn, string command, int expectedExReturn)
         {
             SqliteCommand sqlite_cmd;
