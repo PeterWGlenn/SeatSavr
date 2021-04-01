@@ -5,7 +5,7 @@ import LogoutButton from "./logout-button";
 
 import { withAuth0 } from "@auth0/auth0-react";
 import { NavLink } from 'react-router-dom';
-import {AdminProfile } from './AdminProfile'
+import AdminProfile from './AdminProfile'
 
 class AuthenticationButton extends React.Component {
     render() {

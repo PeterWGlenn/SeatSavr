@@ -12,10 +12,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { LayoutEditor } from './LayoutEditor';
+import { withAuth0 } from '@auth0/auth0-react';
 
 import './AdminSelectLayout.css';
 
-export class AdminSelectLayout extends Component {
+class AdminSelectLayout extends Component {
     static displayName = AdminSelectLayout.name;
 
     constructor(props) {
@@ -238,3 +239,4 @@ export class AdminSelectLayout extends Component {
         this.populateLayoutData();
     }
 }
+export default withAuth0(AdminSelectLayout);

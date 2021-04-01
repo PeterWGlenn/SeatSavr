@@ -3,21 +3,22 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler } from 'reactst
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import AuthService from '../AuthService';
+import { withAuth0 } from "@auth0/auth0-react";
 
 import { Button } from '@material-ui/core';
 
 
-export class NavMenu extends Component {
-  static displayName = NavMenu.name;
+class NavMenu extends Component {
+    static displayName = NavMenu.name;
 
-  constructor (props) {
-    super(props);
+    constructor (props) {
+        super(props);
 
-    this.toggleNavbar = this.toggleNavbar.bind(this);
-    this.state = {
-      collapsed: true
-      };
-      this.authService = new AuthService();
+        this.toggleNavbar = this.toggleNavbar.bind(this);
+        this.state = {
+            collapsed: true
+        };
+        this.authService = new AuthService();
     }
 
     startSession(history) {
@@ -31,21 +32,32 @@ export class NavMenu extends Component {
         });
     }
 
-    
+    getCorrectLoginButton() {
+        const auth0 = this.props.auth0;
+
+        return auth0.isAuthenticated ?
+            <Button onClick={() =>
+                auth0.logout({
+                    returnTo: window.location.origin,
+                })
+            }>Logout of Admin Account</Button> :
+            <Button onClick={() => auth0.loginWithRedirect()}>Login to Admin Account</Button>
+    }
+
     render() {
-        
-    return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
-          <Container>
-            <NavbarBrand tag={Link} to="/">SeatSavr</NavbarBrand>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-                <Button onClick={() => this.authService.login()}>Login to Admin Account</Button>
-            </Collapse>
-          </Container>
-        </Navbar>
-      </header>
-    );
-  }
+        return (
+            <header>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+                    <Container>
+                    <NavbarBrand tag={Link} to="/">SeatSavr</NavbarBrand>
+                    <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+                        <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
+                            {this.getCorrectLoginButton()}
+                        </Collapse>
+                    </Container>
+                </Navbar>
+            </header>
+        );
+    }
 }
+export default withAuth0(NavMenu);
