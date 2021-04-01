@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
-import { AdminProfile } from "./components/AdminProfile";
 import { AdminSelectLayout } from "./components/AdminSelectLayout";
+import AdminProfile from "./components/AdminProfile";
 
 import './custom.css';
 
@@ -19,7 +19,6 @@ class App extends React.Component {
         if (isLoading) {
             return <Loading />;
         }
-        console.log(isLoading); // TODO PG -> just putting this here to appease the build.
         return (
             <Layout>
                 <NavBar />
@@ -32,4 +31,4 @@ class App extends React.Component {
         );
     }
 }
-export default withAuth0( App);
+export default withAuth0(App);
