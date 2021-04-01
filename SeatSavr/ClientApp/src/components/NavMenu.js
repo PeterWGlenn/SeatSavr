@@ -31,14 +31,7 @@ export class NavMenu extends Component {
         });
     }
 
-    LogoutButton() {
-        return <button onClick={() => this.authService.logout()}>Logout</button>;
-    }
-
-    LoginButton() {
-        return <button onClick={() => this.authService.login()}>Login</button>;
-    }
-
+    
     render() {
         
     return (
