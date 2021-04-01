@@ -63,11 +63,6 @@ class AdminSelectLayout extends Component {
     }
 
     render() {
-
-        console.log("disp layouts");
-        console.log(this.state.displayedLayouts);
-        console.log(this.state.allLayouts);
-
         if (this.state.loading) {
             return (
                 <div>
