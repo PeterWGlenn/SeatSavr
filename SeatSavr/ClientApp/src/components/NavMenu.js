@@ -36,11 +36,10 @@ class NavMenu extends Component {
         const auth0 = this.props.auth0;
 
         return auth0.isAuthenticated ?
-            <Button onClick={() =>
-                auth0.logout({
-                    returnTo: window.location.origin,
-                })
-            }>Logout of Admin Account</Button> :
+            <><Button onClick={() => auth0.logout({
+                returnTo: window.location.origin,
+            })}>Logout of Admin Account</Button>
+                <Button onClick={event => window.location.href = "/admin-profile"}> Profile </Button></>:
             <Button onClick={() => auth0.loginWithRedirect()}>Login to Admin Account</Button>
     }
 
