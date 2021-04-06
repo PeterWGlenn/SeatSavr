@@ -123,7 +123,7 @@ export class SelectArea extends Component {
     }
 
     async populateAreaData() {
-        var selectedAddress = this.props.selectedLayoutAddress;
+        var selectedAddress = this.props.selectedLayout.address;
         if (selectedAddress == null)
             return false;
 
@@ -140,7 +140,7 @@ export class SelectArea extends Component {
         return true;
     }
 
-    async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY) {
+    async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName) {
         var response = await fetch('selectarea/savereservation', {
             method: 'POST',
             headers: {
@@ -156,7 +156,9 @@ export class SelectArea extends Component {
                 duration: duration,
                 date: dateString,
                 areaLocX: areaX,
-                areaLocY: areaY
+                areaLocY: areaY,
+                address: address,
+                layoutName: layoutName
             })
         });
 
@@ -380,7 +382,7 @@ export class SelectArea extends Component {
             return;
         }
 
-        this.postCustomerData(email, first, last, duration, dateStr, areaLoc.x, areaLoc.y);
+        this.postCustomerData(email, first, last, duration, dateStr, areaLoc.x, areaLoc.y, this.props.selectedLayout.address, this.props.selectedLayout.name);
         this.setState({ reserveAreaDialogOpen: false });
     }
 

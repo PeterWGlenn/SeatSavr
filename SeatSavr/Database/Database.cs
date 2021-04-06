@@ -163,8 +163,8 @@ namespace SeatSavr
                     a.NumberOfSeats = areaDatareader.GetInt32(3);
                     a.Name = areaDatareader.GetString(4);
 
-                    a.LayoutName = sqlite_datareader.GetString(5);
-                    a.Address = sqlite_datareader.GetString(6);
+                    a.LayoutName = areaDatareader.GetString(5);
+                    a.Address = areaDatareader.GetString(6);
 
                     areas.Add(a);
                 }
