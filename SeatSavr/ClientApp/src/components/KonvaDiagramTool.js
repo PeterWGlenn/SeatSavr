@@ -6,6 +6,9 @@ import { Stage, Layer, Star, Text } from "react-konva";
 
 export class KonvaDiagramTool extends Component {
 
+    constructor(props) {
+        this.state(props);
+    }
 
     function generateShapes() {
         return [...Array(10)].map((_, i) => ({

@@ -189,6 +189,7 @@ export class LayoutEditor extends Component {
                         singleImage={true} />
                     <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
                     <Button onClick={this.onClearEdits} className="form-buttons">Clear Edits</Button>
+                    
                 </Box>
             </div>
         );
@@ -208,7 +209,7 @@ export class LayoutEditor extends Component {
     }
 
     async clearEdits() {
-        await this.setState({ newAreaLocations: [] });
+        await this.setState({ newAreaLocations: [], currentAreas: [] });
         this.renderAreas();
     }
 
