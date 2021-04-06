@@ -427,7 +427,8 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             string clear = "DELETE FROM Area WHERE EXISTS (SELECT * FROM Area WHERE LayoutName = \'" + l.Name + "\')";
-            bool didClear = InsertData(sqlite_conn, clear, 1);
+            // TODO PG -> Commenting this out for now until we can fix errors
+            //bool didClear = InsertData(sqlite_conn, clear, 1);
 
             string sqlLayout = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
             bool didSucceed = InsertData(sqlite_conn, sqlLayout, 1);

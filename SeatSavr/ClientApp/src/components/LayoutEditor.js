@@ -209,7 +209,9 @@ export class LayoutEditor extends Component {
     }
 
     async clearEdits() {
-        await this.setState({ newAreaLocations: [], currentAreas: [] });
+        // PG TODO commenting this out for now until we get this feature working
+        // await this.setState({ newAreaLocations: [], currentAreas: [] });
+        await this.setState({ newAreaLocations: [] });
         this.renderAreas();
     }
 
