@@ -25,7 +25,7 @@ namespace SeatSavr.Controllers
 
             Customer c = d.ToCustomer();
 
-            return Database.AddReservation(d.ToReservation(c), d.ToArea(), c);
+            return Database.AddReservation(d.ToLayout(), d.ToReservation(c), d.ToArea(), c);
         }
 
         public class ReservationData
@@ -37,7 +37,17 @@ namespace SeatSavr.Controllers
             public string Date { get; set; }
             public float AreaLocX { get; set; }
             public float AreaLocY { get; set; }
+            public string Address { get; set; }
+            public string LayoutName { get; set; }
 
+            public Layout ToLayout()
+            {
+                return new Layout()
+                {
+                    Address = Address,
+                    Name = LayoutName
+                };
+            }
             public Customer ToCustomer()
             {
                 return new Customer()

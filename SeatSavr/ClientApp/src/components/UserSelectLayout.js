@@ -99,7 +99,7 @@ export class UserSelectLayout extends Component {
                     <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
                 </h2>
                 <h5>{address}</h5>
-                <SelectArea selectedLayoutAddress={this.state.selectedLayout.address}/>
+                <SelectArea selectedLayout={this.state.selectedLayout}/>
             </div>
         );
     }
