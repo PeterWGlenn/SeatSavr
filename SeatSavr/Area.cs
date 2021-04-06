@@ -24,10 +24,6 @@ namespace SeatSavr
 
         public string Name { get; set; }
 
-        public string Address { get; set; }
-
-        public string LayoutName { get; set; }
-
         public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
         public bool IsDefined()

@@ -77,9 +77,6 @@ namespace SeatSavr
                 a.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 a.Name = sqlite_datareader.GetString(4);
 
-                a.LayoutName = sqlite_datareader.GetString(5);
-                a.Address = sqlite_datareader.GetString(6);
-
                 areas.Add(a);
             }
             l.Areas = areas;
@@ -162,9 +159,6 @@ namespace SeatSavr
 
                     a.NumberOfSeats = areaDatareader.GetInt32(3);
                     a.Name = areaDatareader.GetString(4);
-
-                    a.LayoutName = areaDatareader.GetString(5);
-                    a.Address = areaDatareader.GetString(6);
 
                     areas.Add(a);
                 }
@@ -249,9 +243,6 @@ namespace SeatSavr
                     a.NumberOfSeats = areasDatareader.GetInt32(3);
                     a.Name = areasDatareader.GetString(4);
 
-                    a.LayoutName = areasDatareader.GetString(5);
-                    a.Address = areasDatareader.GetString(6);
-
                     areas.Add(a);
                 }
                 l.Areas = areas;
@@ -318,9 +309,6 @@ namespace SeatSavr
                 a.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 a.Name = sqlite_datareader.GetString(4);
 
-                a.LayoutName = sqlite_datareader.GetString(5);
-                a.Address = sqlite_datareader.GetString(6);
-
                 areas.Add(a);
             }
 
@@ -379,9 +367,6 @@ namespace SeatSavr
 
                 retrievedArea.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 retrievedArea.Name = sqlite_datareader.GetString(4);
-
-                a.LayoutName = sqlite_datareader.GetString(5);
-                a.Address = sqlite_datareader.GetString(6);
             }
 
             // TODO -> Reservation data
