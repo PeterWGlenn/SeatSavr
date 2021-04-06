@@ -77,6 +77,9 @@ namespace SeatSavr
                 a.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 a.Name = sqlite_datareader.GetString(4);
 
+                a.LayoutName = sqlite_datareader.GetString(5);
+                a.Address = sqlite_datareader.GetString(6);
+
                 areas.Add(a);
             }
             l.Areas = areas;
@@ -159,6 +162,9 @@ namespace SeatSavr
 
                     a.NumberOfSeats = areaDatareader.GetInt32(3);
                     a.Name = areaDatareader.GetString(4);
+
+                    a.LayoutName = sqlite_datareader.GetString(5);
+                    a.Address = sqlite_datareader.GetString(6);
 
                     areas.Add(a);
                 }
@@ -243,6 +249,9 @@ namespace SeatSavr
                     a.NumberOfSeats = areasDatareader.GetInt32(3);
                     a.Name = areasDatareader.GetString(4);
 
+                    a.LayoutName = areasDatareader.GetString(5);
+                    a.Address = areasDatareader.GetString(6);
+
                     areas.Add(a);
                 }
                 l.Areas = areas;
@@ -309,6 +318,9 @@ namespace SeatSavr
                 a.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 a.Name = sqlite_datareader.GetString(4);
 
+                a.LayoutName = sqlite_datareader.GetString(5);
+                a.Address = sqlite_datareader.GetString(6);
+
                 areas.Add(a);
             }
 
@@ -354,7 +366,7 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             // Initialize Areas 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Area WHERE LayoutName = \" AND BuildingAddress = \'{l.Name}\" AND X = \'{a.AreaLocation.X}\' AND Y = \'{a.AreaLocation.Y}\';");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Area WHERE LayoutName = \'{l.Name}\' AND BuildingAddress = \'{l.Address}\' AND X = \'{a.AreaLocation.X}\' AND Y = \'{a.AreaLocation.Y}\';");
             Area retrievedArea = new Area();
 
             while (sqlite_datareader.Read())
@@ -367,6 +379,9 @@ namespace SeatSavr
 
                 retrievedArea.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 retrievedArea.Name = sqlite_datareader.GetString(4);
+
+                a.LayoutName = sqlite_datareader.GetString(5);
+                a.Address = sqlite_datareader.GetString(6);
             }
 
             // TODO -> Reservation data
@@ -440,18 +455,20 @@ namespace SeatSavr
             return didSucceed;
         }
 
-        public static bool AddReservation(Reservation r, Area a, Customer c)
+        public static bool AddReservation(Layout l, Reservation r, Area a, Customer c)
         {
             // Add customer if needed
             string sqlCustomer = $"INSERT OR REPLACE INTO Customer (Email, First, Last) VALUES(\'{c.Email}\', \'{c.FirstName}\', \'{c.LastName}\');";
 
-            string sqlReservation = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY) VALUES(\'" +
+            string sqlReservation = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY, AreaBuildingAddress, AreaLayout) VALUES(\'" +
                 r.Id + "\', \'" +
                 r.Date.ToString() + "\', \'" +
                 r.Duration.ToString() + "\', \'" +
                 r.Customer.Email.ToString() + "\', \'" +
                 a.AreaLocation.X + "\', \'" +
-                a.AreaLocation.Y + "\');";
+                a.AreaLocation.Y + "\', \'" +
+                l.Address + "\', \'" +
+                l.Name + "\');";
 
             int rowsModified = 0;
             using (SqliteConnection conn = new SqliteConnection("Data Source=" + _dbLocation + ";"))
@@ -472,13 +489,14 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string sql = "INSERT INTO Area (Type, X, Y, Seats, Name, LayoutName) VALUES(\'" +
+            string sql = "INSERT INTO Area (Type, X, Y, Seats, Name, LayoutName, BuildingAddress) VALUES(\'" +
                 (int)a.AreaType + "\', \'" +
                 a.AreaLocation.X + "\', \'" +
                 a.AreaLocation.Y + "\', \'" +
                 a.NumberOfSeats + "\', \'" +
                 a.Name + "\', \'" +
-                l.Name + "\');";
+                l.Name + "\', \'" +
+                l.Address + "\');";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();

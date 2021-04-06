@@ -28,8 +28,9 @@ CREATE TABLE Area
   Seats INT NOT NULL,
   Name VARCHAR(255),
   LayoutName VARCHAR(255) NOT NULL,
+  BuildingAddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (X, Y, BuildingAddress, LayoutName),
-  FOREIGN KEY (BuildingAddress, Name) REFERENCES Layout(BuildingAddress, Name)
+  FOREIGN KEY (BuildingAddress, LayoutName) REFERENCES Layout(BuildingAddress, Name)
 );
 
 CREATE TABLE Customer
@@ -57,9 +58,11 @@ CREATE TABLE Reserves
   CustomerEmail VARCHAR(255) NOT NULL,
   AreaX FLOAT NOT NULL,
   AreaY FLOAT NOT NULL,
+  AreaBuildingAddress VARCHAR(255) NOT NULL,
+  AreaLayout VARCHAR(255) NOT NULL,
   PRIMARY KEY (Id),
   FOREIGN KEY (CustomerEmail) REFERENCES Customer(Email),
-  FOREIGN KEY (AreaX, AreaY) REFERENCES Area(X, Y)
+  FOREIGN KEY (AreaX, AreaY, AreaBuildingAddress, AreaLayout) REFERENCES Area(X, Y, BuildingAddress, LayoutName)
 );
 
 /* Insert Sample Data */
@@ -71,16 +74,16 @@ INSERT INTO Building VALUES ('123 Main Street, Washington');
 
 INSERT INTO Layout VALUES ('SampleLayout', '123 Main Street, Washington', null);
 
-INSERT INTO Area VALUES (0, 10, 10, 3, 'Table #2', 'SampleLayout');
-INSERT INTO Area VALUES (0, 20, 20, 2, 'Table #4', 'SampleLayout');
-INSERT INTO Area VALUES (0, 15, 40, 4, 'Table #7', 'SampleLayout');
-INSERT INTO Area VALUES (0, 5, 50, 2, 'Table #8', 'SampleLayout');
-INSERT INTO Area VALUES (0, 6, 70, 4, 'Table #9', 'SampleLayout');
-INSERT INTO Area VALUES (0, 90, 90, 1, 'Table #10', 'SampleLayout');
-INSERT INTO Area VALUES (0, 90, 5, 3, 'Table #11', 'SampleLayout');
-INSERT INTO Area VALUES (0, 80, 60, 9, 'Table #12', 'SampleLayout');
-INSERT INTO Area VALUES (0, 60, 60, 3, 'Table #13', 'SampleLayout');
+INSERT INTO Area VALUES (0, 10, 10, 3, 'Table #2', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 20, 20, 2, 'Table #4', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 15, 40, 4, 'Table #7', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 5, 50, 2, 'Table #8', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 6, 70, 4, 'Table #9', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 90, 90, 1, 'Table #10', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 90, 5, 3, 'Table #11', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 80, 60, 9, 'Table #12', 'SampleLayout', '123 Main Street, Washington');
+INSERT INTO Area VALUES (0, 60, 60, 3, 'Table #13', 'SampleLayout', '123 Main Street, Washington');
 
 INSERT INTO Customer (Email, First, Last) VALUES ('sampleCustomer123@gmail.com', 'Bob', 'Saget');
 
-INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY) VALUES (23312, '3/11/2021 11:37:52 AM', 42.1, 'sampleCustomer123@gmail.com', 20, 20);
+INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY, AreaBuildingAddress, AreaLayout) VALUES (23312, '3/11/2021 11:37:52 AM', 42.1, 'sampleCustomer123@gmail.com', 20, 20, '123 Main Street, Washington', 'SampleLayout');
