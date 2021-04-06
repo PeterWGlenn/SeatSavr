@@ -354,7 +354,7 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             // Initialize Areas 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\" AND X = \'" + a.AreaLocation.X + "\' AND Y = \'" + a.AreaLocation.Y + "\';");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Area WHERE LayoutName = \" AND BuildingAddress = \'{l.Name}\" AND X = \'{a.AreaLocation.X}\' AND Y = \'{a.AreaLocation.Y}\';");
             Area retrievedArea = new Area();
 
             while (sqlite_datareader.Read())
@@ -513,7 +513,7 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string sql = "INSERT INTO Admin (Email, Privilege) VALUES(\'" +
+            string sql = "INSERT OR REPLACE INTO Admin (Email, Privilege) VALUES(\'" +
                 a.Email + "\', \'" +
                 a.Privilege + "\');";
 

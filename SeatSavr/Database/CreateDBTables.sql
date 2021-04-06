@@ -1,5 +1,3 @@
-PRAGMA journal_mode=WAL;
-
 CREATE TABLE Admin
 (
   Email VARCHAR(255) NOT NULL,
@@ -18,7 +16,7 @@ CREATE TABLE Layout
   Name VARCHAR(255) NOT NULL,
   BuildingAddress VARCHAR(255) NOT NULL,
   LayoutImage VARCHAR(255),
-  PRIMARY KEY (Name),
+  PRIMARY KEY (BuildingAddress, Name),
   FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
 );
 
@@ -30,8 +28,8 @@ CREATE TABLE Area
   Seats INT NOT NULL,
   Name VARCHAR(255),
   LayoutName VARCHAR(255) NOT NULL,
-  PRIMARY KEY (X, Y),
-  FOREIGN KEY (LayoutName) REFERENCES Layout(Name)
+  PRIMARY KEY (X, Y, BuildingAddress, LayoutName),
+  FOREIGN KEY (BuildingAddress, Name) REFERENCES Layout(BuildingAddress, Name)
 );
 
 CREATE TABLE Customer

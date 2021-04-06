@@ -16,7 +16,8 @@ class NavMenu extends Component {
 
         this.toggleNavbar = this.toggleNavbar.bind(this);
         this.state = {
-            collapsed: true
+            collapsed: true,
+            adminExists: false
         };
         this.authService = new AuthService();
     }
@@ -46,7 +47,36 @@ class NavMenu extends Component {
             <Button onClick={() => auth0.loginWithRedirect()}>Login to Admin Account</Button>
     }
 
+    async addNewAdminIfNeeded() {
+        var auth0 = this.props.auth0;
+
+        if (auth0.isAuthenticated && !this.state.adminExists) {
+            var userEmail = auth0.user.email;
+
+            var response = await fetch('navmenu/createadmin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Credentials": true
+                },
+                body: JSON.stringify({
+                    email: userEmail,
+                    privilege: 1
+                })
+            });
+
+            if (await response.json()) {
+                this.setState({ adminExists: true });
+            }
+        }
+    }
+
     render() {
+
+        this.addNewAdminIfNeeded();
+
         return (
             <header>
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>

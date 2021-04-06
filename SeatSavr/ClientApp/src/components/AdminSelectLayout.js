@@ -38,7 +38,7 @@ class AdminSelectLayout extends Component {
     }
 
     async populateLayoutData() {
-        var selectedEmail = 'sampleAdmin123@gmail.com';
+        var selectedEmail = this.props.auth0.user.email;
         if (selectedEmail == null)
             return false;
 
@@ -213,7 +213,9 @@ class AdminSelectLayout extends Component {
     }
 
     async postLayoutData(name, address) {
-        var response = await fetch('adminselectlayout/createlayout', {
+        var selectedEmail = this.props.auth0.user.email;
+
+        var response = await fetch('adminselectlayout/createlayout?email=' + selectedEmail, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -17,9 +17,9 @@ namespace SeatSavr.Controllers
         }
 
         [HttpPost("[action]")]
-        public bool CreateLayout([FromBody] Layout layout)
+        public bool CreateLayout([FromBody] Layout layout, string email)
         {
-            Admin admin = new Admin() { Email = "sampleAdmin123@gmail.com" };
+            Admin admin = new Admin() { Email = email };
             return Database.AddLayout(layout, admin);
         }
     }
