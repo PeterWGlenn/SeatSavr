@@ -1,0 +1,22 @@
+.content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+}
+
+.canvas {
+    flex: 1;
+    padding: 5px;
+    background-color: #a7a7a7;
+}
+
+.canvas .canvas-actual {
+    cursor: crosshair;
+    background-color: white;
+}
+
+.canvas .canvas-overlay {
+    position: absolute;
+    transform: translateX(-100%);
+    pointer-events: none;
+}
