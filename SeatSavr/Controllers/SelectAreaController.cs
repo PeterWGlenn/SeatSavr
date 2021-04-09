@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -13,6 +11,10 @@ namespace SeatSavr.Controllers
     [Route("[controller]")]
     public class SelectAreaController
     {
+        private static string _sendGridKeyVariableName = "NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY";
+        private static string _sendGridEmail = "peter.glenn.17@cnu.edu";
+        private static string _sendGridName = "SeatSavr";
+
         [HttpGet("[action]")]
         public Layout GetLayout(string address)
         {
@@ -33,22 +35,23 @@ namespace SeatSavr.Controllers
         [HttpPost("[action]")]
         public async Task<bool> SendConfirmationEmail([FromBody] ReservationData d)
         {
-            //string apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
-            //SendGridClient client = new SendGridClient(apiKey);
+            string apiKey = Environment.GetEnvironmentVariable(_sendGridKeyVariableName);
 
-            //EmailAddress from = new EmailAddress("test@example.com", "Example User");
-            //EmailAddress to = new EmailAddress("test@example.com", "Example User");
+            if (apiKey == null)
+                return false;
 
-            //string subject = "Sending with SendGrid is Fun";
-            //string plainTextContent = "and easy to do anywhere, even with C#";
-            //string htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            SendGridClient client = new SendGridClient(apiKey);
 
-            //SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-            //Response response = await client.SendEmailAsync(msg);
+            EmailAddress from = new EmailAddress(_sendGridEmail, _sendGridName);
+            EmailAddress to = new EmailAddress(d.Email, $"{d.FirstName} {d.LastName}");
 
-            //return response.IsSuccessStatusCode;
+            string subject = $"Reservation Confirmation - {d.LayoutName} - {d.Date}";
+            string content = $"You successfully reserved an area at {d.LayoutName}! Your reservation starts at {d.Date} and lasts {d.Duration} hours.";
 
-            return true;
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
+            Response response = await client.SendEmailAsync(msg);
+
+            return response.IsSuccessStatusCode;
         }
 
         public class ReservationData
