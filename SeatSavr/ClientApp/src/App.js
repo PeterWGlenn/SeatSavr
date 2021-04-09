@@ -4,6 +4,7 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import AdminSelectLayout from "./components/AdminSelectLayout";
 import AdminProfile from "./components/AdminProfile";
+import LayoutDraw from "./components/LayoutDraw";
 
 import './custom.css';
 
@@ -24,6 +25,7 @@ class App extends React.Component {
                     <Route exact path='/' component={Home} />
                     <ProtectedRoute path='/admin-layouts' component={AdminSelectLayout} />
                     <ProtectedRoute path='/admin-profile' component={AdminProfile} />
+                    <ProtectedRoute path='/draw-layout' component={LayoutDraw} />
                 </Switch>
             </Layout>
         );
