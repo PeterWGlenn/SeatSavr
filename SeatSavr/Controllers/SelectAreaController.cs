@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace SeatSavr.Controllers
 {
@@ -26,6 +28,27 @@ namespace SeatSavr.Controllers
             Customer c = d.ToCustomer();
 
             return Database.AddReservation(d.ToLayout(), d.ToReservation(c), d.ToArea(), c);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<bool> SendConfirmationEmail([FromBody] ReservationData d)
+        {
+            //string apiKey = Environment.GetEnvironmentVariable("NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY");
+            //SendGridClient client = new SendGridClient(apiKey);
+
+            //EmailAddress from = new EmailAddress("test@example.com", "Example User");
+            //EmailAddress to = new EmailAddress("test@example.com", "Example User");
+
+            //string subject = "Sending with SendGrid is Fun";
+            //string plainTextContent = "and easy to do anywhere, even with C#";
+            //string htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+
+            //SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            //Response response = await client.SendEmailAsync(msg);
+
+            //return response.IsSuccessStatusCode;
+
+            return true;
         }
 
         public class ReservationData

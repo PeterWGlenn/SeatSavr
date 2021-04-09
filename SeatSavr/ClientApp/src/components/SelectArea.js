@@ -164,9 +164,33 @@ export class SelectArea extends Component {
 
         if (await response.json()) {
             this.openReservedAreaSuccess();
+            this.sendConfirmationEmail(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName);
         }
 
         this.renderAreas();
+    }
+
+    async sendConfirmationEmail(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName) {
+        await fetch('selectarea/sendconfirmationemail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
+            },
+            body: JSON.stringify({
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                duration: duration,
+                date: dateString,
+                areaLocX: areaX,
+                areaLocY: areaY,
+                address: address,
+                layoutName: layoutName
+            })
+        });
     }
 
     static drawAreaIcon(context, area, isRes) {
