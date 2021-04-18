@@ -4,15 +4,15 @@ import MenuBar from "./menu-bar";
 import Content from "./Content";
 import ColorPanel from "./color-panel";
 
-import pencil from "../images/pencil.png";
-import line from "../images/line.png";
-import brush from "../images/brush.png";
-import fill from "../images/fill.png";
-import rectangle from "../images/rectangle.png";
-import text from "../images/text.png";
-import circle from "../images/circle.png";
-import erase from "../images/eraser.jpg";
-import picker from "../images/picker.png";
+import pencil from "../images/pencil.ico";
+import line from "../images/line.ico";
+import brush from "../images/brush.ico";
+import fill from "../images/fill.ico";
+import rectangle from "../images/rectangle.ico";
+import text from "../images/text.ico";
+import circle from "../images/circle.ico";
+import erase from "../images/eraser.ico";
+import picker from "../images/picker.ico";
 
 const defaultColor = "black";
 const defaultTool = "Pencil";
