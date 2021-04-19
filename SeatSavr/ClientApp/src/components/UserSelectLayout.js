@@ -39,7 +39,7 @@ export class UserSelectLayout extends Component {
         return (
             <div>
                 <h1>Welcome to SeatSavr!</h1>
-                <p>SeatSavr manages your reservations in the modern world. Please select a layout below to set started! If you want to create your own layouts, login as an administrator.</p>
+                <p>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! If you want to create your own layouts, login as an administrator.</p>
             </div>
         );
     }
