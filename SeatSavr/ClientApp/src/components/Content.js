@@ -8,14 +8,17 @@ export default class Content extends React.Component {
         this.state = {
             isDrawing: false,
             offsetX: 0,
+            newAreaLocations: [],
             offsetY: 0,
             startX: 0,
-            startY: 0
+            startY: 0,
+            canvasImageDataURL: null
         };
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.canvasRef = React.createRef();
+        
         this.canvasOverlayRef = React.createRef();
         this.ctx = null;
         this.overlayCtx = null;
@@ -121,6 +124,7 @@ export default class Content extends React.Component {
 
         ctx.closePath();
         this.setState({ isDrawing: false });
+        
     }
 
     render() {
@@ -134,6 +138,7 @@ export default class Content extends React.Component {
                 <div className="canvas">
                     <canvas
                         className="canvas-actual"
+                        id="background"
                         width="600px"
                         height="480px"
                         ref={this.canvasRef}
@@ -143,12 +148,56 @@ export default class Content extends React.Component {
                     />
                     <canvas
                         className="canvas-overlay"
+                        id="overlay"
                         width="600px"
                         height="480px"
                         ref={this.canvasOverlayRef}
                     />
                 </div>
+                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
             </div>
         );
+    }
+
+    onSaveLayout = () => {
+        
+        
+        this.saveLayout();
+        
+    }
+
+    async saveLayout() {
+        
+        await this.postLayout();
+        //this.renderAreas();
+    }
+
+    async postLayout() {
+
+        var canvas = document.getElementById('background');
+        this.state.canvasImageDataURL = canvas.toDataURL();
+        console.log("Canvas Url");
+        console.log(this.state.canvasImageDataURL);
+
+        if (this.state.loading)
+            return;
+
+        //var layout = "DrawSampleLayout";
+
+        await fetch('layouteditor/savelayout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
+            },
+            body: JSON.stringify({
+                name: "DrawSampleLayout",
+                address: "12345 Draw Street",
+                layoutImage: this.state.canvasImageDataURL
+                //newAreaLocations: this.state.newAreaLocations
+            })
+        });
     }
 }
