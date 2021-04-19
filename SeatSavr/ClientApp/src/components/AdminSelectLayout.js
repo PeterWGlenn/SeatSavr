@@ -15,7 +15,6 @@ import { LayoutEditor } from './LayoutEditor';
 import { withAuth0 } from '@auth0/auth0-react';
 
 import './AdminSelectLayout.css';
-import { Redirect } from 'auth0-js';
 
 class AdminSelectLayout extends Component {
     static displayName = AdminSelectLayout.name;

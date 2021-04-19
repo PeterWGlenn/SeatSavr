@@ -1,6 +1,5 @@
 ﻿import React from "react";
 import { withAuth0 } from '@auth0/auth0-react';
-import MenuBar from "./menu-bar";
 import Content from "./Content";
 import ColorPanel from "./color-panel";
 
