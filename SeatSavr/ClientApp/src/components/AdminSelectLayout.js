@@ -15,6 +15,7 @@ import { LayoutEditor } from './LayoutEditor';
 import { withAuth0 } from '@auth0/auth0-react';
 
 import './AdminSelectLayout.css';
+import { Redirect } from 'auth0-js';
 
 class AdminSelectLayout extends Component {
     static displayName = AdminSelectLayout.name;
@@ -29,9 +30,12 @@ class AdminSelectLayout extends Component {
             createLayoutDialogOpen: false,
             layoutCreatedOpen: false,
             errors: { layoutName: false, layoutAddress: false },
-            errorMessages: { layoutName: '', layoutAddress: '' }
+            errorMessages: { layoutName: '', layoutAddress: '' },
+            
         };
     }
+
+    
 
     componentDidMount() {
         this.populateLayoutData();
@@ -71,7 +75,7 @@ class AdminSelectLayout extends Component {
                 </div>
             );
         }
-
+        
         if (this.state.selectedLayout == null) {
             return (
                 <div>
@@ -149,8 +153,11 @@ class AdminSelectLayout extends Component {
                                 Cancel
                         </Button>
                             <Button onClick={this.handleCreateLayout} color="primary">
-                                Create
+                                Upload Image
                         </Button>
+                            <Button onClick={this.handleDrawLayout} color="primary">
+                                Draw Layout
+                            </Button>
                         </DialogActions>
                     </Dialog>
                     <Snackbar
@@ -184,6 +191,32 @@ class AdminSelectLayout extends Component {
                 <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
             </div>
         );
+    }
+
+    handleDrawLayout = () => {
+        var nameElem = document.getElementById('name');
+        var addressElem = document.getElementById('address');
+
+        var name = nameElem.value;
+        var address = addressElem.value;
+
+        var nHasError = name == null || name === "";
+        var aHasError = address == null || address === "";
+
+        // Do not post or close form if errors exist!
+        if (nHasError || aHasError) {
+            this.setState({
+                errors: { layoutName: nHasError, layoutAddress: aHasError },
+                errorMessages: {
+                    layoutName: nHasError ? 'Layout name is a required field.' : '',
+                    layoutAddress: aHasError ? 'Layout address is a required field.' : ''
+                }
+            });
+            return;
+        }
+
+        this.postLayoutData(name, address);
+        this.setState({ createLayoutDialogOpen: false });
     }
 
     handleCreateLayout = () => {

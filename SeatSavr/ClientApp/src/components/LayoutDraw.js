@@ -4,9 +4,7 @@ import MenuBar from "./menu-bar";
 import Content from "./Content";
 import ColorPanel from "./color-panel";
 
-
-
-
+import TextField from '@material-ui/core/TextField'
 
 const defaultColor = "black";
 
@@ -15,12 +13,12 @@ const toolbarItems = [
     { name: "Pencil" },
     { name: "Line" },
     { name: "Brush" },
-    { name: "Fill"},
-    { name: "Text" },
+    // TODO { name: "Fill"},
+    // TODO{ name: "Text" },
     { name: "Rectangle" },
-    { name: "Circle" },
-    { name: "Erase" },
-    { name: "Picker" }
+    //TODO { name: "Circle" },
+    //TODO { name: "Erase" },
+    //TODO { name: "Picker" }
 ];
 
 class LayoutDraw extends React.Component {
@@ -45,6 +43,11 @@ class LayoutDraw extends React.Component {
     render() {
         return (
             <React.Fragment>
+                <p>
+                    <form className='Name enter' noValidate autoComplete="off">
+                        <TextField id="standard-basic" label="Enter Layout Name Here" />
+                    </form>
+                </p>
                                 
                 <Content
                     items={this.state.toolbarItems}
