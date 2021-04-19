@@ -4,29 +4,21 @@ import MenuBar from "./menu-bar";
 import Content from "./Content";
 import ColorPanel from "./color-panel";
 
-import pencil from "../images/pencil.ico";
-import line from "../images/line.ico";
-import brush from "../images/brush.ico";
-import fill from "../images/fill.ico";
-import rectangle from "../images/rectangle.ico";
-import text from "../images/text.ico";
-import circle from "../images/circle.ico";
-import erase from "../images/eraser.ico";
-import picker from "../images/picker.ico";
+import TextField from '@material-ui/core/TextField'
 
 const defaultColor = "black";
-const defaultTool = "Pencil";
+
 
 const toolbarItems = [
-    { name: "Pencil", image: pencil },
-    { name: "Line", image: line },
-    { name: "Brush", image: brush },
-    { name: "Fill", image: fill },
-    { name: "Text", image: text },
-    { name: "Rectangle", image: rectangle },
-    { name: "Circle", image: circle },
-    { name: "Erase", image: erase },
-    { name: "Picker", image: picker }
+    { name: "Pencil" },
+    { name: "Line" },
+    { name: "Brush" },
+    // TODO { name: "Fill"},
+    // TODO{ name: "Text" },
+    { name: "Rectangle" },
+    //TODO { name: "Circle" },
+    //TODO { name: "Erase" },
+    //TODO { name: "Picker" }
 ];
 
 class LayoutDraw extends React.Component {
@@ -34,7 +26,6 @@ class LayoutDraw extends React.Component {
         super(props);
         this.state = {
             color: defaultColor,
-            selectedItem: defaultTool,
             toolbarItems: toolbarItems
         };
         this.changeColor = this.changeColor.bind(this);
@@ -52,7 +43,12 @@ class LayoutDraw extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <MenuBar />
+                <p>
+                    <form className='Name enter' noValidate autoComplete="off">
+                        <TextField id="standard-basic" label="Enter Layout Name Here" />
+                    </form>
+                </p>
+                                
                 <Content
                     items={this.state.toolbarItems}
                     activeItem={this.state.selectedItem}
@@ -63,7 +59,41 @@ class LayoutDraw extends React.Component {
                     selectedColor={this.state.color}
                     handleClick={this.changeColor}
                 />
+                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
             </React.Fragment>
         );
+    }
+
+    onSaveLayout = () => {
+        this.saveLayout();
+    }
+
+    async saveLayout() {
+        await this.postLayout();
+        this.renderAreas();
+    }
+
+    async postLayout() {
+
+        if (this.state.loading)
+            return;
+
+        var layout = this.state.layout;
+
+        await fetch('layouteditor/savelayout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
+            },
+            body: JSON.stringify({
+                name: layout.name,
+                address: layout.address,
+                layoutImage: this.state.canvasImageDataURL,
+                newAreaLocations: this.state.newAreaLocations
+            })
+        });
     }
 } export default withAuth0(LayoutDraw);
