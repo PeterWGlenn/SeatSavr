@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System.IO;
 
 namespace SeatSavr.Controllers
 {
@@ -11,7 +12,7 @@ namespace SeatSavr.Controllers
     [Route("[controller]")]
     public class SelectAreaController
     {
-        private static string _sendGridKeyVariableName = "NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY";
+        private static string _sendGridKeyFile = Directory.GetCurrentDirectory() + "\\Keys\\SendGridKey.txt";
         private static string _sendGridEmail = "peter.glenn.17@cnu.edu";
         private static string _sendGridName = "SeatSavr";
 
@@ -35,10 +36,10 @@ namespace SeatSavr.Controllers
         [HttpPost("[action]")]
         public async Task<bool> SendConfirmationEmail([FromBody] ReservationData d)
         {
-            string apiKey = Environment.GetEnvironmentVariable(_sendGridKeyVariableName);
-
-            if (apiKey == null)
+            if (!File.Exists(_sendGridKeyFile)) {
                 return false;
+            }
+            string apiKey = File.ReadAllText(_sendGridKeyFile);
 
             SendGridClient client = new SendGridClient(apiKey);
 
