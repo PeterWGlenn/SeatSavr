@@ -36,9 +36,6 @@ namespace SeatSavr.Controllers
         [HttpPost("[action]")]
         public async Task<bool> SendConfirmationEmail([FromBody] ReservationData d)
         {
-            // TODO PG -> For debugging - delete later!
-            Console.WriteLine(_sendGridKeyFile);
-
             if (!File.Exists(_sendGridKeyFile)) {
                 return false;
             }
@@ -54,9 +51,6 @@ namespace SeatSavr.Controllers
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
             Response response = await client.SendEmailAsync(msg);
-
-            // TODO PG -> For debugging - delete later!
-            Console.WriteLine(response.IsSuccessStatusCode);
 
             return response.IsSuccessStatusCode;
         }
