@@ -12,7 +12,7 @@ namespace SeatSavr.Controllers
     [Route("[controller]")]
     public class SelectAreaController
     {
-        private static string _sendGridKeyFile = Directory.GetCurrentDirectory() + "\\Keys\\SendGridKey.txt";
+        private static string _sendGridKeyFile = $"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}Keys{Path.DirectorySeparatorChar}SendGridKey.txt";
         private static string _sendGridEmail = "peter.glenn.17@cnu.edu";
         private static string _sendGridName = "SeatSavr";
 
