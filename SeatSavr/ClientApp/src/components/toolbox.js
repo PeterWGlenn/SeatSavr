@@ -6,11 +6,11 @@ const Button = props => {
     };
 
     return (
-        <div
+        <button
             className={"button " + (props.active ? "selected" : "")}
             dangerouslySetInnerHTML={style}
             onClick={e => props.handleClick(e, props.name)}
-        />
+        ></button> 
     );
 };
 
@@ -29,10 +29,11 @@ export default class Toolbox extends React.Component {
             <Button
                 active={this.props.activeItem === item.name ? true : false}
                 name={item.name}
+                title={item.name}
                 image={item.image}
                 key={item.name}
                 handleClick={this.handleClick}
-            />
+            > items.name</Button>
         ));
 
         return <div className="toolbox">{items}</div>;

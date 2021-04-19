@@ -9,12 +9,8 @@ export default class MenuBar extends React.Component {
     render() {
         return (
             <div className="menu-bar">
-                <MenuItem text="File" />
-                <MenuItem text="Edit" />
-                <MenuItem text="View" />
                 <MenuItem text="Image" />
                 <MenuItem text="Colors" />
-                <MenuItem text="Help" />
             </div>
         );
     }
