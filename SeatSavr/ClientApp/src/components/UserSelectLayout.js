@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Button, TextField } from '@material-ui/core';
+//import custom from '../custom.css';
 
 export class UserSelectLayout extends Component {
     static displayName = UserSelectLayout.name;
@@ -38,8 +39,8 @@ export class UserSelectLayout extends Component {
     getWelcomeHTML() {
         return (
             <div>
-                <h1>Welcome to SeatSavr!</h1>
-                <p>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! If you want to create your own layouts, login as an administrator.</p>
+                <h1 > <center> Welcome to SeatSavr! </center></h1>
+                <p><center>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! If you want to create your own layouts, login as an administrator. </center></p>
             </div>
         );
     }
@@ -63,6 +64,7 @@ export class UserSelectLayout extends Component {
                         label="Search Layouts"
                         variant="outlined"
                         fullWidth
+                        className='button-nav'
                         onChange={() => {
                             var newLayouts = [];
                             var filter = document.getElementById('layoutListFilter').value.toLowerCase();

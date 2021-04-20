@@ -1,14 +1,19 @@
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+  color: #D77B5F;
 }
 
 code {
   color: #E01A76;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.button-nav {
+    color: #C0413B;
+    background-color: #FFCD73;
+    border-color: #57291f;  
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }

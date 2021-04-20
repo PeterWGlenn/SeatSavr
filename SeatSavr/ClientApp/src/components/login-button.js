@@ -1,5 +1,6 @@
 ﻿import React from "react";
 import { withAuth0 } from "@auth0/auth0-react";
+import "../custom.css"
 
 class LoginButton extends React.Component {
     render() {
@@ -9,6 +10,7 @@ class LoginButton extends React.Component {
             <button
                 className="btn btn-primary btn-block"
                 onClick={() => loginWithRedirect()}
+                backgroundColor= "btn-primary"
             >
                 Log In
             </button>
