@@ -4,7 +4,7 @@ import { SelectArea } from './SelectArea';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 //import custom from '../custom.css';
 
 export class UserSelectLayout extends Component {

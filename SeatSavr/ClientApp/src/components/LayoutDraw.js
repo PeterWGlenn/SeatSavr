@@ -2,7 +2,7 @@
 import { withAuth0 } from '@auth0/auth0-react';
 import Content from "./Content";
 import ColorPanel from "./color-panel";
-import Snackbar from '@material-ui/core/Snackbar';
+//import Snackbar from '@material-ui/core/Snackbar';
 
 import TextField from '@material-ui/core/TextField'
 

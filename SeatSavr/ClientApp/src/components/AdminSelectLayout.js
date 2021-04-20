@@ -12,7 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { LayoutEditor } from './LayoutEditor';
-import { LayoutDraw } from './LayoutDraw';
+//import { LayoutDraw } from './LayoutDraw';
 import { withAuth0 } from '@auth0/auth0-react';
 
 import './AdminSelectLayout.css';
