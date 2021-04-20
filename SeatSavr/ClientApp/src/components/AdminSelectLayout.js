@@ -208,40 +208,33 @@ class AdminSelectLayout extends Component {
         
 
 
-
+        var name = "No layout selected";
+        var address = "";
 
         if (this.state.selectedLayout != null) {
-            var name = "No layout selected";
-            var address = "";
+            
             name = this.state.selectedLayout.name;
             address = this.state.selectedLayout.address;
-            return (
-                <div>
+          
 
-                    <h2>
-                        {name}
-                        <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
-                    </h2>
-                    <h5>{address}</h5>
-                    <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
-                </div>
-            );
+        }
 
-        } else {
-            return (
-                <div>
-                    <h1> Something went wrong </h1>
-                </div>
-            );
-           }
+        return (
+            <div>
+
+                <h2>
+                    {name}
+                    <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                </h2>
+                <h5>{address}</h5>
+                <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+            </div>
+        );
                      
                      
     }
 
-    handleEditRedirect = () => {
-
-    }
-                     
+                        
 
     handleDrawRedirect = () => {
         this.redirect = "draw";
