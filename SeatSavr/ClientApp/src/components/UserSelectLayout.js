@@ -64,7 +64,7 @@ export class UserSelectLayout extends Component {
                         label="Search Layouts"
                         variant="outlined"
                         fullWidth
-                        className='button-nav'
+                        
                         onChange={() => {
                             var newLayouts = [];
                             var filter = document.getElementById('layoutListFilter').value.toLowerCase();
@@ -76,7 +76,8 @@ export class UserSelectLayout extends Component {
                             });
                             this.setState({ availableLayouts: newLayouts });
                         }}/>
-                    <List id='layoutList'>
+                    <List id='layoutList'
+                       className='button-nav'>
                         {this.state.availableLayouts.map(layout =>
                             <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />

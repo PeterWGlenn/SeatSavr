@@ -1,10 +1,25 @@
 /* Provide sufficient contrast against white background */
+
 a {
   color: #D77B5F;
 }
 
 code {
   color: #E01A76;
+}
+
+h1 {
+    font-size: 45px;
+    font-family: Avantgarde;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+p {
+    font-size: 30px;
+    font-family: Avantgarde;
+    font-weight: normal;
+    margin-top: 5px;
 }
 
 .button-nav {

@@ -5,7 +5,7 @@ import './NavMenu.css';
 import AuthService from '../AuthService';
 import { withAuth0 } from "@auth0/auth0-react";
 
-import { Button } from '@material-ui/core';
+//import { Button } from '@material-ui/core';
 import "../custom.css";
 
 
@@ -81,7 +81,7 @@ class NavMenu extends Component {
 
         return (
             <header>
-                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" >
                     <Container>
                         <NavbarBrand className='button-nav' tag={Link} to="/">SeatSavr</NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
