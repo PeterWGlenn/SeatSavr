@@ -40,7 +40,7 @@ export class UserSelectLayout extends Component {
         return (
             <div>
                 <h1 > <center> Welcome to SeatSavr! </center></h1>
-                <p><center>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! If you want to create your own layouts, login as an administrator. </center></p>
+                <p><center>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! <p>If you want to create your own layouts, login as an administrator.</p> </center></p>
             </div>
         );
     }
@@ -64,7 +64,7 @@ export class UserSelectLayout extends Component {
                         label="Search Layouts"
                         variant="outlined"
                         fullWidth
-                        
+
                         onChange={() => {
                             var newLayouts = [];
                             var filter = document.getElementById('layoutListFilter').value.toLowerCase();
@@ -75,9 +75,9 @@ export class UserSelectLayout extends Component {
                                 }
                             });
                             this.setState({ availableLayouts: newLayouts });
-                        }}/>
+                        }} />
                     <List id='layoutList'
-                       className='button-nav'>
+                        className='button-nav'>
                         {this.state.availableLayouts.map(layout =>
                             <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />
@@ -97,14 +97,14 @@ export class UserSelectLayout extends Component {
 
         return (
             <div>
-                <h1>
-                    {name}
-                </h1>
-                <h6>{address}</h6>
-                    <center>
-                        <button className='button-nav' onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</button>
+                <center>
+                    <button className='button-nav' onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</button>
                     </center>
-                <SelectArea selectedLayout={this.state.selectedLayout}/>
+                <h1> {name} </h1>
+                
+                <h6>{address}</h6>
+
+                <SelectArea selectedLayout={this.state.selectedLayout} />
             </div>
         );
     }
