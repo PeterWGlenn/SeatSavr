@@ -27,7 +27,7 @@ export class UserSelectLayout extends Component {
         const response = await fetch('userselectlayout/getlayouts', {
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json'    
             }
         });
 

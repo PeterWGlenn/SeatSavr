@@ -10,9 +10,6 @@ namespace SeatSavr
     {
         private static string _dbLocation = "Database/SeatSavrDB.sqlite3";
 
-        private static string _startTransaction = "BEGIN TRANSACTION;";
-        private static string _commit = "COMMIT;";
-
         #region Read From Database
         public static Task<Admin[]> GetAdminDataAsync()
         {
@@ -68,7 +65,7 @@ namespace SeatSavr
             {
                 Area a = new Area();
 
-                a.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+                a.AreaType = (Area.Type)sqlite_datareader.GetInt64(0);
 
                 float x = sqlite_datareader.GetFloat(1);
                 float y = sqlite_datareader.GetFloat(2);
@@ -90,7 +87,7 @@ namespace SeatSavr
                 {
                     Reservation r = new Reservation();
 
-                    r.Id = sqlite_datareader.GetInt32(0);
+                    r.Id = sqlite_datareader.GetString(0);
                     r.Date = DateTime.Parse(sqlite_datareader.GetString(1));
                     r.Duration = sqlite_datareader.GetFloat(2);
 
@@ -151,7 +148,7 @@ namespace SeatSavr
                 {
                     Area a = new Area();
 
-                    a.AreaType = (Area.Type)areaDatareader.GetInt32(0);
+                    a.AreaType = (Area.Type)areaDatareader.GetInt64(0);
 
                     float x = areaDatareader.GetFloat(1);
                     float y = areaDatareader.GetFloat(2);
@@ -173,7 +170,7 @@ namespace SeatSavr
                     {
                         Reservation r = new Reservation();
 
-                        r.Id = areaDatareader.GetInt32(0);
+                        r.Id = areaDatareader.GetString(0);
                         r.Date = DateTime.Parse(areaDatareader.GetString(1));
                         r.Duration = areaDatareader.GetFloat(2);
 
@@ -234,7 +231,7 @@ namespace SeatSavr
                 {
                     Area a = new Area();
 
-                    a.AreaType = (Area.Type)areasDatareader.GetInt32(0);
+                    a.AreaType = (Area.Type)areasDatareader.GetInt64(0);
 
                     float x = areasDatareader.GetFloat(1);
                     float y = areasDatareader.GetFloat(2);
@@ -257,7 +254,7 @@ namespace SeatSavr
                     {
                         Reservation r = new Reservation();
 
-                        r.Id = areasDatareader.GetInt32(0);
+                        r.Id = areasDatareader.GetString(0);
                         r.Date = DateTime.Parse(areasDatareader.GetString(1));
                         r.Duration = areasDatareader.GetFloat(2);
 
@@ -300,7 +297,7 @@ namespace SeatSavr
             {
                 Area a = new Area();
 
-                a.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+                a.AreaType = (Area.Type)sqlite_datareader.GetInt64(0);
 
                 float x = sqlite_datareader.GetFloat(1);
                 float y = sqlite_datareader.GetFloat(2);
@@ -321,7 +318,7 @@ namespace SeatSavr
                 {
                     Reservation r = new Reservation();
 
-                    r.Id = sqlite_datareader.GetInt32(0);
+                    r.Id = sqlite_datareader.GetString(0);
                     r.Date = DateTime.Parse(sqlite_datareader.GetString(1));
                     r.Duration = sqlite_datareader.GetFloat(2);
 
@@ -359,7 +356,7 @@ namespace SeatSavr
 
             while (sqlite_datareader.Read())
             {
-                retrievedArea.AreaType = (Area.Type)sqlite_datareader.GetInt32(0);
+                retrievedArea.AreaType = (Area.Type)sqlite_datareader.GetInt64(0);
 
                 float x = sqlite_datareader.GetFloat(1);
                 float y = sqlite_datareader.GetFloat(2);
@@ -404,6 +401,37 @@ namespace SeatSavr
             return Task.FromResult(retrievedCustomer);
         }
 
+        public static async Task<Reservation> GetReservation(string id)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            // Initialize Areas 
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Reserves WHERE Id = \"{id}\";");
+            Reservation retrievedReservation = new Reservation();
+
+            while (sqlite_datareader.Read())
+            {
+                retrievedReservation.Id = sqlite_datareader.GetString(0);
+                retrievedReservation.Date = sqlite_datareader.GetDateTime(1);
+                retrievedReservation.Duration = sqlite_datareader.GetFloat(2);
+                
+                string customerEmail = sqlite_datareader.GetString(3);
+                retrievedReservation.Customer = await GetCustomer(customerEmail);
+
+                retrievedReservation.ReservedAreaAddress = sqlite_datareader.GetString(6);
+                retrievedReservation.ReservedAreaName = sqlite_datareader.GetString(7);
+            }
+
+            if (!retrievedReservation.IsDefined())
+                retrievedReservation = null;
+
+            sqlite_conn.Close();
+
+            return retrievedReservation;
+        }
+
         private static SqliteDataReader ReadFrom(SqliteConnection conn, string command)
         {
             // Select Table
@@ -430,7 +458,8 @@ namespace SeatSavr
             // TODO PG -> Commenting this out for now until we can fix errors
             //bool didClear = InsertData(sqlite_conn, clear, 1);
 
-            string sqlLayout = "UPDATE Layout SET Name = \'" + l.Name + "\', LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
+            // This does not update the layout name, only the layout image.
+            string sqlLayout = "UPDATE Layout SET LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
             bool didSucceed = InsertData(sqlite_conn, sqlLayout, 1);
 
             // Insert Areas
@@ -449,7 +478,7 @@ namespace SeatSavr
             // Add customer if needed
             string sqlCustomer = $"INSERT OR REPLACE INTO Customer (Email, First, Last) VALUES(\'{c.Email}\', \'{c.FirstName}\', \'{c.LastName}\');";
 
-            string sqlReservation = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY, AreaBuildingAddress, AreaLayout) VALUES(\'" +
+            string sqlReservation = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY, AreaBuildingAddress, AreaLayoutName) VALUES(\'" +
                 r.Id + "\', \'" +
                 r.Date.ToString() + "\', \'" +
                 r.Duration.ToString() + "\', \'" +
@@ -523,6 +552,20 @@ namespace SeatSavr
             string sql = "INSERT OR REPLACE INTO Admin (Email, Privilege) VALUES(\'" +
                 a.Email + "\', \'" +
                 a.Privilege + "\');";
+
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
+        public static bool CancelReservation(string id)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string sql = $"DELETE FROM Reserves WHERE Id = \"{id}\"";
 
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 

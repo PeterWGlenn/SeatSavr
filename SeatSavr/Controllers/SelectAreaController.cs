@@ -15,6 +15,7 @@ namespace SeatSavr.Controllers
         private static string _sendGridKeyFile = $"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}Keys{Path.DirectorySeparatorChar}SendGridKey.txt";
         private static string _sendGridEmail = "peter.glenn.17@cnu.edu";
         private static string _sendGridName = "SeatSavr";
+        private static string _cancelationLink = "https://seatsavr.azurewebsites.net/cancel-reservation?id=";
 
         [HttpGet("[action]")]
         public Layout GetLayout(string address)
@@ -29,12 +30,21 @@ namespace SeatSavr.Controllers
                 return false;
 
             Customer c = d.ToCustomer();
+            Reservation r = d.ToReservation(c);
 
-            return Database.AddReservation(d.ToLayout(), d.ToReservation(c), d.ToArea(), c);
+            // Send confirmation email if successful
+            if (Database.AddReservation(d.ToLayout(), r, d.ToArea(), c))
+            {
+                SendConfirmationEmail(r);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        [HttpPost("[action]")]
-        public async Task<bool> SendConfirmationEmail([FromBody] ReservationData d)
+        private async Task<bool> SendConfirmationEmail(Reservation r)
         {
             if (!File.Exists(_sendGridKeyFile)) {
                 return false;
@@ -44,10 +54,10 @@ namespace SeatSavr.Controllers
             SendGridClient client = new SendGridClient(apiKey);
 
             EmailAddress from = new EmailAddress(_sendGridEmail, _sendGridName);
-            EmailAddress to = new EmailAddress(d.Email, $"{d.FirstName} {d.LastName}");
+            EmailAddress to = new EmailAddress(r.Customer.Email, $"{r.Customer.FirstName} {r.Customer.LastName}");
 
-            string subject = $"Reservation Confirmation - {d.LayoutName} - {d.Date}";
-            string content = $"You successfully reserved an area at {d.LayoutName}! Your reservation starts at {d.Date} and lasts {d.Duration} hours.";
+            string subject = $"Reservation Confirmation - {r.ReservedAreaName} - {r.Date}";
+            string content = $"You successfully reserved an area at {r.ReservedAreaName}! Your reservation starts at {r.Date} and lasts {r.Duration} hour(s). You can cancel your reservation using this link: {_cancelationLink}{r.Id}";
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
             Response response = await client.SendEmailAsync(msg);
@@ -91,7 +101,9 @@ namespace SeatSavr.Controllers
                     Id = Reservation.GenerateId(),
                     Date = DateTime.Parse(Date).ToUniversalTime(),
                     Duration = Duration,
-                    Customer = c
+                    Customer = c,
+                    ReservedAreaName = LayoutName,
+                    ReservedAreaAddress = Address
                 };
             }
 

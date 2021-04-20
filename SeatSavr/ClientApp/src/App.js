@@ -5,6 +5,7 @@ import { Home } from './components/Home';
 import AdminSelectLayout from "./components/AdminSelectLayout";
 import AdminProfile from "./components/AdminProfile";
 import LayoutDraw from "./components/LayoutDraw";
+import { CancelReservation } from './components/CancelReservation';
 
 import './custom.css';
 
@@ -23,6 +24,7 @@ class App extends React.Component {
             <Layout>
                 <Switch>
                     <Route exact path='/' component={Home} />
+                    <Route exact path='/cancel-reservation' component={CancelReservation} />
                     <ProtectedRoute path='/admin-layouts' component={AdminSelectLayout} />
                     <ProtectedRoute path='/admin-profile' component={AdminProfile} />
                     <ProtectedRoute path='/draw-layout' component={LayoutDraw} />
