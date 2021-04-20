@@ -1,4 +1,6 @@
 ﻿import React from "react";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 import Toolbox from "./toolbox";
 
@@ -129,12 +131,11 @@ export default class Content extends React.Component {
 
     render() {
         return (
-            <div className="content">
+            <><div className="content">
                 <Toolbox
                     items={this.props.items}
                     activeItem={this.props.activeItem}
-                    handleClick={this.props.handleClick}
-                />
+                    handleClick={this.props.handleClick} />
                 <div className="canvas">
                     <canvas
                         className="canvas-actual"
@@ -144,19 +145,37 @@ export default class Content extends React.Component {
                         ref={this.canvasRef}
                         onMouseDown={this.handleMouseDown}
                         onMouseMove={this.handleMouseMove}
-                        onMouseUp={this.handleMouseUp}
-                    />
+                        onMouseUp={this.handleMouseUp} />
                     <canvas
                         className="canvas-overlay"
                         id="overlay"
                         width="600px"
                         height="480px"
-                        ref={this.canvasOverlayRef}
-                    />
+                        ref={this.canvasOverlayRef} />
                 </div>
-                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
             </div>
+                <button onClick={this.onContinue} className="form-buttons">Continue to Place Areas </button>
+                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
+                <Snackbar open={this.state.saveDrawOpen} autoHideDuration={3000} onClose={this.handleSaveDrawClose}>
+                    <Alert onClose={this.handleReservedAreaWarningClose} severity="success">
+                        You have successfully saved your personal drawing of a layout
+                    </Alert>
+                </Snackbar></>
+
+                
         );
+    }
+
+    onContinue() {
+
+    }
+
+    openSaveDialog() {
+        this.setState({ saveDrawOpen: true });
+    }
+
+    handleSaveDrawClose = () => {
+        this.setState({ saveDrawOpen: false });
     }
 
     onSaveLayout = () => {
@@ -169,7 +188,7 @@ export default class Content extends React.Component {
     async saveLayout() {
         
         await this.postLayout();
-        //this.renderAreas();
+        this.openSaveDialog();
     }
 
     async postLayout() {
