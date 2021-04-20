@@ -15,6 +15,24 @@ h1 {
     margin-top: 5px;
 }
 
+h6 {
+    font-size: 16px;
+    font-family: Avantgarde;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+profile-text {
+    font-size: 14px;
+    font-family: Avantgarde;
+    font-weight: normal;
+    margin-top: 5px;
+}
+
+small {
+    font-family: Avantgarde;
+}
+
 p {
     font-size: 30px;
     font-family: Avantgarde;
@@ -31,4 +49,9 @@ p {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    margin-bottom: 5px;
+}
+
+background {
+    color: #FFCD73;
 }

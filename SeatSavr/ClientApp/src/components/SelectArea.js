@@ -19,6 +19,7 @@ import Slider from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
 
 import './SelectArea.css';
+import '../custom.css';
 
 export class SelectArea extends Component {
     static displayName = SelectArea.name;
@@ -247,7 +248,7 @@ export class SelectArea extends Component {
                         onClick={this.canvasClick} />
                 <Box maxWidth={SelectArea.layoutWidth}>
                     <Box maxWidth={SelectArea.layoutWidth}>
-                        <Typography id="sliderLabel" className="duration-slider-label">
+                        <Typography id="sliderLabel" className="duration-slider-label small">
                             Duration (hours)
                                 </Typography>
                         <Slider
@@ -343,12 +344,12 @@ export class SelectArea extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleReserveDialogClose} color="primary">
+                        <button onClick={this.handleReserveDialogClose} className='button-nav'>
                             Cancel
-                        </Button>
-                        <Button onClick={this.handleReserve} color="primary">
+                        </button>
+                        <button onClick={this.handleReserve} className='button-nav' >
                             Reserve
-                        </Button>
+                        </button>
                     </DialogActions>
                 </Dialog>
                 <Snackbar open={this.state.reservedAreaWarningOpen} autoHideDuration={3000} onClose={this.handleReservedAreaWarningClose}>

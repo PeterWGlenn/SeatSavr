@@ -25,8 +25,8 @@ class AdminProfile extends React.Component {
                             <div className="card mb-3">
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Full Name</h6>
+                                        <div className="col-sm-3" >
+                                            <h6 className="mb-0" >Full Name</h6>
                                         </div>
                                         <div className="col-sm-9 text-secondary">
                                             {name}
