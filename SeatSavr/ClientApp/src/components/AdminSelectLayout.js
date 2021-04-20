@@ -30,6 +30,7 @@ class AdminSelectLayout extends Component {
             createLayoutDialogOpen: false,
             editLayoutDialogOpen: false,
             layoutCreatedOpen: false,
+            completeWithRedirect: false,
             redirect: "none",
             name: "No layout selected",
             address: "",
@@ -80,7 +81,7 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        
+        if (this.state.selectedLayout == null || !this.completeWithRedirect) {
             return (
                 <div>
                     {this.getListTitleHTML()}
@@ -180,7 +181,7 @@ class AdminSelectLayout extends Component {
                         <DialogActions>
                             <Button
                                 onClick={() => {
-                                    this.setState({ editLayoutDialogOpen: false });
+                                    this.setState({ editLayoutDialogOpen: false, completeWithRedirect:true });
                                 }}
                                 color="primary">
                                 Cancel
@@ -205,25 +206,33 @@ class AdminSelectLayout extends Component {
                     </Snackbar>
                 </div>
             );
+        }
        
-        
 
-        return (
+        if (this.state.selectedLayout != null && this.completeWithRedirect) {
+            return (
+                <div>
+
+                    <h2>
+                        {this.state.selectedLayout.name}
+                        <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                    </h2>
+                    <h5>{this.state.selectedLayout.address}</h5>
+                    <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+                </div>
+            );
+        }
+
+        else return (
             <div>
-
-                <h2>
-                    {this.state.selectedLayout.name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
-                </h2>
-                <h5>{this.state.selectedLayout.address}</h5>
-                <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+                <h1> Something Went Wrong </h1>
             </div>
         );
-                     
-                     
-    }
+                 
+                 
+                }
 
-                        
+                 
 
     handleDrawRedirect = () => {
         this.redirect = "draw";
