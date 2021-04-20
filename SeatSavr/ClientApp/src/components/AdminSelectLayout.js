@@ -80,7 +80,7 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        if (this.state.selectedLayout == null) {
+        
             return (
                 <div>
                     {this.getListTitleHTML()}
@@ -103,7 +103,11 @@ class AdminSelectLayout extends Component {
                         }} />
                     <List id='layoutList'>
                         {this.state.displayedLayouts.map(layout =>
-                            <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>
+                            <ListItem key={layout.address} button onClick={() => {
+                                this.setState({
+                                    editLayoutDialogOpen: true, selectedLayout: layout
+                                });
+                            }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />
                             </ListItem>
                         )}
@@ -157,6 +161,31 @@ class AdminSelectLayout extends Component {
                                 Cancel
                         </Button>
                             <Button onClick={this.handleCreateLayout} color="primary">
+                                Create Layout
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={this.state.editLayoutDialogOpen}
+                        onClose={() => {
+                            this.setState({ editLayoutDialogOpen: false });
+                        }}
+                        aria-labelledby="editLayoutDialog">
+                        <DialogTitle id="editLayoutDialog">Edit Layout</DialogTitle>
+                        <DialogContent orientation='vertical'>
+                            <DialogContentText>
+                                Edit Layout Dialog
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={() => {
+                                    this.setState({ editLayoutDialogOpen: false });
+                                }}
+                                color="primary">
+                                Cancel
+                        </Button>
+                            <Button onClick={this.handleCreateLayout} color="primary">
                                 Upload Image
                         </Button>
                             <Button onClick={this.handleDrawLayout} color="primary">
@@ -176,58 +205,43 @@ class AdminSelectLayout extends Component {
                     </Snackbar>
                 </div>
             );
-        }
-
         
+
+
+
+
         if (this.state.selectedLayout != null) {
-            this.name = this.state.selectedLayout.name;
-            this.address = this.state.selectedLayout.address;
-            return(
-                <Dialog
-                    open={this.state.editLayoutDialogOpen}
-                    onClose={() => {
-                        this.setState({ editLayoutDialogOpen: false });
-                    }}
-                    aria-labelledby="editLayoutDialog">
-                 <DialogTitle id="ediLayoutDialog">Edit Layout</DialogTitle>
-                    <DialogContent orientation='vertical'>
-                        <DialogContentText>
-                            Please choose how you would like to edit your layout.
-                    </DialogContentText>
-                        <DialogActions>
-                            <Button
-                                onClick={this.handleEditRedirect}
-                                color="primary">
-                                Upload Photo
-                        </Button>
-                            <Button onClick={this.handleDrawRedirect} color="primary">
-                                Draw Image
-                        </Button>
-                        </DialogActions>
-                    </DialogContent>
-                    </Dialog>
-            );
-            
-        }
+            var name = "No layout selected";
+            var address = "";
+            name = this.state.selectedLayout.name;
+            address = this.state.selectedLayout.address;
+            return (
+                <div>
 
-        
+                    <h2>
+                        {name}
+                        <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                    </h2>
+                    <h5>{address}</h5>
+                    <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+                </div>
+            );
+
+        } else {
+            return (
+                <div>
+                    <h1> Something went wrong </h1>
+                </div>
+            );
+           }
+                     
+                     
     }
 
     handleEditRedirect = () => {
-        this.setState({ editLayoutDialogOpen: false });
-        console.log(this.state.redirect);
-        return (
-            <div>
-                <h2>
-                    {this.name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
-                </h2>
-                <h5>{this.address}</h5>
-                <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
-            </div>
-        );
 
     }
+                     
 
     handleDrawRedirect = () => {
         this.redirect = "draw";
