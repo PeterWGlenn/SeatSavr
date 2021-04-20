@@ -1,4 +1,6 @@
 ﻿import React from "react";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 import Toolbox from "./toolbox";
 
@@ -8,14 +10,17 @@ export default class Content extends React.Component {
         this.state = {
             isDrawing: false,
             offsetX: 0,
+            newAreaLocations: [],
             offsetY: 0,
             startX: 0,
-            startY: 0
+            startY: 0,
+            canvasImageDataURL: null
         };
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.canvasRef = React.createRef();
+        
         this.canvasOverlayRef = React.createRef();
         this.ctx = null;
         this.overlayCtx = null;
@@ -121,34 +126,97 @@ export default class Content extends React.Component {
 
         ctx.closePath();
         this.setState({ isDrawing: false });
+        
     }
 
     render() {
         return (
-            <div className="content">
+            <><div className="content">
                 <Toolbox
                     items={this.props.items}
                     activeItem={this.props.activeItem}
-                    handleClick={this.props.handleClick}
-                />
+                    handleClick={this.props.handleClick} />
                 <div className="canvas">
                     <canvas
                         className="canvas-actual"
+                        id="background"
                         width="600px"
                         height="480px"
                         ref={this.canvasRef}
                         onMouseDown={this.handleMouseDown}
                         onMouseMove={this.handleMouseMove}
-                        onMouseUp={this.handleMouseUp}
-                    />
+                        onMouseUp={this.handleMouseUp} />
                     <canvas
                         className="canvas-overlay"
+                        id="overlay"
                         width="600px"
                         height="480px"
-                        ref={this.canvasOverlayRef}
-                    />
+                        ref={this.canvasOverlayRef} />
                 </div>
             </div>
+                <button onClick={this.onContinue} className="form-buttons">Continue to Place Areas </button>
+                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
+                <Snackbar open={this.state.saveDrawOpen} autoHideDuration={3000} onClose={this.handleSaveDrawClose}>
+                    <Alert onClose={this.handleReservedAreaWarningClose} severity="success">
+                        You have successfully saved your personal drawing of a layout
+                    </Alert>
+                </Snackbar></>
+
+                
         );
+    }
+
+    onContinue() {
+
+    }
+
+    openSaveDialog() {
+        this.setState({ saveDrawOpen: true });
+    }
+
+    handleSaveDrawClose = () => {
+        this.setState({ saveDrawOpen: false });
+    }
+
+    onSaveLayout = () => {
+        
+        
+        this.saveLayout();
+        
+    }
+
+    async saveLayout() {
+        
+        await this.postLayout();
+        this.openSaveDialog();
+    }
+
+    async postLayout() {
+
+        var canvas = document.getElementById('background');
+        this.state.canvasImageDataURL = canvas.toDataURL();
+        console.log("Canvas Url");
+        console.log(this.state.canvasImageDataURL);
+
+        if (this.state.loading)
+            return;
+
+        //var layout = "DrawSampleLayout";
+
+        await fetch('layouteditor/savelayout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
+            },
+            body: JSON.stringify({
+                name: "DrawSampleLayout",
+                address: "12345 Draw Street",
+                layoutImage: this.state.canvasImageDataURL
+                //newAreaLocations: this.state.newAreaLocations
+            })
+        });
     }
 }

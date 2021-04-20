@@ -2,6 +2,7 @@
 import { withAuth0 } from '@auth0/auth0-react';
 import Content from "./Content";
 import ColorPanel from "./color-panel";
+//import Snackbar from '@material-ui/core/Snackbar';
 
 import TextField from '@material-ui/core/TextField'
 
@@ -20,12 +21,14 @@ const toolbarItems = [
     //TODO { name: "Picker" }
 ];
 
-class LayoutDraw extends React.Component {
+export class LayoutDraw extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             color: defaultColor,
-            toolbarItems: toolbarItems
+            toolbarItems: toolbarItems,
+            canvasImageDataURL: null,
+            saveDrawOpen: false
         };
         this.changeColor = this.changeColor.bind(this);
         this.changeTool = this.changeTool.bind(this);
@@ -41,58 +44,26 @@ class LayoutDraw extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
+            <><React.Fragment>
                 <p>
                     <form className='Name enter' noValidate autoComplete="off">
                         <TextField id="standard-basic" label="Enter Layout Name Here" />
                     </form>
                 </p>
-                                
+
                 <Content
                     items={this.state.toolbarItems}
                     activeItem={this.state.selectedItem}
                     handleClick={this.changeTool}
-                    color={this.state.color}
-                />
+                    color={this.state.color} />
                 <ColorPanel
                     selectedColor={this.state.color}
-                    handleClick={this.changeColor}
-                />
-                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
+                    handleClick={this.changeColor} />
+
             </React.Fragment>
+                </>
         );
     }
 
-    onSaveLayout = () => {
-        this.saveLayout();
-    }
-
-    async saveLayout() {
-        await this.postLayout();
-        this.renderAreas();
-    }
-
-    async postLayout() {
-
-        if (this.state.loading)
-            return;
-
-        var layout = this.state.layout;
-
-        await fetch('layouteditor/savelayout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true
-            },
-            body: JSON.stringify({
-                name: layout.name,
-                address: layout.address,
-                layoutImage: this.state.canvasImageDataURL,
-                newAreaLocations: this.state.newAreaLocations
-            })
-        });
-    }
+    
 } export default withAuth0(LayoutDraw);

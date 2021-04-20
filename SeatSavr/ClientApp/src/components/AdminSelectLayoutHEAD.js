@@ -12,7 +12,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { LayoutEditor } from './LayoutEditor';
-//import { LayoutDraw } from './LayoutDraw';
 import { withAuth0 } from '@auth0/auth0-react';
 
 import './AdminSelectLayout.css';
@@ -28,18 +27,14 @@ class AdminSelectLayout extends Component {
             loading: true,
             selectedLayout: null,
             createLayoutDialogOpen: false,
-            editLayoutDialogOpen: false,
             layoutCreatedOpen: false,
-            redirect: "none",
-            name: "No layout selected",
-            address: "",
             errors: { layoutName: false, layoutAddress: false },
             errorMessages: { layoutName: '', layoutAddress: '' },
-
+            
         };
     }
 
-
+    
 
     componentDidMount() {
         this.populateLayoutData();
@@ -79,7 +74,7 @@ class AdminSelectLayout extends Component {
                 </div>
             );
         }
-
+        
         if (this.state.selectedLayout == null) {
             return (
                 <div>
@@ -117,7 +112,7 @@ class AdminSelectLayout extends Component {
                         <DialogTitle id="createLayoutDialog">Create Layout</DialogTitle>
                         <DialogContent orientation='vertical'>
                             <DialogContentText>
-                                Please enter the new layout's name and the address where the layout's building is located.
+                                Please enter the new layout's name and the address where the layout's building is located. 
                             </DialogContentText>
                             <TextField
                                 id="name"
@@ -178,60 +173,23 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        
+        var name = "No layout selected";
+        var address = "";
         if (this.state.selectedLayout != null) {
-            this.name = this.state.selectedLayout.name;
-            this.address = this.state.selectedLayout.address;
-            return(
-                <Dialog
-                    open={this.state.editLayoutDialogOpen}
-                    onClose={() => {
-                        this.setState({ editLayoutDialogOpen: false });
-                    }}
-                    aria-labelledby="editLayoutDialog">
-                 <DialogTitle id="ediLayoutDialog">Edit Layout</DialogTitle>
-                    <DialogContent orientation='vertical'>
-                        <DialogContentText>
-                            Please choose how you would like to edit your layout.
-                    </DialogContentText>
-                        <DialogActions>
-                            <Button
-                                onClick={this.handleEditRedirect}
-                                color="primary">
-                                Upload Photo
-                        </Button>
-                            <Button onClick={this.handleDrawRedirect} color="primary">
-                                Draw Image
-                        </Button>
-                        </DialogActions>
-                    </DialogContent>
-                    </Dialog>
-            );
-            
+            name = this.state.selectedLayout.name;
+            address = this.state.selectedLayout.address;
         }
 
-        
-    }
-
-    handleEditRedirect = () => {
-        this.setState({ editLayoutDialogOpen: false });
-        console.log(this.state.redirect);
         return (
             <div>
                 <h2>
-                    {this.name}
+                    {name}
                     <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
                 </h2>
-                <h5>{this.address}</h5>
+                <h5>{address}</h5>
                 <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
             </div>
         );
-
-    }
-
-    handleDrawRedirect = () => {
-        this.redirect = "draw";
-        this.setState({ editLayoutDialogOpen: false });
     }
 
     handleDrawLayout = () => {

@@ -5,7 +5,8 @@ import './NavMenu.css';
 import AuthService from '../AuthService';
 import { withAuth0 } from "@auth0/auth0-react";
 
-import { Button } from '@material-ui/core';
+//import { Button } from '@material-ui/core';
+import "../custom.css";
 
 
 class NavMenu extends Component {
@@ -38,14 +39,14 @@ class NavMenu extends Component {
 
         return auth0.isAuthenticated ?
             <>
-                <Button onClick={() => auth0.logout({
+                <button className='button-nav' onClick={() => auth0.logout({
                     returnTo: window.location.origin,
-                })}>Logout of Admin Account</Button>
-                <Button onClick={() => window.location.href = "/admin-profile"}>Profile</Button>
-                <Button onClick={() => window.location.href = "/admin-layouts"}>My Layouts</Button>
-                <Button onClick={() => window.location.href = "/draw-layout"}>Draw Layout</Button>
+                })}>Logout of Admin Account</button>
+                <button className='button-nav' onClick={() => window.location.href = "/admin-profile"}>Profile</button>
+                <button className='button-nav'onClick={() => window.location.href = "/admin-layouts"}>My Layouts</button>
+                <button className='button-nav' onClick={() => window.location.href = "/draw-layout"}>Draw Layout</button>
             </> :
-            <Button onClick={() => auth0.loginWithRedirect()}>Login to Admin Account</Button>
+            <button className='button-nav' onClick={() => auth0.loginWithRedirect()}> Login to Admin Account</button>
     }
 
     async addNewAdminIfNeeded() {
@@ -80,9 +81,9 @@ class NavMenu extends Component {
 
         return (
             <header>
-                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" >
                     <Container>
-                    <NavbarBrand tag={Link} to="/">SeatSavr</NavbarBrand>
+                        <NavbarBrand className='button-nav' tag={Link} to="/">SeatSavr</NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                             {this.getCorrectNavMenuButtons()}

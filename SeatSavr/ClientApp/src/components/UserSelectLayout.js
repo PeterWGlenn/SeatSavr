@@ -4,7 +4,8 @@ import { SelectArea } from './SelectArea';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Button, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
+//import custom from '../custom.css';
 
 export class UserSelectLayout extends Component {
     static displayName = UserSelectLayout.name;
@@ -38,8 +39,8 @@ export class UserSelectLayout extends Component {
     getWelcomeHTML() {
         return (
             <div>
-                <h1>Welcome to SeatSavr!</h1>
-                <p>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! If you want to create your own layouts, login as an administrator.</p>
+                <h1 > <center> Welcome to SeatSavr! </center></h1>
+                <p><center>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! <p>If you want to create your own layouts, login as an administrator.</p> </center></p>
             </div>
         );
     }
@@ -63,6 +64,7 @@ export class UserSelectLayout extends Component {
                         label="Search Layouts"
                         variant="outlined"
                         fullWidth
+
                         onChange={() => {
                             var newLayouts = [];
                             var filter = document.getElementById('layoutListFilter').value.toLowerCase();
@@ -73,8 +75,9 @@ export class UserSelectLayout extends Component {
                                 }
                             });
                             this.setState({ availableLayouts: newLayouts });
-                        }}/>
-                    <List id='layoutList'>
+                        }} />
+                    <List id='layoutList'
+                        className='button-nav'>
                         {this.state.availableLayouts.map(layout =>
                             <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />
@@ -94,12 +97,14 @@ export class UserSelectLayout extends Component {
 
         return (
             <div>
-                <h2>
-                    {name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
-                </h2>
-                <h5>{address}</h5>
-                <SelectArea selectedLayout={this.state.selectedLayout}/>
+                <center>
+                    <button className='button-nav' onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</button>
+                    </center>
+                <h1> {name} </h1>
+                
+                <h6>{address}</h6>
+
+                <SelectArea selectedLayout={this.state.selectedLayout} />
             </div>
         );
     }
