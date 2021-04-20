@@ -81,7 +81,8 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        if (this.state.selectedLayout == null || !this.completeWithRedirect) {
+        console.log(this.state.redirect);
+        if (this.state.selectedLayout == null || !this.state.completeWithRedirect) {
             return (
                 <div>
                     {this.getListTitleHTML()}
@@ -186,7 +187,10 @@ class AdminSelectLayout extends Component {
                                 color="primary">
                                 Cancel
                         </Button>
-                            <Button onClick={this.handleCreateLayout} color="primary">
+                            <Button onClick={() => {
+                                this.setState({ redirect: "upload", editLayoutDialogOpen: false, completeWithRedirect: true });
+                            }}
+                             color = "primary" >
                                 Upload Image
                         </Button>
                             <Button onClick={this.handleDrawLayout} color="primary">
@@ -207,9 +211,11 @@ class AdminSelectLayout extends Component {
                 </div>
             );
         }
+
+        
        
 
-        if (this.state.selectedLayout != null && this.completeWithRedirect) {
+        if (this.state.selectedLayout != null && this.state.completeWithRedirect && this.state.redirect === "upload") {
             return (
                 <div>
 
