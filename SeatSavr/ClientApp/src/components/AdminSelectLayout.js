@@ -205,28 +205,17 @@ class AdminSelectLayout extends Component {
                     </Snackbar>
                 </div>
             );
+       
         
-
-
-        var name = "No layout selected";
-        var address = "";
-
-        if (this.state.selectedLayout != null) {
-            
-            name = this.state.selectedLayout.name;
-            address = this.state.selectedLayout.address;
-          
-
-        }
 
         return (
             <div>
 
                 <h2>
-                    {name}
+                    {this.state.selectedLayout.name}
                     <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
                 </h2>
-                <h5>{address}</h5>
+                <h5>{this.state.selectedLayout.address}</h5>
                 <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
             </div>
         );
