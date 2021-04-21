@@ -45,11 +45,7 @@ export class LayoutDraw extends React.Component {
     render() {
         return (
             <><React.Fragment>
-                <p>
-                    <form className='Name enter' noValidate autoComplete="off">
-                        <TextField id="standard-basic" label="Enter Layout Name Here" />
-                    </form>
-                </p>
+                
 
                 <Content
                     items={this.state.toolbarItems}

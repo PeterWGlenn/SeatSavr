@@ -14,7 +14,9 @@ export default class Content extends React.Component {
             offsetY: 0,
             startX: 0,
             startY: 0,
-            canvasImageDataURL: null
+            canvasImageDataURL: null,
+            layout: null,
+            loading: false
         };
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -26,7 +28,31 @@ export default class Content extends React.Component {
         this.overlayCtx = null;
     }
 
+    async populateLayout() {
+
+        var selectedAddress = this.props.selectedLayoutAddress;
+        if (selectedAddress == null)
+            return false;
+
+        var fetchString = 'layouteditor/getlayout/?address=' + selectedAddress;
+        const response = await fetch(fetchString, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        const layout = await response.json();
+
+        this.setState({
+            layout: layout,
+            canvasImageDataURL: "data:image/png;base64," + layout.layoutImage,
+            loading: false
+        });
+        return true;
+    }
+
     componentDidMount() {
+        this.populateLayout();
         let canvasRef = this.canvasRef.current;
         let canvasOverlayRef = this.canvasOverlayRef.current;
         let canvasRect = canvasRef.getBoundingClientRect();
@@ -161,8 +187,7 @@ export default class Content extends React.Component {
                         You have successfully saved your personal drawing of a layout
                     </Alert>
                 </Snackbar></>
-
-                
+       
         );
     }
 
@@ -179,14 +204,10 @@ export default class Content extends React.Component {
     }
 
     onSaveLayout = () => {
-        
-        
         this.saveLayout();
-        
     }
 
     async saveLayout() {
-        
         await this.postLayout();
         this.openSaveDialog();
     }
