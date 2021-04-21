@@ -4,7 +4,6 @@ import Content from "./Content";
 import ColorPanel from "./color-panel";
 //import Snackbar from '@material-ui/core/Snackbar';
 
-import TextField from '@material-ui/core/TextField'
 
 const defaultColor = "black";
 
