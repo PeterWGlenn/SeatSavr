@@ -208,7 +208,7 @@ export class LayoutEditor extends Component {
                 return false;
             return (
                 <div>
-                    <LayoutDraw selectedLayoutAddress={selectedAddress} />
+                    <LayoutDraw selectedLayoutAddress={this.props.selectedLayoutAddress} />
                 </div>);
         }
     }

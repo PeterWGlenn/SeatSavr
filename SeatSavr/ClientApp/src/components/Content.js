@@ -23,79 +23,40 @@ export default class Content extends React.Component {
             startY: 0,
             canvasImageDataURL: null,
             layout: null,
-            loading: false
+            loading: true
         };
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
         this.canvasRef = React.createRef();
-        
+
         this.canvasOverlayRef = React.createRef();
         this.ctx = null;
         this.overlayCtx = null;
     }
 
-    async populateLayout() {
+    //componentWillMount() {
+    //    this.renderContent();
+    //}
 
-        var selectedAddress = this.props.selectedLayoutAddress;
-        if (selectedAddress == null)
-            return false;
-
-        var fetchString = 'layouteditor/getlayout/?address=' + selectedAddress;
-        const response = await fetch(fetchString, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        });
-        const layout = await response.json();
-
-        this.setState({
-            layout: layout,
-            canvasImageDataURL: "data:image/png;base64," + layout.layoutImage,
-            loading: false
-        });
-        return true;
+    async renderContent() {
+        if (this.state.loading === true) {
+            await this.populateContent;
+        }
     }
 
+
+
     componentDidMount() {
-        this.populateLayout();
+        this.renderContent();
         let canvasRef = this.canvasRef.current;
         let canvasOverlayRef = this.canvasOverlayRef.current;
         let canvasRect = canvasRef.getBoundingClientRect();
         this.ctx = canvasRef.getContext("2d");
         this.ctxOverlay = canvasOverlayRef.getContext("2d");
-        this.setState({ offsetX: canvasRect.left, offsetY: canvasRect.top });
+        this.setState({ offsetX: canvasRect.left, offsetY: canvasRect.top, loading: false });
     }
 
-    async renderDraw() {
-
-        if (this.state.loading === true) {
-            await this.populateLayout();
-        }
-
-        var canvas = document.getElementById('canvas-actual');
-        if (canvas != null) {
-            var context = canvas.getContext('2d');
-
-
-            var image = new Image();
-            image.onload = function () {
-                //Draw Background Image
-                context.drawImage(image, 0, 0, Content.layoutWidth, Content.layoutHeight);
-
-                // Draw Border
-                context.lineWidth = 1;
-                context.strokeStyle = "#000000";
-                context.strokeRect(0, 0, canvas.width, canvas.height);
-            }
-
-
-            if (this.state.canvasImageDataURL != null) {
-                image.src = this.state.canvasImageDataURL;
-            }
-        }
-    }
 
     handleMouseDown(e) {
         let ctx = this.ctx;
@@ -122,7 +83,7 @@ export default class Content extends React.Component {
                 startX: e.clientX - this.state.offsetX,
                 startY: e.clientY - this.state.offsetY
             });
-        } 
+        }
     }
 
     handleMouseMove(e) {
@@ -194,10 +155,10 @@ export default class Content extends React.Component {
 
         ctx.closePath();
         this.setState({ isDrawing: false });
-        
+
     }
 
-    
+
     render() {
         return (
             <><div className="content">
@@ -230,14 +191,14 @@ export default class Content extends React.Component {
                         You have successfully saved your personal drawing of a layout
                     </Alert>
                 </Snackbar></>
-       
+
         );
     }
 
     onContinue() {
 
     }
-        
+
     openSaveDialog() {
         this.setState({ saveDrawOpen: true });
     }
@@ -256,7 +217,6 @@ export default class Content extends React.Component {
     }
 
     async postLayout() {
-
         var canvas = document.getElementById('background');
         this.state.canvasImageDataURL = canvas.toDataURL();
         console.log("Canvas Url");
@@ -265,7 +225,7 @@ export default class Content extends React.Component {
         if (this.state.loading)
             return;
 
-        //var layout = "DrawSampleLayout";
+        var layout = this.state.layout;
 
         await fetch('layouteditor/savelayout', {
             method: 'POST',
@@ -276,8 +236,8 @@ export default class Content extends React.Component {
                 "Access-Control-Allow-Credentials": true
             },
             body: JSON.stringify({
-                name: "DrawSampleLayout",
-                address: "12345 Draw Street",
+                name: this.props.layout.name,
+                address: this.props.layout.address,
                 layoutImage: this.state.canvasImageDataURL
                 //newAreaLocations: this.state.newAreaLocations
             })

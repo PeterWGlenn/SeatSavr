@@ -27,10 +27,19 @@ export class LayoutDraw extends React.Component {
             color: defaultColor,
             toolbarItems: toolbarItems,
             canvasImageDataURL: null,
-            saveDrawOpen: false
+            saveDrawOpen: false,
+            loading: true
         };
         this.changeColor = this.changeColor.bind(this);
         this.changeTool = this.changeTool.bind(this);
+    }
+
+    componentWillMount() {
+        this.renderDraw();
+    }
+
+    componentDidMount() {
+        this.renderDraw();
     }
 
     changeColor(event) {
@@ -48,7 +57,8 @@ export class LayoutDraw extends React.Component {
                     items={this.state.toolbarItems}
                     activeItem={this.state.selectedItem}
                     handleClick={this.changeTool}
-                    color={this.state.color} />
+                    color={this.state.color}
+                    selectedLayoutAddress={this.props.selectedLayoutAddress}/>
                 <ColorPanel
                     selectedColor={this.state.color}
                     handleClick={this.changeColor} />
@@ -57,5 +67,34 @@ export class LayoutDraw extends React.Component {
         );
     }
 
+    async renderDraw() {
+        if (this.state.loading === true) {
+            await this.populateDraw();
+        }
+    }
+
+    async populateDraw() {
+
+        var selectedAddress = this.props.selectedLayoutAddress;
+        if (selectedAddress == null)
+            return false;
+
+        var fetchString = 'layouteditor/getlayout/?address=' + selectedAddress;
+        const response = await fetch(fetchString, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        const layout = await response.json();
+
+        this.setState({
+            layout: layout,
+            currentAreas: layout.areas,
+            canvasImageDataURL: "data:image/png;base64," + layout.layoutImage,
+            loading: false
+        });
+        return true;
+    }
     
 } export default withAuth0(LayoutDraw);
