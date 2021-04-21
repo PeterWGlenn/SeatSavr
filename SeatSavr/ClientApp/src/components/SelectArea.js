@@ -17,6 +17,7 @@ import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Loading from './loading';
 
 import './SelectArea.css';
 import '../custom.css';
@@ -219,17 +220,22 @@ export class SelectArea extends Component {
 
     render() {
 
+        var canvasOrLoading = <Loading/>;
+        if (!this.state.loading) {
+            canvasOrLoading = <canvas id="layoutCanvas"
+                                      width={SelectArea.layoutWidth}
+                                      height={SelectArea.layoutHeight}
+                                      onClick={this.canvasClick} />
+        }   
+
         return (
             <div>
-                <canvas id="layoutCanvas"
-                        width={SelectArea.layoutWidth}
-                        height={SelectArea.layoutHeight}
-                        onClick={this.canvasClick} />
+                {canvasOrLoading}
                 <Box maxWidth={SelectArea.layoutWidth}>
                     <Box maxWidth={SelectArea.layoutWidth}>
                         <Typography id="sliderLabel" className="duration-slider-label small">
                             Duration (hours)
-                                </Typography>
+                        </Typography>
                         <Slider
                             className="duration-slider"
                             id="durationSlider"

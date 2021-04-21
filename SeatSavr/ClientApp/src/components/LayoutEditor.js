@@ -6,6 +6,7 @@ import { Button } from '@material-ui/core';
 
 import './LayoutEditor.css'
 import LayoutDraw from './LayoutDraw';
+import Loading from './loading';
 
 export class LayoutEditor extends Component {
     static displayName = LayoutEditor.name;
@@ -175,13 +176,19 @@ export class LayoutEditor extends Component {
     }
 
     render() {
+
+        var canvasOrLoading = <Loading />;
+        if (!this.state.loading) {
+            canvasOrLoading = <canvas id="layoutEditorCanvas"
+                                      width={LayoutEditor.layoutWidth}
+                                      height={LayoutEditor.layoutHeight}
+                                      onClick={this.canvasClick} />
+        }
+
         if (!this.state.renderDrawImage) {
             return (
                 <div>
-                    <canvas id="layoutEditorCanvas"
-                        width={LayoutEditor.layoutWidth}
-                        height={LayoutEditor.layoutHeight}
-                        onClick={this.canvasClick} />
+                    {canvasOrLoading}
                     <Box maxWidth={LayoutEditor.layoutWidth}>
                         <ImageUploader
                             width={LayoutEditor.layoutWidth}
