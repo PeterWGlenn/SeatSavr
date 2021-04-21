@@ -2,10 +2,12 @@
 import { SelectArea } from './SelectArea';
 
 import List from '@material-ui/core/List';
+import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { TextField } from '@material-ui/core';
-//import custom from '../custom.css';
+
+import '../custom.css';
 
 export class UserSelectLayout extends Component {
     static displayName = UserSelectLayout.name;
@@ -97,11 +99,10 @@ export class UserSelectLayout extends Component {
 
         return (
             <div>
-                <center>
-                    <button className='button-nav' onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</button>
-                    </center>
-                <h1> {name} </h1>
-                
+                <h1>
+                    {name}
+                    <Button className='button-nav' onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                </h1>
                 <h6>{address}</h6>
 
                 <SelectArea selectedLayout={this.state.selectedLayout} />

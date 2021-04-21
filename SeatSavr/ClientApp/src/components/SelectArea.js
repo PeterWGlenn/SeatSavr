@@ -15,6 +15,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 
 import './SelectArea.css';
@@ -319,12 +320,12 @@ export class SelectArea extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <button onClick={this.handleReserveDialogClose} className='button-nav'>
+                        <Button onClick={this.handleReserveDialogClose} className='button-nav'>
                             Cancel
-                        </button>
-                        <button onClick={this.handleReserve} className='button-nav' >
+                        </Button>
+                        <Button onClick={this.handleReserve} className='button-nav' >
                             Reserve
-                        </button>
+                        </Button>
                     </DialogActions>
                 </Dialog>
                 <Snackbar open={this.state.reservedAreaWarningOpen} autoHideDuration={3000} onClose={this.handleReservedAreaWarningClose}>

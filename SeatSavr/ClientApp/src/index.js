@@ -9,13 +9,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Auth0ProviderWithHistory } from "./auth0-provider-with-history";
 
 import './styles/styles.css';
+import './custom.css';
 
 ReactDOM.render(
     <Router>
         <Auth0ProviderWithHistory>
             <App>
-                <LayoutDraw />
-             </App> 
+                <LayoutDraw/>
+            </App> 
         </Auth0ProviderWithHistory>
     </Router>,
     document.getElementById('root')

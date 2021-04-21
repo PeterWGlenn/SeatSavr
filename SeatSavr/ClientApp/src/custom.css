@@ -1,23 +1,23 @@
-/* Provide sufficient contrast against white background */
-
-a {
-  color: #D77B5F;
+html {
+    --color-background: #D77B5F;
+    --color-primary: #C0413B;
+    --color-secondary: #FF9200;
+    --color-dark: #57291F;
+    --color-light: #FFCD73;
+    --color-background-light: #FEEADF;
+    --color-background-dark: #FEDBD6;
+    --color-background-light-comp: #8D8BB3;
 }
-
-code {
-  color: #E01A76;
-}
-
 
 h1 {
-    font-size: 45px;
+    font-size: 40px;
     font-family: Avantgarde;
     font-weight: bold;
     margin-top: 5px;
 }
 
 h6 {
-    font-size: 16px;
+    font-size: 24px;
     font-family: Avantgarde;
     font-weight: bold;
     margin-top: 5px;
@@ -35,24 +35,48 @@ small {
 }
 
 p {
-    font-size: 30px;
+    font-size: 20px;
     font-family: Avantgarde;
     font-weight: normal;
     margin-top: 5px;
 }
 
-.button-nav {
-    color: #C0413B;
-    background-color: #FFCD73;
-    border-color: #57291f;  
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-bottom: 5px;
+a {
+    color: #0366d6;
 }
 
-background {
-    color: #FFCD73;
+code {
+    color: #E01A76;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+    color: var(--color-dark);
+    font-size: 30px;
+    font-family: 'Brush Script MT', cursive;
+    padding: 0px;
+}
+
+.custom-navbar-styling {
+    background: linear-gradient(to bottom right, var(--color-light), var(--color-secondary));
+    padding: 1px;
+}
+
+.custom-body-style {
+    background: white;
+}
+
+.logo-styling {
+    width: 45px;
+    height: 45px;
+    margin-right: 10px;
+    padding: 0px;
 }

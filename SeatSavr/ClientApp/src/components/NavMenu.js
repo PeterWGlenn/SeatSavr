@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import AuthService from '../AuthService';
 import { withAuth0 } from "@auth0/auth0-react";
+import { Button } from '@material-ui/core';
 
-//import { Button } from '@material-ui/core';
+import Logo from './logo.png';
+
 import "../custom.css";
 
 
@@ -39,14 +41,14 @@ class NavMenu extends Component {
 
         return auth0.isAuthenticated ?
             <>
-                <button className='button-nav' onClick={() => auth0.logout({
+                <Button className='button-nav' onClick={() => auth0.logout({
                     returnTo: window.location.origin,
-                })}>Logout of Admin Account</button>
-                <button className='button-nav' onClick={() => window.location.href = "/admin-profile"}>Profile</button>
-                <button className='button-nav'onClick={() => window.location.href = "/admin-layouts"}>My Layouts</button>
-                <button className='button-nav' onClick={() => window.location.href = "/draw-layout"}>Draw Layout</button>
+                })}>Logout of Admin Account</Button>
+                <Button className='button-nav' onClick={() => window.location.href = "/admin-profile"}>Profile</Button>
+                <Button className='button-nav' onClick={() => window.location.href = "/admin-layouts"}>My Layouts</Button>
+                <Button className='button-nav' onClick={() => window.location.href = "/draw-layout"}>Draw Layout</Button>
             </> :
-            <button className='button-nav' onClick={() => auth0.loginWithRedirect()}> Login to Admin Account</button>
+            <Button className='button-nav' onClick={() => auth0.loginWithRedirect()}> Login to Admin Account</Button>
     }
 
     async addNewAdminIfNeeded() {
@@ -76,14 +78,16 @@ class NavMenu extends Component {
     }
 
     render() {
-
         this.addNewAdminIfNeeded();
 
         return (
             <header>
-                <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" >
+                <Navbar className="custom-navbar-styling navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" >
                     <Container>
-                        <NavbarBrand className='button-nav' tag={Link} to="/">SeatSavr</NavbarBrand>
+                        <NavbarBrand className='button-nav' tag={Link} to="/">
+                            <img src={Logo} className="logo-styling"/>
+                            SeatSavr
+                        </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                             {this.getCorrectNavMenuButtons()}

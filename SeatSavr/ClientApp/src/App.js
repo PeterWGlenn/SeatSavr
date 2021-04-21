@@ -21,7 +21,7 @@ class App extends React.Component {
             return <Loading />;
         }
         return (
-            <Layout>
+            <Layout className="custom-app-styling">
                 <Switch>
                     <Route exact path='/' component={Home} />
                     <Route exact path='/cancel-reservation' component={CancelReservation} />

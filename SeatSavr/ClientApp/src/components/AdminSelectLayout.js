@@ -186,13 +186,13 @@ class AdminSelectLayout extends Component {
                                 }}
                                 color="primary">
                                 Cancel
-                        </Button>
+                            </Button>
                             <Button onClick={() => {
                                 this.setState({ redirect: "upload", editLayoutDialogOpen: false, completeWithRedirect: true });
                             }}
                              color = "primary" >
                                 Upload Image
-                        </Button>
+                            </Button>
                             <Button onClick={this.handleDrawLayout} color="primary">
                                 Draw Layout
                             </Button>
@@ -212,9 +212,6 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        
-       
-
         if (this.state.selectedLayout != null && this.state.completeWithRedirect && this.state.redirect === "upload") {
             return (
                 <div>
@@ -228,17 +225,12 @@ class AdminSelectLayout extends Component {
                 </div>
             );
         }
-
         else return (
             <div>
                 <h1> Something Went Wrong </h1>
             </div>
-        );
-                 
-                 
-                }
-
-                 
+        );            
+    }            
 
     handleDrawRedirect = () => {
         this.redirect = "draw";
