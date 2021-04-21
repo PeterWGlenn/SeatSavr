@@ -44,8 +44,6 @@ export class LayoutDraw extends React.Component {
     render() {
         return (
             <><React.Fragment>
-                
-
                 <Content
                     items={this.state.toolbarItems}
                     activeItem={this.state.selectedItem}
@@ -54,7 +52,6 @@ export class LayoutDraw extends React.Component {
                 <ColorPanel
                     selectedColor={this.state.color}
                     handleClick={this.changeColor} />
-
             </React.Fragment>
                 </>
         );

@@ -46,7 +46,6 @@ class NavMenu extends Component {
                 })}>Logout of Admin Account</Button>
                 <Button className='button-nav' onClick={() => window.location.href = "/admin-profile"}>Profile</Button>
                 <Button className='button-nav' onClick={() => window.location.href = "/admin-layouts"}>My Layouts</Button>
-                <Button className='button-nav' onClick={() => window.location.href = "/draw-layout"}>Draw Layout</Button>
             </> :
             <Button className='button-nav' onClick={() => auth0.loginWithRedirect()}> Login to Admin Account</Button>
     }
