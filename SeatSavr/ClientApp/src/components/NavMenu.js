@@ -85,7 +85,7 @@ class NavMenu extends Component {
                 <Navbar className="custom-navbar-styling navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" >
                     <Container>
                         <NavbarBrand className='button-nav' tag={Link} to="/">
-                            <img src={Logo} className="logo-styling"/>
+                            <img src={Logo} className="logo-styling" alt=""/>
                             SeatSavr
                         </NavbarBrand>
                     <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
