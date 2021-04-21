@@ -4,7 +4,6 @@ import Content from "./Content";
 import ColorPanel from "./color-panel";
 //import Snackbar from '@material-ui/core/Snackbar';
 
-import TextField from '@material-ui/core/TextField'
 
 const defaultColor = "black";
 
@@ -45,11 +44,7 @@ export class LayoutDraw extends React.Component {
     render() {
         return (
             <><React.Fragment>
-                <p>
-                    <form className='Name enter' noValidate autoComplete="off">
-                        <TextField id="standard-basic" label="Enter Layout Name Here" />
-                    </form>
-                </p>
+                
 
                 <Content
                     items={this.state.toolbarItems}

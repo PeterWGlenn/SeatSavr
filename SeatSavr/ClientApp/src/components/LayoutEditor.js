@@ -5,6 +5,7 @@ import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
 
 import './LayoutEditor.css'
+import LayoutDraw from './LayoutDraw';
 
 export class LayoutEditor extends Component {
     static displayName = LayoutEditor.name;
@@ -21,6 +22,7 @@ export class LayoutEditor extends Component {
             currentAreas: [],
             newAreaLocations: [],
             layout: null,
+            renderDrawImage: false,
             canvasImageDataURL: null,
             loading: true
         }
@@ -173,29 +175,48 @@ export class LayoutEditor extends Component {
     }
 
     render() {
-        return (
-            <div>
-                <canvas id="layoutEditorCanvas"
+        if (!this.state.renderDrawImage) {
+            return (
+                <div>
+                    <canvas id="layoutEditorCanvas"
                         width={LayoutEditor.layoutWidth}
                         height={LayoutEditor.layoutHeight}
-                        onClick={this.canvasClick}/>
-                <Box maxWidth={LayoutEditor.layoutWidth}>
-                    <ImageUploader
-                        width={LayoutEditor.layoutWidth}
-                        withIcon={false}
-                        label="Accepted file types: .jpg, .gif, .png"
-                        buttonText='Upload Layout Background'
-                        onChange={this.onDrop}
-                        withPreview={false}
-                        imgExtension={['.jpg', '.gif', '.png']}
-                        maxFileSize={2000000}
-                        singleImage={true} />
-                    <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
-                    <Button onClick={this.onClearEdits} className="form-buttons">Clear Edits</Button>
-                    
-                </Box>
-            </div>
-        );
+                        onClick={this.canvasClick} />
+                    <Box maxWidth={LayoutEditor.layoutWidth}>
+                        <ImageUploader
+                            width={LayoutEditor.layoutWidth}
+                            withIcon={false}
+                            label="Accepted file types: .jpg, .gif, .png"
+                            buttonText='Upload Layout Background'
+                            onChange={this.onDrop}
+                            withPreview={false}
+                            imgExtension={['.jpg', '.gif', '.png']}
+                            maxFileSize={2000000}
+                            singleImage={true} />
+                        <Button onClick={this.onRenderDrawImage} className="form-buttons">Draw Layout</Button>
+                        <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
+                        <Button onClick={this.onClearEdits} className="form-buttons">Clear Edits</Button>
+
+                    </Box>
+                </div>
+            );
+        }
+
+        else {
+            var selectedAddress = this.props.selectedLayoutAddress;
+            if (selectedAddress == null)
+                return false;
+            return (
+                <div>
+                    <LayoutDraw selectedLayoutAddress={selectedAddress} />
+                </div>);
+        }
+    }
+
+    onRenderDrawImage = () => {
+        this.setState({ renderDrawImage: true });
+        this.renderAreas();
+        console.log(this.state.renderDrawImage);
     }
 
     onSaveLayout = () => {
@@ -204,6 +225,10 @@ export class LayoutEditor extends Component {
 
     onClearEdits = () => {
         this.clearEdits();
+    }
+
+    onDrawLayout = () => {
+        return (<div> Button Works </div>);
     }
 
     async saveLayout() {
