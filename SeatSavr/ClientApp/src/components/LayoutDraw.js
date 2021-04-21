@@ -16,7 +16,7 @@ const toolbarItems = [
     // TODO{ name: "Text" },
     { name: "Rectangle" },
     //TODO { name: "Circle" },
-    //TODO { name: "Erase" },
+    { name: "Erase" },
     //TODO { name: "Picker" }
 ];
 

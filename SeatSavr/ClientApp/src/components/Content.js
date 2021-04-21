@@ -5,12 +5,19 @@ import Alert from '@material-ui/lab/Alert';
 import Toolbox from "./toolbox";
 
 export default class Content extends React.Component {
+    static displayName = Content.name;
+    static areaRadius = 16;
+
+    static layoutScale = 0.95;
+
+    static layoutWidth = 888 * this.layoutScale;
+    static layoutHeight = 500 * this.layoutScale;
+
     constructor(props) {
         super(props);
         this.state = {
             isDrawing: false,
             offsetX: 0,
-            newAreaLocations: [],
             offsetY: 0,
             startX: 0,
             startY: 0,
@@ -56,10 +63,38 @@ export default class Content extends React.Component {
         let canvasRef = this.canvasRef.current;
         let canvasOverlayRef = this.canvasOverlayRef.current;
         let canvasRect = canvasRef.getBoundingClientRect();
-
         this.ctx = canvasRef.getContext("2d");
         this.ctxOverlay = canvasOverlayRef.getContext("2d");
         this.setState({ offsetX: canvasRect.left, offsetY: canvasRect.top });
+    }
+
+    async renderDraw() {
+
+        if (this.state.loading === true) {
+            await this.populateLayout();
+        }
+
+        var canvas = document.getElementById('canvas-actual');
+        if (canvas != null) {
+            var context = canvas.getContext('2d');
+
+
+            var image = new Image();
+            image.onload = function () {
+                //Draw Background Image
+                context.drawImage(image, 0, 0, Content.layoutWidth, Content.layoutHeight);
+
+                // Draw Border
+                context.lineWidth = 1;
+                context.strokeStyle = "#000000";
+                context.strokeRect(0, 0, canvas.width, canvas.height);
+            }
+
+
+            if (this.state.canvasImageDataURL != null) {
+                image.src = this.state.canvasImageDataURL;
+            }
+        }
     }
 
     handleMouseDown(e) {
@@ -79,7 +114,7 @@ export default class Content extends React.Component {
                 e.clientY - this.state.offsetY
             );
             if (activeItem === "Brush") ctx.lineWidth = 5;
-        } else if (activeItem === "Line" || activeItem === "Rectangle") {
+        } else if (activeItem === "Line" || activeItem === "Rectangle" || activeItem === "Erase") {
             ctxOverlay.strokeStyle = this.props.color;
             ctxOverlay.lineWidth = 1;
             ctxOverlay.lineJoin = ctx.lineCap = "round";
@@ -87,7 +122,7 @@ export default class Content extends React.Component {
                 startX: e.clientX - this.state.offsetX,
                 startY: e.clientY - this.state.offsetY
             });
-        }
+        } 
     }
 
     handleMouseMove(e) {
@@ -116,7 +151,7 @@ export default class Content extends React.Component {
                 ctxOverlay.stroke();
                 ctxOverlay.closePath();
             }
-            if (this.props.activeItem === "Rectangle") {
+            if (this.props.activeItem === "Rectangle" || this.props.activeItem === "Erase") {
                 ctxOverlay.clearRect(0, 0, 600, 480);
                 let width = e.clientX - this.state.offsetX - this.state.startX;
                 let height = e.clientY - this.state.offsetY - this.state.startY;
@@ -150,11 +185,19 @@ export default class Content extends React.Component {
             ctx.strokeRect(this.state.startX, this.state.startY, width, height);
         }
 
+        if (this.props.activeItem === "Erase") {
+            let width = e.clientX - this.state.offsetX - this.state.startX;
+            let height = e.clientY - this.state.offsetY - this.state.startY;
+            this.ctxOverlay.clearRect(0, 0, 600, 480);
+            ctx.clearRect(this.state.startX, this.state.startY, width, height);
+        }
+
         ctx.closePath();
         this.setState({ isDrawing: false });
         
     }
 
+    
     render() {
         return (
             <><div className="content">
@@ -194,7 +237,7 @@ export default class Content extends React.Component {
     onContinue() {
 
     }
-
+        
     openSaveDialog() {
         this.setState({ saveDrawOpen: true });
     }
