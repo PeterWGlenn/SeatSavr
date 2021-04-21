@@ -225,7 +225,7 @@ export default class Content extends React.Component {
         if (this.state.loading)
             return;
 
-        var layout = this.state.layout;
+        var layout = this.props.layout;
 
         await fetch('layouteditor/savelayout', {
             method: 'POST',
@@ -236,8 +236,8 @@ export default class Content extends React.Component {
                 "Access-Control-Allow-Credentials": true
             },
             body: JSON.stringify({
-                name: this.props.layout.name,
-                address: this.props.layout.address,
+                name: layout.name,
+                address: layout.address,
                 layoutImage: this.state.canvasImageDataURL
                 //newAreaLocations: this.state.newAreaLocations
             })
