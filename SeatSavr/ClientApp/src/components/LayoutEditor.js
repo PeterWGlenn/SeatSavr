@@ -9,8 +9,11 @@ import './LayoutEditor.css'
 export class LayoutEditor extends Component {
     static displayName = LayoutEditor.name;
     static areaRadius = 16;
-    static layoutWidth = 888;
-    static layoutHeight = 500;
+
+    static layoutScale = 0.95;
+
+    static layoutWidth = 888 * this.layoutScale;
+    static layoutHeight = 500 * this.layoutScale;
 
     constructor(props) {
         super(props);

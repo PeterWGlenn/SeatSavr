@@ -1,6 +1,9 @@
 ﻿import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 
+import './CancelReservation.css'
+import '../custom.css'
+
 export class CancelReservation extends Component {
     static displayName = CancelReservation.name;
 
@@ -81,16 +84,16 @@ export class CancelReservation extends Component {
         }
 
         return (
-            <div>
+            <div className="text-div">
+                <h1>Reservation Information</h1>
                 <p>
-                    <b>Reservation Information</b><br />
                     Reservee: {this.state.reservation.customer.firstName} {this.state.reservation.customer.lastName}<br />
                     Layout: {this.state.reservation.reservedAreaName}<br />
                     Address: {this.state.reservation.reservedAreaAddress}<br />
                     Date: {this.state.reservation.date}<br />
                     Duration: {this.state.reservation.duration} hour(s)<br />
                 </p>
-                <Button onClick={() => { this.postCancelationData(this.state.reservation.id) }}>
+                <Button onClick={() => { this.postCancelationData(this.state.reservation.id) }} className="form-buttons">
                     Cancel Reservation
                 </Button>
             </div>

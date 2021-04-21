@@ -25,8 +25,11 @@ export class SelectArea extends Component {
     static displayName = SelectArea.name;
     static areaRadius = 16;
     static defaultDuration = 1.0;
-    static layoutWidth = 888;
-    static layoutHeight = 500;
+
+    static layoutScale = 0.95;
+
+    static layoutWidth = 888 * this.layoutScale;
+    static layoutHeight = 500 * this.layoutScale;
 
     constructor(props) {
         super(props);
