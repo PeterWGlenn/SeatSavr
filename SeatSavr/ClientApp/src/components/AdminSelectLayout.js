@@ -13,6 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { LayoutEditor } from './LayoutEditor';
 import { withAuth0 } from '@auth0/auth0-react';
+import { AdminViewer } from './AdminViewer';
 
 import './AdminSelectLayout.css';
 
@@ -30,7 +31,9 @@ class AdminSelectLayout extends Component {
             layoutCreatedOpen: false,
             errors: { layoutName: false, layoutAddress: false },
             errorMessages: { layoutName: '', layoutAddress: '' },
-
+            layoutSelectedDialogOpen: false,
+            openViewLayout: false,
+            openEditLayout: false
         };
     }
 
@@ -75,7 +78,7 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        if (this.state.selectedLayout == null) {
+        if (this.state.selectedLayout == null || (!this.state.openViewLayout && !this.state.openEditLayout)) {
             return (
                 <div>
                     {this.getListTitleHTML()}
@@ -98,7 +101,7 @@ class AdminSelectLayout extends Component {
                         }} />
                     <List id='layoutList'>
                         {this.state.displayedLayouts.map(layout =>
-                            <ListItem key={layout.address} button onClick={() => { this.setState({ selectedLayout: layout }); }}>
+                            <ListItem key={layout.address} button onClick={() => { this.setState({ layoutSelectedDialogOpen: true, selectedLayout: layout }); }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />
                             </ListItem>
                         )}
@@ -169,6 +172,16 @@ class AdminSelectLayout extends Component {
                             Layout successfully created!
                         </Alert>
                     </Snackbar>
+                    <Dialog open={this.state.layoutSelectedDialogOpen} onClose={this.handleLayoutSelectedDialogClose} aria-labelledby="layoutSelectedDialog">
+                        <DialogActions>
+                            <Button onClick={this.handleView} className='button-nav'>
+                                View
+                            </Button>
+                            <Button onClick={this.handleEdit} className='button-nav'>
+                                Edit
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             );
         }
@@ -180,16 +193,33 @@ class AdminSelectLayout extends Component {
             address = this.state.selectedLayout.address;
         }
 
+        var layoutComponentType = <AdminViewer selectedLayout={this.state.selectedLayout} />
+        if (this.state.openEditLayout) {
+            layoutComponentType = <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+        }
+
         return (
             <div>
                 <h2>
                     {name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                    <Button onClick={() => { this.setState({ selectedLayout: null, openViewLayout: false, openEditLayout: false }); }}>(Change Layout)</Button>
                 </h2>
                 <h5>{address}</h5>
-                <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+                {layoutComponentType}
             </div>
         );
+    }
+
+    handleLayoutSelectedDialogClose = () => {
+        this.setState({ layoutSelectedDialogOpen: false });
+    }
+
+    handleView = () => {
+        this.setState({ openViewLayout: true, layoutSelectedDialogOpen: false });
+    }
+
+    handleEdit = () => {
+        this.setState({ openEditLayout: true, layoutSelectedDialogOpen: false });
     }
 
     handleDrawLayout = () => {

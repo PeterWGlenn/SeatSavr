@@ -4,9 +4,7 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
     KeyboardTimePicker
-}
-    from '@material-ui/pickers';
-import Button from '@material-ui/core/Button';
+} from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,16 +15,22 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Loading from './loading';
 
-import './SelectArea.css';
+import './AdminViewer.css';
+import '../custom.css';
 
 export class AdminViewer extends Component {
-    static displayName = SelectArea.name;
+    static displayName = AdminViewer.name;
     static areaRadius = 16;
     static defaultDuration = 1.0;
-    static layoutWidth = 888;
-    static layoutHeight = 500;
+
+    static layoutScale = 0.95;
+
+    static layoutWidth = 888 * this.layoutScale;
+    static layoutHeight = 500 * this.layoutScale;
 
     constructor(props) {
         super(props);
@@ -36,7 +40,7 @@ export class AdminViewer extends Component {
             selectedDate: new Date(),
             selectedTime: new Date(),
             selectedArea: null,
-            selectedDuration: SelectArea.defaultDuration,
+            selectedDuration: AdminViewer.defaultDuration,
             reserveAreaDialogOpen: false,
             reservedAreaWarningOpen: false,
             reservedAreaSuccessOpen: false,
@@ -96,7 +100,7 @@ export class AdminViewer extends Component {
             image.onload = function () {
 
                 // Draw Background Image
-                context.drawImage(image, 0, 0, SelectArea.layoutWidth, SelectArea.layoutHeight);
+                context.drawImage(image, 0, 0, AdminViewer.layoutWidth, AdminViewer.layoutHeight);
 
                 // Draw border
                 context.lineWidth = 1;
@@ -106,7 +110,7 @@ export class AdminViewer extends Component {
                 // Draw areas
                 areas.forEach(area => {
                     var isRes = saveThisObject.isAreaReserved(area);
-                    SelectArea.drawAreaIcon(context, area, isRes);
+                    AdminViewer.drawAreaIcon(context, area, isRes);
                 });
             };
 
@@ -117,8 +121,8 @@ export class AdminViewer extends Component {
     }
 
     static convertAreaLocToCanvasLoc(area) {
-        var xLoc = (area.areaLocation.x / 100) * SelectArea.layoutWidth;
-        var yLoc = (area.areaLocation.y / 100) * SelectArea.layoutHeight;
+        var xLoc = (area.areaLocation.x / 100) * AdminViewer.layoutWidth;
+        var yLoc = (area.areaLocation.y / 100) * AdminViewer.layoutHeight;
 
         return { x: xLoc, y: yLoc };
     }
@@ -128,10 +132,9 @@ export class AdminViewer extends Component {
         if (selectedAddress == null)
             return false;
 
-        var fetchString = 'selectarea/getlayout/?address=' + selectedAddress;
+        var fetchString = 'SelectArea/getlayout/?address=' + selectedAddress;
         const response = await fetch(fetchString, {
-            headers:
-            {
+            headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
@@ -143,10 +146,9 @@ export class AdminViewer extends Component {
     }
 
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName) {
-        var response = await fetch('selectarea/savereservation', {
+        var response = await fetch('AdminViewer/savereservation', {
             method: 'POST',
-            headers:
-            {
+            headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 "Access-Control-Allow-Origin": "*",
@@ -167,42 +169,17 @@ export class AdminViewer extends Component {
 
         if (await response.json()) {
             this.openReservedAreaSuccess();
-            this.sendConfirmationEmail(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName);
         }
 
         this.renderAreas();
     }
 
-    async sendConfirmationEmail(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName) {
-        await fetch('selectarea/sendconfirmationemail', {
-            method: 'POST',
-            headers:
-            {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true
-            },
-            body: JSON.stringify({
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                duration: duration,
-                date: dateString,
-                areaLocX: areaX,
-                areaLocY: areaY,
-                address: address,
-                layoutName: layoutName
-            })
-        });
-    }
-
     static drawAreaIcon(context, area, isRes) {
 
-        var cLoc = SelectArea.convertAreaLocToCanvasLoc(area);
+        var cLoc = AdminViewer.convertAreaLocToCanvasLoc(area);
 
         context.beginPath();
-        context.arc(cLoc.x, cLoc.y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
+        context.arc(cLoc.x, cLoc.y, AdminViewer.areaRadius, 0, 2 * Math.PI, false);
 
         if (isRes) {
             context.fillStyle = 'rgba(100, 100, 100, 0.75)';
@@ -224,8 +201,8 @@ export class AdminViewer extends Component {
         var y = e.clientY - canvasRect.top;
 
         this.state.layout.areas.forEach(area => {
-            var areaLoc = SelectArea.convertAreaLocToCanvasLoc(area);
-            if (this.isNumberWithin(x, areaLoc.x, SelectArea.areaRadius) && this.isNumberWithin(y, areaLoc.y, SelectArea.areaRadius)) {
+            var areaLoc = AdminViewer.convertAreaLocToCanvasLoc(area);
+            if (this.isNumberWithin(x, areaLoc.x, AdminViewer.areaRadius) && this.isNumberWithin(y, areaLoc.y, AdminViewer.areaRadius)) {
                 if (!this.isAreaReserved(area)) {
                     this.setState({ selectedArea: area });
                     this.openReserveDialog();
@@ -242,33 +219,39 @@ export class AdminViewer extends Component {
     }
 
     render() {
+
+        var canvasOrLoading = <Loading />;
+        if (!this.state.loading) {
+            canvasOrLoading = <canvas id="layoutCanvas"
+                width={AdminViewer.layoutWidth}
+                height={AdminViewer.layoutHeight}
+                onClick={this.canvasClick} />
+        }
+
         return (
-           <><div>
-                <canvas id="layoutCanvas"
-                    width={SelectArea.layoutWidth}
-                    height={SelectArea.layoutHeight}
-                    onClick={this.canvasClick} />
-                <Box maxWidth={SelectArea.layoutWidth}>
-                    <Box maxWidth={SelectArea.layoutWidth}>
-                        <Typography id="sliderLabel" className="duration-slider-label">
-                            Duration(hours)
+            <div>
+                {canvasOrLoading}
+                <Box maxWidth={AdminViewer.layoutWidth}>
+                    <Box maxWidth={AdminViewer.layoutWidth}>
+                        <Typography id="sliderLabel" className="duration-slider-label small">
+                            Duration (hours)
                         </Typography>
                         <Slider
                             className="duration-slider"
                             id="durationSlider"
-                            aria /> label = "sliderLabel"
-                            defaultValue ={SelectArea.defaultDuration}
-    step ={0.25}
-                        marks
-                        min = {0.25}
-                            max ={4.0}
-    valueLabelDisplay = "auto"
-                            onChange ={(e, value) => {
-                            this.setState({ selectedDuration: value });
-                            this.renderAreas();
-                        } }
-    width ={100}
-                        /{'>'}
+                            aria-label="sliderLabel"
+                            defaultValue={AdminViewer.defaultDuration}
+                            step={0.25}
+                            marks
+                            min={0.25}
+                            max={4.0}
+                            valueLabelDisplay="auto"
+                            onChange={(e, value) => {
+                                this.setState({ selectedDuration: value });
+                                this.renderAreas();
+                            }}
+                            width={100}
+                        />
                     </Box>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
@@ -281,7 +264,8 @@ export class AdminViewer extends Component {
                             onChange={this.handleDateChanged}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
-                            }} />
+                            }}
+                        />
                         <KeyboardTimePicker
                             id="time-picker-inline"
                             label="Reservation Time"
@@ -290,95 +274,80 @@ export class AdminViewer extends Component {
                             onChange={this.handleTimeChanged}
                             KeyboardButtonProps={{
                                 'aria-label': 'change time',
-                            }} />
+                            }}
+                        />
                     </MuiPickersUtilsProvider>
                 </Box>
-                <Dialog open={this.state.reserveAreaDialogOpen}
-                    onClose={this.handleReserveDialogClose}
-                    aria /> labelledby = "reserveAreaDialog" >
-                <DialogTitle id="reserveAreaDialog"> Reserve Area </DialogTitle>
-                <DialogContent orientation='vertical'>
-                    <DialogContentText>
-                        To reserve this area, please enter your email address and full name.
-                    </DialogContentText>
-                    <TextField
-                        id="email"
-                        label="Email Address"
-                        fullWidth
-                        error={this.state.errors.email}
-                        helperText={this.state.errorMessages.email}
-                        onChange={() => {
-                            var newErrors = this.state.errors;
-                            var newErrorMessages = this.state.errorMessages;
-                            newErrors.email = false;
-                            newErrorMessages.email = '';
-                            this.setState({ errors: newErrors, errorMessages: newErrorMessages });
-                        } } />
-                    <TextField
-                        id="firstName"
-                        label="First Name"
-                        fullWidth
-                        error={this.state.errors.first}
-                        helperText={this.state.errorMessages.first}
-                        onChange={() => {
-                            var newErrors = this.state.errors;
-                            var newErrorMessages = this.state.errorMessages;
-                            newErrors.first = false;
-                            newErrorMessages.first = '';
-                            this.setState({ errors: newErrors, errorMessages: newErrorMessages });
-                        } } />
-                    <TextField
-                        className="last-dialog-text-field"
-                        id="lastName"
-                        label="Last Name"
-                        fullWidth
-                        error={this.state.errors.last}
-                        helperText={this.state.errorMessages.last}
-                        onChange={() => {
-                            var newErrors = this.state.errors;
-                            var newErrorMessages = this.state.errorMessages;
-                            newErrors.last = false;
-                            newErrorMessages.last = '';
-                            this.setState({ errors: newErrors, errorMessages: newErrorMessages });
-                        } } />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleReserveDialogClose}
-                        color="primary">
-                                          Cancel
-                    </Button>
-
-                    <Button onClick={this.handleReserve}
-                        color="primary">
-                                          Reserve
-                    </Button>
-
-                </DialogActions>
-
-            </Dialog><Snackbar open={this.state.reservedAreaWarningOpen}
-                autoHideDuration={3000}
-                onClose={this.handleReservedAreaWarningClose}>
-
-                    <Alert onClose={this.handleReservedAreaWarningClose}
-                        severity="warning">
+                <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
+                    <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
+                    <DialogContent orientation='vertical'>
+                        <DialogContentText>
+                            To reserve this area, please enter your email address and full name.
+                        </DialogContentText>
+                        <TextField
+                            id="email"
+                            label="Email Address"
+                            fullWidth
+                            error={this.state.errors.email}
+                            helperText={this.state.errorMessages.email}
+                            onChange={() => {
+                                var newErrors = this.state.errors
+                                var newErrorMessages = this.state.errorMessages;
+                                newErrors.email = false;
+                                newErrorMessages.email = '';
+                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                            }}
+                        />
+                        <TextField
+                            id="firstName"
+                            label="First Name"
+                            fullWidth
+                            error={this.state.errors.first}
+                            helperText={this.state.errorMessages.first}
+                            onChange={() => {
+                                var newErrors = this.state.errors;
+                                var newErrorMessages = this.state.errorMessages;
+                                newErrors.first = false;
+                                newErrorMessages.first = '';
+                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                            }}
+                        />
+                        <TextField
+                            className="last-dialog-text-field"
+                            id="lastName"
+                            label="Last Name"
+                            fullWidth
+                            error={this.state.errors.last}
+                            helperText={this.state.errorMessages.last}
+                            onChange={() => {
+                                var newErrors = this.state.errors;
+                                var newErrorMessages = this.state.errorMessages;
+                                newErrors.last = false;
+                                newErrorMessages.last = '';
+                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                            }}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleReserveDialogClose} className='button-nav'>
+                            Cancel
+                        </Button>
+                        <Button onClick={this.handleReserve} className='button-nav' >
+                            Reserve
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Snackbar open={this.state.reservedAreaWarningOpen} autoHideDuration={3000} onClose={this.handleReservedAreaWarningClose}>
+                    <Alert onClose={this.handleReservedAreaWarningClose} severity="warning">
                         This area has already been reserved at this time!
                     </Alert>
-
                 </Snackbar>
-
-                <Snackbar open={this.state.reservedAreaSuccessOpen}
-                    autoHideDuration={6000}
-                    onClose={this.handleReservedAreaSuccessClose}>
-
-                    <Alert onClose={this.handleReservedAreaSuccessClose}
-                        severity="success">
-                        You have successfully reserved an area!Be on the lookout for a confirmation email shortly.
-
+                <Snackbar open={this.state.reservedAreaSuccessOpen} autoHideDuration={6000} onClose={this.handleReservedAreaSuccessClose}>
+                    <Alert onClose={this.handleReservedAreaSuccessClose} severity="success">
+                        You have successfully reserved an area! Be on the lookout for a confirmation email shortly.
                     </Alert>
-
-                </Snackbar></>
-        
-            </div >
+                </Snackbar>
+            </div>
         );
     }
 
@@ -404,7 +373,7 @@ export class AdminViewer extends Component {
         var areaLoc = this.state.selectedArea.areaLocation;
 
         // Validate text fields
-        var validEmailRegex = / ^[a - zA - Z0 - 9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        var validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
         var eHasError = email == null || email === "" || !email.match(validEmailRegex);
         var fHasError = first == null || first === "";
@@ -414,8 +383,7 @@ export class AdminViewer extends Component {
         if (eHasError || fHasError || lHasError) {
             this.setState({
                 errors: { email: eHasError, first: fHasError, last: lHasError },
-                errorMessages:
-                {
+                errorMessages: {
                     email: eHasError ? 'Please enter a valid email.' : '',
                     first: fHasError ? 'First name is a required field.' : '',
                     last: lHasError ? 'Last name is a required field.' : ''
