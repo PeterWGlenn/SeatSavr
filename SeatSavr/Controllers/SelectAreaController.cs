@@ -44,6 +44,16 @@ namespace SeatSavr.Controllers
             }
         }
 
+        private async Task<Reservation[]> GetReservationsForArea([FromBody] Area r)
+        {
+            string x = Convert.ToString(r.AreaLocation.X);
+            string y = Convert.ToString(r.AreaLocation.Y);
+            string name = r.LayoutName;
+            string address = r.LayoutAddress;
+
+            return Database.GetReservations(x, y, name, address).Result;
+        }
+
         private async Task<bool> SendConfirmationEmail(Reservation r)
         {
             if (!File.Exists(_sendGridKeyFile)) {
