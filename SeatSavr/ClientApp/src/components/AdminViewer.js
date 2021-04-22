@@ -19,8 +19,10 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import Loading from './loading';
 
+
 import './AdminViewer.css';
 import '../custom.css';
+import { ToggleButton } from '@material-ui/lab';
 
 export class AdminViewer extends Component {
     static displayName = AdminViewer.name;
@@ -45,7 +47,8 @@ export class AdminViewer extends Component {
             reservedAreaWarningOpen: false,
             reservedAreaSuccessOpen: false,
             errors: { email: false, first: false, last: false },
-            errorMessages: { email: '', first: '', last: '' }
+            errorMessages: { email: '', first: '', last: '' },
+            inputReservation: true
         };
     }
 
@@ -228,8 +231,100 @@ export class AdminViewer extends Component {
                 onClick={this.canvasClick} />
         }
 
+        var output;
+        if (this.state.inputReservation) {
+            output =
+                <div>
+                    <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
+                        <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
+                        <DialogContent orientation='vertical'>
+                            <DialogContentText>
+                                To reserve this area, please enter your email address and full name.
+                        </DialogContentText>
+                            <TextField
+                                id="email"
+                                label="Email Address"
+                                fullWidth
+                                error={this.state.errors.email}
+                                helperText={this.state.errorMessages.email}
+                                onChange={() => {
+                                    var newErrors = this.state.errors
+                                    var newErrorMessages = this.state.errorMessages;
+                                    newErrors.email = false;
+                                    newErrorMessages.email = '';
+                                    this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                                }}
+                            />
+                            <TextField
+                                id="firstName"
+                                label="First Name"
+                                fullWidth
+                                error={this.state.errors.first}
+                                helperText={this.state.errorMessages.first}
+                                onChange={() => {
+                                    var newErrors = this.state.errors;
+                                    var newErrorMessages = this.state.errorMessages;
+                                    newErrors.first = false;
+                                    newErrorMessages.first = '';
+                                    this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                                }}
+                            />
+                            <TextField
+                                className="last-dialog-text-field"
+                                id="lastName"
+                                label="Last Name"
+                                fullWidth
+                                error={this.state.errors.last}
+                                helperText={this.state.errorMessages.last}
+                                onChange={() => {
+                                    var newErrors = this.state.errors;
+                                    var newErrorMessages = this.state.errorMessages;
+                                    newErrors.last = false;
+                                    newErrorMessages.last = '';
+                                    this.setState({ errors: newErrors, errorMessages: newErrorMessages });
+                                }}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleReserveDialogClose} className='button-nav'>
+                                Cancel
+                        </Button>
+                            <Button onClick={this.handleReserve} className='button-nav' >
+                                Reserve
+                        </Button>
+                        </DialogActions>
+                    </Dialog>
+                </div>;
+        } else {
+            output = <div>
+                <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
+                    <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
+                    <DialogContent orientation='vertical'>
+                        <DialogContentText>
+                            Toggle Button Works
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleReserveDialogClose} className='button-nav'>
+                            Cancel
+                        </Button>                     
+                    </DialogActions>
+                </Dialog>
+            </div>;
+        }
+        console.log(this.state.inputReservation)
         return (
+            
             <div>
+                <ToggleButton
+                    value="check"
+                    selected={this.state.inputReservation}
+                    onChange={() => {
+                        this.handleInputChange();
+                    }}
+                >
+                    Input Reservations
+                </ToggleButton>
                 {canvasOrLoading}
                 <Box maxWidth={AdminViewer.layoutWidth}>
                     <Box maxWidth={AdminViewer.layoutWidth}>
@@ -278,65 +373,7 @@ export class AdminViewer extends Component {
                         />
                     </MuiPickersUtilsProvider>
                 </Box>
-                <Dialog open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
-                    <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
-                    <DialogContent orientation='vertical'>
-                        <DialogContentText>
-                            To reserve this area, please enter your email address and full name.
-                        </DialogContentText>
-                        <TextField
-                            id="email"
-                            label="Email Address"
-                            fullWidth
-                            error={this.state.errors.email}
-                            helperText={this.state.errorMessages.email}
-                            onChange={() => {
-                                var newErrors = this.state.errors
-                                var newErrorMessages = this.state.errorMessages;
-                                newErrors.email = false;
-                                newErrorMessages.email = '';
-                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
-                            }}
-                        />
-                        <TextField
-                            id="firstName"
-                            label="First Name"
-                            fullWidth
-                            error={this.state.errors.first}
-                            helperText={this.state.errorMessages.first}
-                            onChange={() => {
-                                var newErrors = this.state.errors;
-                                var newErrorMessages = this.state.errorMessages;
-                                newErrors.first = false;
-                                newErrorMessages.first = '';
-                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
-                            }}
-                        />
-                        <TextField
-                            className="last-dialog-text-field"
-                            id="lastName"
-                            label="Last Name"
-                            fullWidth
-                            error={this.state.errors.last}
-                            helperText={this.state.errorMessages.last}
-                            onChange={() => {
-                                var newErrors = this.state.errors;
-                                var newErrorMessages = this.state.errorMessages;
-                                newErrors.last = false;
-                                newErrorMessages.last = '';
-                                this.setState({ errors: newErrors, errorMessages: newErrorMessages });
-                            }}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleReserveDialogClose} className='button-nav'>
-                            Cancel
-                        </Button>
-                        <Button onClick={this.handleReserve} className='button-nav' >
-                            Reserve
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                {output}
                 <Snackbar open={this.state.reservedAreaWarningOpen} autoHideDuration={3000} onClose={this.handleReservedAreaWarningClose}>
                     <Alert onClose={this.handleReservedAreaWarningClose} severity="warning">
                         This area has already been reserved at this time!
@@ -394,6 +431,10 @@ export class AdminViewer extends Component {
 
         this.postCustomerData(email, first, last, duration, dateStr, areaLoc.x, areaLoc.y, this.props.selectedLayout.address, this.props.selectedLayout.name);
         this.setState({ reserveAreaDialogOpen: false });
+    }
+
+    handleInputChange = () => {
+        this.setState({ inputReservation: !this.state.inputReservation });
     }
 
     openReservedAreaWarning() {
