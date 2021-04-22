@@ -3,6 +3,7 @@
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import { Button, TextField } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -78,7 +79,7 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        if (this.state.selectedLayout == null || (!this.state.openViewLayout && !this.state.openEditLayout)) {
+        if (this.state.selectedLayout == null) {
             return (
                 <div>
                     {this.getListTitleHTML()}
@@ -103,6 +104,9 @@ class AdminSelectLayout extends Component {
                         {this.state.displayedLayouts.map(layout =>
                             <ListItem key={layout.address} button onClick={() => { this.setState({ layoutSelectedDialogOpen: true, selectedLayout: layout }); }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />
+                                <ListItemSecondaryAction>
+                                    <Button onClick={() => this.setState({ openEditLayout: true, selectedLayout: layout })}>Edit</Button>
+                                </ListItemSecondaryAction>
                             </ListItem>
                         )}
                     </List>
@@ -172,16 +176,6 @@ class AdminSelectLayout extends Component {
                             Layout successfully created!
                         </Alert>
                     </Snackbar>
-                    <Dialog open={this.state.layoutSelectedDialogOpen} onClose={this.handleLayoutSelectedDialogClose} aria-labelledby="layoutSelectedDialog">
-                        <DialogActions>
-                            <Button onClick={this.handleView} className='button-nav'>
-                                View
-                            </Button>
-                            <Button onClick={this.handleEdit} className='button-nav'>
-                                Edit
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
                 </div>
             );
         }
@@ -202,24 +196,12 @@ class AdminSelectLayout extends Component {
             <div>
                 <h2>
                     {name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null, openViewLayout: false, openEditLayout: false }); }}>(Change Layout)</Button>
+                    <Button onClick={() => { this.setState({ selectedLayout: null, openEditLayout: false }); }}>(Change Layout)</Button>
                 </h2>
                 <h5>{address}</h5>
                 {layoutComponentType}
             </div>
         );
-    }
-
-    handleLayoutSelectedDialogClose = () => {
-        this.setState({ layoutSelectedDialogOpen: false });
-    }
-
-    handleView = () => {
-        this.setState({ openViewLayout: true, layoutSelectedDialogOpen: false });
-    }
-
-    handleEdit = () => {
-        this.setState({ openEditLayout: true, layoutSelectedDialogOpen: false });
     }
 
     handleDrawLayout = () => {
