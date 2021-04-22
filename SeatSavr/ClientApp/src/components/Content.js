@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-
+import Button from '@material-ui/core/Button';
 import Toolbox from "./toolbox";
 
 export default class Content extends React.Component {
@@ -208,8 +208,8 @@ export default class Content extends React.Component {
                         ref={this.canvasOverlayRef} />
                 </div>
             </div>
-                <button onClick={this.onContinue} className="form-buttons">Continue to Place Areas </button>
-                <button onClick={this.onSaveLayout} className="form-buttons">Save Layout</button>
+                <Button onClick={this.onContinue} className="form-buttons">Continue to Place Areas </Button>
+                <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
                 <Snackbar open={this.state.saveDrawOpen} autoHideDuration={3000} onClose={this.handleSaveDrawClose}>
                     <Alert onClose={this.handleReservedAreaWarningClose} severity="success">
                         You have successfully saved your personal drawing of a layout

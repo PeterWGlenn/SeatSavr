@@ -21,7 +21,7 @@ import Box from '@material-ui/core/Box';
 
 import './SelectArea.css';
 
-export class AdminDashboard extends Component {
+export class AdminViewer extends Component {
     static displayName = SelectArea.name;
     static areaRadius = 16;
     static defaultDuration = 1.0;
@@ -242,24 +242,17 @@ export class AdminDashboard extends Component {
     }
 
     render() {
-
         return (
-
            <><div>
-
                 <canvas id="layoutCanvas"
                     width={SelectArea.layoutWidth}
                     height={SelectArea.layoutHeight}
                     onClick={this.canvasClick} />
-
                 <Box maxWidth={SelectArea.layoutWidth}>
-
                     <Box maxWidth={SelectArea.layoutWidth}>
-
                         <Typography id="sliderLabel" className="duration-slider-label">
                             Duration(hours)
                         </Typography>
-
                         <Slider
                             className="duration-slider"
                             id="durationSlider"
@@ -278,7 +271,6 @@ export class AdminDashboard extends Component {
                         /{'>'}
                     </Box>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-
                         <KeyboardDatePicker
                             disableToolbar
                             variant="inline"
@@ -304,11 +296,8 @@ export class AdminDashboard extends Component {
                 <Dialog open={this.state.reserveAreaDialogOpen}
                     onClose={this.handleReserveDialogClose}
                     aria /> labelledby = "reserveAreaDialog" >
-
                 <DialogTitle id="reserveAreaDialog"> Reserve Area </DialogTitle>
-
                 <DialogContent orientation='vertical'>
-
                     <DialogContentText>
                         To reserve this area, please enter your email address and full name.
                     </DialogContentText>
