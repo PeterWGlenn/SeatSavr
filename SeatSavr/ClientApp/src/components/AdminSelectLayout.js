@@ -17,6 +17,7 @@ import { withAuth0 } from '@auth0/auth0-react';
 import { AdminViewer } from './AdminViewer';
 
 import './AdminSelectLayout.css';
+import AdminLayoutStats from './AdminLayoutStats';
 
 class AdminSelectLayout extends Component {
     static displayName = AdminSelectLayout.name;
@@ -32,9 +33,7 @@ class AdminSelectLayout extends Component {
             layoutCreatedOpen: false,
             errors: { layoutName: false, layoutAddress: false },
             errorMessages: { layoutName: '', layoutAddress: '' },
-            layoutSelectedDialogOpen: false,
-            openViewLayout: false,
-            openEditLayout: false
+            layoutOpenMode: 'NONE'
         };
     }
 
@@ -105,7 +104,8 @@ class AdminSelectLayout extends Component {
                             <ListItem key={layout.address} button onClick={() => { this.setState({ layoutSelectedDialogOpen: true, selectedLayout: layout }); }}>
                                 <ListItemText primary={layout.name} secondary={layout.address} />
                                 <ListItemSecondaryAction>
-                                    <Button onClick={() => this.setState({ openEditLayout: true, selectedLayout: layout })}>Edit</Button>
+                                    <Button onClick={() => this.setState({ layoutOpenMode: 'STATS', selectedLayout: layout })}>Stats</Button>
+                                    <Button onClick={() => this.setState({ layoutOpenMode: 'EDIT', selectedLayout: layout })}>Edit</Button>
                                 </ListItemSecondaryAction>
                             </ListItem>
                         )}
@@ -188,15 +188,17 @@ class AdminSelectLayout extends Component {
         }
 
         var layoutComponentType = <AdminViewer selectedLayout={this.state.selectedLayout} />
-        if (this.state.openEditLayout) {
+        if (this.state.layoutOpenMode == 'EDIT') {
             layoutComponentType = <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
+        } else if (this.state.layoutOpenMode == 'STATS') {
+            layoutComponentType = <AdminLayoutStats selectedLayout={this.state.selectedLayout} />
         }
 
         return (
             <div>
                 <h2>
                     {name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null, openEditLayout: false }); }}>(Change Layout)</Button>
+                    <Button onClick={() => { this.setState({ selectedLayout: null, layoutOpenMode: 'NONE' }); }}>(Change Layout)</Button>
                 </h2>
                 <h5>{address}</h5>
                 {layoutComponentType}
