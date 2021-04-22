@@ -28,7 +28,8 @@ export class LayoutDraw extends React.Component {
             toolbarItems: toolbarItems,
             canvasImageDataURL: null,
             saveDrawOpen: false,
-            loading: true
+            loading: true,
+            layout: null
         };
         this.changeColor = this.changeColor.bind(this);
         this.changeTool = this.changeTool.bind(this);
@@ -38,9 +39,7 @@ export class LayoutDraw extends React.Component {
         this.renderDraw();
     }
 
-    componentDidMount() {
-        this.renderDraw();
-    }
+    
 
     changeColor(event) {
         this.setState({ color: event.target.style.backgroundColor });

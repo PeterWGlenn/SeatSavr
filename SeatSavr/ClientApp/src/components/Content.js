@@ -22,7 +22,6 @@ export default class Content extends React.Component {
             startX: 0,
             startY: 0,
             canvasImageDataURL: null,
-            layout: null,
             loading: true
         };
         this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -39,16 +38,11 @@ export default class Content extends React.Component {
     //    this.renderContent();
     //}
 
-    async renderContent() {
-        if (this.state.loading === true) {
-            await this.populateContent;
-        }
-    }
 
 
 
     componentDidMount() {
-        this.renderContent();
+        //this.renderContent();
         let canvasRef = this.canvasRef.current;
         let canvasOverlayRef = this.canvasOverlayRef.current;
         let canvasRect = canvasRef.getBoundingClientRect();
@@ -236,8 +230,8 @@ export default class Content extends React.Component {
                 "Access-Control-Allow-Credentials": true
             },
             body: JSON.stringify({
-                name: layout.name,
-                address: layout.address,
+                name: this.state.layout.name,
+                address: this.state.layout.address,
                 layoutImage: this.state.canvasImageDataURL
                 //newAreaLocations: this.state.newAreaLocations
             })
