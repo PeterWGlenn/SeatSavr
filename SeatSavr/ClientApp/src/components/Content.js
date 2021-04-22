@@ -249,8 +249,6 @@ export default class Content extends React.Component {
         if (this.state.loading)
             return;
 
-        var layout = this.state.layout;
-
         await fetch('layouteditor/savelayout', {
             method: 'POST',
             headers: {
