@@ -38,11 +38,40 @@ export default class Content extends React.Component {
     //    this.renderContent();
     //}
 
+    async renderContent() {
+        if (this.state.loading === true) {
+            console.log("hitting populate content");
+            await this.populateContent();
+        }
+    }
 
 
+    async populateContent() {
+
+        var selectedAddress = this.props.selectedLayoutAddress;
+        if (selectedAddress == null)
+            return false;
+
+        var fetchString = 'layouteditor/getlayout/?address=' + selectedAddress;
+        const response = await fetch(fetchString, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        const layout = await response.json();
+
+        this.setState({
+            layout: layout,
+            currentAreas: layout.areas,
+            canvasImageDataURL: "data:image/png;base64," + layout.layoutImage,
+            loading: false
+        });
+        return true;
+    }
 
     componentDidMount() {
-        //this.renderContent();
+        this.renderContent();
         let canvasRef = this.canvasRef.current;
         let canvasOverlayRef = this.canvasOverlayRef.current;
         let canvasRect = canvasRef.getBoundingClientRect();
@@ -83,6 +112,7 @@ export default class Content extends React.Component {
     handleMouseMove(e) {
         let ctx = this.ctx;
         let ctxOverlay = this.ctxOverlay;
+        
 
         if (this.state.isDrawing) {
             if (
@@ -219,7 +249,7 @@ export default class Content extends React.Component {
         if (this.state.loading)
             return;
 
-        var layout = this.props.layout;
+        var layout = this.state.layout;
 
         await fetch('layouteditor/savelayout', {
             method: 'POST',

@@ -96,4 +96,5 @@ export class LayoutDraw extends React.Component {
         return true;
     }
     
+
 } export default withAuth0(LayoutDraw);
