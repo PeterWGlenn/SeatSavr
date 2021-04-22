@@ -34,6 +34,41 @@ namespace SeatSavr
             return Task.FromResult(list.ToArray());
         }
 
+        public static Task<Reservation[]> GetReservations(string areaLocationX, string areaLocationY, string layoutName, string layoutAddress)
+        {
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Reserves WHERE AreaX =  \'{areaLocationX}\' AND  AreaY =  \'{areaLocationY}\' AND AreaBuildingAddress = \'{layoutAddress}\' AND AreaLayoutName = \'{layoutName}\';");
+
+            List<Reservation> list = new List<Reservation>();
+            while (sqlite_datareader.Read())
+            {
+                Reservation r = new Reservation();
+
+                r.Id = sqlite_datareader.GetString(0);
+                r.Date = DateTime.Parse(sqlite_datareader.GetString(1));
+                r.Duration = sqlite_datareader.GetFloat(2);
+
+                // Customer fetching
+                string customerEmail = sqlite_datareader.GetString(3);
+                Customer c = new Customer();
+                SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                while (customerReader.Read())
+                {
+                    c.Email = customerReader.GetString(0);
+                    c.FirstName = customerReader.GetString(1);
+                    c.LastName = customerReader.GetString(2);
+                }
+
+                r.Customer = c;
+            }
+            sqlite_conn.Close();
+
+            return Task.FromResult(list.ToArray());
+
+        }
+
         public static Task<Layout> GetLayoutAsync(string layoutAddress)
         {
             // Create a new database connection
@@ -73,6 +108,8 @@ namespace SeatSavr
 
                 a.NumberOfSeats = sqlite_datareader.GetInt32(3);
                 a.Name = sqlite_datareader.GetString(4);
+                a.LayoutName = sqlite_datareader.GetString(5);
+                a.LayoutAddress = sqlite_datareader.GetString(6);
 
                 areas.Add(a);
             }
@@ -156,6 +193,8 @@ namespace SeatSavr
 
                     a.NumberOfSeats = areaDatareader.GetInt32(3);
                     a.Name = areaDatareader.GetString(4);
+                    a.LayoutName = areaDatareader.GetString(5);
+                    a.LayoutAddress = areaDatareader.GetString(6);
 
                     areas.Add(a);
                 }
