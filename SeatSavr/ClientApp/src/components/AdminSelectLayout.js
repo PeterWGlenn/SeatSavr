@@ -185,9 +185,9 @@ class AdminSelectLayout extends Component {
         }
 
         var layoutComponentType = <AdminViewer selectedLayout={this.state.selectedLayout} />
-        if (this.state.layoutOpenMode == 'EDIT') {
+        if (this.state.layoutOpenMode === 'EDIT') {
             layoutComponentType = <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
-        } else if (this.state.layoutOpenMode == 'STATS') {
+        } else if (this.state.layoutOpenMode === 'STATS') {
             layoutComponentType = <AdminLayoutStats selectedLayout={this.state.selectedLayout} />
         }
 

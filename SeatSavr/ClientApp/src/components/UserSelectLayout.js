@@ -41,8 +41,11 @@ export class UserSelectLayout extends Component {
     getWelcomeHTML() {
         return (
             <div>
-                <h1 > <center> Welcome to SeatSavr! </center></h1>
-                <p><center>SeatSavr manages your reservations in the modern world. Please select a layout below to get started! <p>If you want to create your own layouts, login as an administrator.</p> </center></p>
+                <center>
+                    <h1>Welcome to SeatSavr!</h1>
+                    <p>SeatSavr manages your reservations in the modern world. Please select a layout below to get started!</p>
+                    <p>If you want to create your own layouts, login as an administrator.</p>
+                </center>
             </div>
         );
     }

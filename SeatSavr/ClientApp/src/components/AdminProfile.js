@@ -44,62 +44,6 @@ class AdminProfile extends React.Component {
                                     
                                 </div>
                             </div>
-                            <div className="row gutters-sm">
-                                <div className="col-sm-6 mb-3">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">statistics</i>Admin Dashboard Coming Soon</h6>
-                                            <small>Bugs Fixed</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '80%' }} aria-valuenow={80} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Tears Shed</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '72%' }} aria-valuenow={72} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Lines of Code Written</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '89%' }} aria-valuenow={89} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Sacrifices Made</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '55%' }} aria-valuenow={55} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Child's Birthdays Missed</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '66%' }} aria-valuenow={66} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6 mb-3">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">statistics</i>Admin Dashboard Coming Soon</h6>
-                                            <small>Bugs Fixed</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '80%' }} aria-valuenow={80} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Tears Shed</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '72%' }} aria-valuenow={72} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Lines of Code Written</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '89%' }} aria-valuenow={89} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Sacrifices Made</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '55%' }} aria-valuenow={55} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                            <small>Child's Birthdays Missed</small>
-                                            <div className="progress mb-3" style={{ height: 5 }}>
-                                                <div className="progress-bar bg-primary" role="progressbar" style={{ width: '66%' }} aria-valuenow={66} aria-valuemin={0} aria-valuemax={100} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
