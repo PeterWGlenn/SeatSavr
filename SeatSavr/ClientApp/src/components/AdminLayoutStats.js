@@ -11,6 +11,7 @@ const plotOptions = {
         xAxes: [{
             type: 'time',
             time: {
+                tooltipFormat: 'MM/DD/YYYY',
                 unit: 'day'
             }
         }]
@@ -27,7 +28,7 @@ class AdminLayoutStats extends React.Component {
                 labels: [],
                 datasets: [
                     {
-                        label: 'Reservations',
+                        label: 'Reservations Per Day',
                         fill: false,
                         lineTension: 0.5,
                         backgroundColor: '#FF9200',
@@ -42,34 +43,41 @@ class AdminLayoutStats extends React.Component {
         this.setReservationPlotData();
     }
 
+    sameDay(d1, d2) {
+
+        d1 = new Date(d1);
+        d2 = new Date(d2);
+
+        return d1.getFullYear() === d2.getFullYear() &&
+               d1.getMonth() === d2.getMonth() &&
+               d1.getDate() === d2.getDate();
+    }
+
     setReservationPlotData() {
 
-        var numReservations = 0;
-        var dataPoints = []
-
+        var reservationDates = []
         this.state.layout.areas.forEach(a => {
             a.reservations.forEach(r => {
                 var resDate = moment(r.date + "Z");
-                numReservations = numReservations + 1;
-
-                dataPoints.push({ x: resDate, y: numReservations });
+                reservationDates.push(resDate);
             });
         });
+        reservationDates.sort((a, b) => a - b);
 
-        dataPoints.sort(function (a, b) {
-            var keyA = a.x;
-            var keyB = b.x;
+        var considerDate = moment().subtract(30, 'days');
+        for (let day = 0; day < 30; day++) {
+            considerDate = considerDate.add(1, 'days');
 
-            if (keyA < keyB) return -1;
-            if (keyA > keyB) return 1;
+            var numResOnDay = 0;
+            reservationDates.forEach(date => {
+                if (this.sameDay(considerDate, date)) {
+                    numResOnDay = numResOnDay + 1;
+                }
+            });
 
-            return 0;
-        });
-
-        dataPoints.forEach(point => {
-            this.state.reservationsPlotData.labels.push(point.x);
-            this.state.reservationsPlotData.datasets[0].data.push(point.y);
-        });
+            this.state.reservationsPlotData.labels.push(new Date(considerDate));
+            this.state.reservationsPlotData.datasets[0].data.push(numResOnDay);
+        }
     }
 
     getCapacityPercentage() {
