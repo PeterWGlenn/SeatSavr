@@ -358,16 +358,15 @@ export class AdminViewer extends Component {
         return (
             
             <div>
-                <ToggleButton
-                    value="check"
-                    selected={this.state.inputReservation}
-                    onChange={() => {
-                        this.handleInputChange();
-                    }}
-                >
-
-                    Input Reservations
-                </ToggleButton>
+                {/*<ToggleButton*/}
+                {/*    value="check"*/}
+                {/*    selected={this.state.inputReservation}*/}
+                {/*    onChange={() => {*/}
+                {/*        this.handleInputChange();*/}
+                {/*    }}*/}
+                {/*>*/}
+                {/*    Input Reservations*/}
+                {/*</ToggleButton>*/}
                 {canvasOrLoading}
                 <Box maxWidth={AdminViewer.layoutWidth}>
                     <Box maxWidth={AdminViewer.layoutWidth}>
