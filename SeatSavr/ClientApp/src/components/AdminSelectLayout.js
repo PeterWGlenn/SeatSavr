@@ -159,10 +159,7 @@ class AdminSelectLayout extends Component {
                                 Cancel
                         </Button>
                             <Button onClick={this.handleCreateLayout} color="primary">
-                                Upload Image
-                            </Button>
-                            <Button onClick={this.handleDrawLayout} color="primary">
-                                Draw Layout
+                                Create Layout
                             </Button>
                         </DialogActions>
                     </Dialog>
