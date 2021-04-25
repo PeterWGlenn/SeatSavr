@@ -1,9 +1,21 @@
 ﻿import React from "react";
 import { withAuth0 } from "@auth0/auth0-react";
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs';
+import moment from "moment";
 
 import '../custom.css'
+
+const plotOptions = {
+    scales: {
+        xAxes: [{
+            type: 'time',
+            time: {
+                unit: 'day'
+            }
+        }]
+    }
+}
 
 class AdminLayoutStats extends React.Component {
 
@@ -19,7 +31,7 @@ class AdminLayoutStats extends React.Component {
                         fill: false,
                         lineTension: 0.5,
                         backgroundColor: '#FF9200',
-                        borderColor: 'rgba(0,0,0,1)',
+                        borderColor: '#57291F',
                         borderWidth: 1,
                         data: []
                     }
@@ -33,17 +45,30 @@ class AdminLayoutStats extends React.Component {
     setReservationPlotData() {
 
         var numReservations = 0;
+        var dataPoints = []
 
         this.state.layout.areas.forEach(a => {
             a.reservations.forEach(r => {
-
-                var resDate = new Date(r.date);
-
+                var resDate = moment(r.date + "Z");
                 numReservations = numReservations + 1;
 
-                this.state.reservationsPlotData.labels.push(resDate);
-                this.state.reservationsPlotData.datasets[0].data.push(numReservations);
+                dataPoints.push({ x: resDate, y: numReservations });
             });
+        });
+
+        dataPoints.sort(function (a, b) {
+            var keyA = a.x;
+            var keyB = b.x;
+
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+
+            return 0;
+        });
+
+        dataPoints.forEach(point => {
+            this.state.reservationsPlotData.labels.push(point.x);
+            this.state.reservationsPlotData.datasets[0].data.push(point.y);
         });
     }
 
@@ -93,13 +118,7 @@ class AdminLayoutStats extends React.Component {
                     <div className="card-body">
                         <Line
                             data={this.state.reservationsPlotData}
-                            options={{
-                            title:{
-                                display:true,
-                                text:'Average Rainfall per month',
-                                fontSize:20
-                            }
-                            }}
+                            options={plotOptions}
                         />
                     </div>
                 </div>
