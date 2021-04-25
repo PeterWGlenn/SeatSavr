@@ -69,11 +69,12 @@ class AdminLayoutStats extends React.Component {
             considerDate = considerDate.add(1, 'days');
 
             var numResOnDay = 0;
-            reservationDates.forEach(date => {
-                if (this.sameDay(considerDate, date)) {
+
+            for (let i = 0; i < reservationDates.length; i++) {
+                if (this.sameDay(considerDate, reservationDates[i])) {
                     numResOnDay = numResOnDay + 1;
                 }
-            });
+            }
 
             this.state.reservationsPlotData.labels.push(new Date(considerDate));
             this.state.reservationsPlotData.datasets[0].data.push(numResOnDay);
