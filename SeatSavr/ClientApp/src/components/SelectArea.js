@@ -82,8 +82,6 @@ export class SelectArea extends Component {
             }
         });
 
-        console.log(isReserved);
-
         return isReserved;
     }
 
