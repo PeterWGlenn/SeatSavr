@@ -62,6 +62,7 @@ namespace SeatSavr
                 }
 
                 r.Customer = c;
+                list.Add(r);
             }
             sqlite_conn.Close();
 

@@ -44,10 +44,9 @@ namespace SeatSavr.Controllers
             }
         }
 
-        private async Task<Reservation[]> GetReservationsForArea([FromBody] string x, string y, string name, string address)
+        [HttpGet("[action]")]
+        public Reservation[] GetReservationsForArea(string x, string y, string name, string address)
         {
-            
-
             return Database.GetReservations(x, y, name, address).Result;
         }
 

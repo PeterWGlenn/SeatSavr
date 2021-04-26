@@ -153,15 +153,17 @@ export class AdminViewer extends Component {
         return true;
     }
 
-    async populateReservationPopup(x, y) {
-        var selectedAddress = this.props.selectedLayoutAddress;
-        var selectedX = this.props.selectedArea.areaLocX;
-        var selectedY = this.props.selectedArea.yLoc;
+    async populateReservationPopup() {
+        var selectedAddress = this.props.selectedLayout.address;
+        var selectedX = this.state.selectedArea.areaLocation.x;
+        var selectedY = this.state.selectedArea.areaLocation.y;
         var selectedName = this.props.selectedLayout.name;
-        if (selectedAddress == null)
-            return false;
-
-        var fetchString = 'selectarea/getreservationsforarea/?x=' + selectedX + selectedY + selectedName + selectedAddress;
+        //if (selectedAddress == null)
+            //return false;
+        //+ '?y=' + selectedY + '?name=' + selectedName + '?address=' +selectedAddress
+        console.log("right before fetch")
+        var fetchString = 'SelectArea/getreservationsforarea?x=' + selectedX + '&y=' + selectedY + '&name=' + selectedName + '&address=' + selectedAddress;
+        console.log(fetchString);
         const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
@@ -178,10 +180,7 @@ export class AdminViewer extends Component {
     }
 
     handleReservationPopUp = () => {
-        var x = this.state.selectedArea.xLoc;
-        var y = this.state.selectedArea.yLoc;
-
-        this.populateReservationPopup(x, y);
+        this.populateReservationPopup();
     }
 
 
@@ -247,16 +246,25 @@ export class AdminViewer extends Component {
         this.state.layout.areas.forEach(area => {
             var areaLoc = AdminViewer.convertAreaLocToCanvasLoc(area);
             if (this.isNumberWithin(x, areaLoc.x, AdminViewer.areaRadius) && this.isNumberWithin(y, areaLoc.y, AdminViewer.areaRadius)) {
-                if (!this.isAreaReserved(area) || !this.state.inputReservation) {
-                    this.setState({ selectedArea: area });
-                    console.log(this.selectedArea)
-                    this.openReserveDialog();
+                console.log(this.state.inputReservation)
+                if (!this.state.inputReservation) {
+                    console.log("Hits false inputReservation")
+                    this.setState({ selectedArea: area }, this.openReserveDialog);
+                    return;
                 }
-                else {
+                if (!this.isAreaReserved(area)) {
+                    this.setState({ selectedArea: area }, this.openReserveDialog);
+                    console.log("Reserve")
+                    return;
+                } else {
                     this.openReservedAreaWarning();
                 }
             }
         });
+    }
+
+    waitForSelectArea = () => {
+
     }
 
     isNumberWithin(x, n, r) {
@@ -441,6 +449,10 @@ export class AdminViewer extends Component {
     
     openReserveDialog() {
         console.log('Hits openReserveDialog');
+
+        if (!this.state.inputReservation) {
+            this.handleReservationPopUp();
+        }
                 
         this.setState({ reserveAreaDialogOpen: true });
         
