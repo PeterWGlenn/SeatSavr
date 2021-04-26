@@ -513,6 +513,19 @@ namespace SeatSavr
             return didSucceed;
         }
 
+        public static bool DeleteLayout(Layout l)
+        {
+            // Create a new database connection
+            SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
+            sqlite_conn.Open();
+
+            string sql = $"DELETE FROM Layout WHERE Name = \'{l.Name}\' AND BuildingAddress = \'{l.Address}\'";
+            bool didSucceed = InsertData(sqlite_conn, sql, 1);
+
+            sqlite_conn.Close();
+            return didSucceed;
+        }
+
         public static bool AddReservation(Layout l, Reservation r, Area a, Customer c)
         {
             // Add customer if needed

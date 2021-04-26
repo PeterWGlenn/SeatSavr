@@ -22,5 +22,11 @@ namespace SeatSavr.Controllers
             Admin admin = new Admin() { Email = email };
             return Database.AddLayout(layout, admin);
         }
+
+        [HttpPost("[action]")]
+        public bool DeleteLayout([FromBody] Layout layout)
+        {
+            return Database.DeleteLayout(layout);
+        }
     }
 }

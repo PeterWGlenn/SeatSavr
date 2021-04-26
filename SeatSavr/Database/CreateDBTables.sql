@@ -19,7 +19,7 @@ CREATE TABLE Layout
   BuildingAddress VARCHAR(255) NOT NULL,
   LayoutImage VARCHAR(255),
   PRIMARY KEY (BuildingAddress, Name),
-  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
+  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address) ON DELETE CASCADE
 );
 
 CREATE TABLE Area
@@ -32,7 +32,7 @@ CREATE TABLE Area
   LayoutName VARCHAR(255) NOT NULL,
   BuildingAddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (X, Y, BuildingAddress, LayoutName),
-  FOREIGN KEY (BuildingAddress, LayoutName) REFERENCES Layout(BuildingAddress, Name)
+  FOREIGN KEY (BuildingAddress, LayoutName) REFERENCES Layout(BuildingAddress, Name) ON DELETE CASCADE
 );
 
 CREATE TABLE Customer
@@ -49,7 +49,7 @@ CREATE TABLE Manages
   BuildingAddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (Email, BuildingAddress),
   FOREIGN KEY (Email) REFERENCES Admin(Email),
-  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
+  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address) ON DELETE CASCADE
 );
 
 CREATE TABLE Reserves
@@ -64,7 +64,7 @@ CREATE TABLE Reserves
   AreaLayoutName VARCHAR(255) NOT NULL,
   PRIMARY KEY (Id),
   FOREIGN KEY (CustomerEmail) REFERENCES Customer(Email),
-  FOREIGN KEY (AreaX, AreaY, AreaBuildingAddress, AreaLayoutName) REFERENCES Area(X, Y, BuildingAddress, LayoutName)
+  FOREIGN KEY (AreaX, AreaY, AreaBuildingAddress, AreaLayoutName) REFERENCES Area(X, Y, BuildingAddress, LayoutName) ON DELETE CASCADE
 );
 
 /* Insert Sample Data */

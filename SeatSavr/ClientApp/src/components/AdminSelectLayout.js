@@ -30,7 +30,9 @@ class AdminSelectLayout extends Component {
             loading: true,
             selectedLayout: null,
             createLayoutDialogOpen: false,
+            deleteLayoutDialogOpen: false,
             layoutCreatedOpen: false,
+            layoutDeletedOpen: false,
             errors: { layoutName: false, layoutAddress: false },
             errorMessages: { layoutName: '', layoutAddress: '' },
             layoutOpenMode: 'NONE'
@@ -78,7 +80,7 @@ class AdminSelectLayout extends Component {
             );
         }
 
-        if (this.state.selectedLayout == null) {
+        if (this.state.selectedLayout == null || this.state.deleteLayoutDialogOpen) {
             return (
                 <div>
                     {this.getListTitleHTML()}
@@ -106,6 +108,7 @@ class AdminSelectLayout extends Component {
                                 <ListItemSecondaryAction>
                                     <Button onClick={() => this.setState({ layoutOpenMode: 'STATS', selectedLayout: layout })}>Stats</Button>
                                     <Button onClick={() => this.setState({ layoutOpenMode: 'EDIT', selectedLayout: layout })}>Edit</Button>
+                                    <Button onClick={() => this.setState({ deleteLayoutDialogOpen: true, selectedLayout: layout })}>Delete</Button>
                                 </ListItemSecondaryAction>
                             </ListItem>
                         )}
@@ -163,6 +166,32 @@ class AdminSelectLayout extends Component {
                             </Button>
                         </DialogActions>
                     </Dialog>
+                    <Dialog
+                        open={this.state.deleteLayoutDialogOpen}
+                        onClose={() => {
+                            this.setState({ deleteLayoutDialogOpen: false, selectedLayout: null  });
+                        }}
+                        aria-labelledby="deleteLayoutDialog">
+                        <DialogTitle id="deleteLayoutDialog">Delete Layout</DialogTitle>
+                        <DialogContent orientation='vertical'>
+                            <DialogContentText>
+                                Are you sure you want to delete this layout? All layout data will be deleted. This cannot be undone!
+                            </DialogContentText>
+                            
+                        </DialogContent>
+                        <DialogActions>
+                            <Button
+                                onClick={() => {
+                                    this.setState({ deleteLayoutDialogOpen: false, selectedLayout: null  });
+                                }}
+                                color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={this.handleDeleteLayout} color="primary">
+                                Delete Layout
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                     <Snackbar
                         open={this.state.layoutCreatedOpen}
                         autoHideDuration={3000}
@@ -171,6 +200,16 @@ class AdminSelectLayout extends Component {
                         }}>
                         <Alert severity="success">
                             Layout successfully created!
+                        </Alert>
+                    </Snackbar>
+                    <Snackbar
+                        open={this.state.layoutDeletedOpen}
+                        autoHideDuration={3000}
+                        onClose={() => {
+                            this.setState({ layoutDeletedOpen: false });
+                        }}>
+                        <Alert severity="success">
+                            Layout successfully deleted!
                         </Alert>
                     </Snackbar>
                 </div>
@@ -189,7 +228,7 @@ class AdminSelectLayout extends Component {
             layoutComponentType = <LayoutEditor selectedLayoutAddress={this.state.selectedLayout.address} />
         } else if (this.state.layoutOpenMode === 'STATS') {
             layoutComponentType = <AdminLayoutStats selectedLayout={this.state.selectedLayout} />
-        }
+        } 
 
         return (
             <div>
@@ -255,6 +294,11 @@ class AdminSelectLayout extends Component {
         this.setState({ createLayoutDialogOpen: false });
     }
 
+    handleDeleteLayout = () => {
+        var saveSelectedLayout = this.state.selectedLayout;
+        this.setState({ deleteLayoutDialogOpen: false, selectedLayout: null }, () => { this.postDeleteLayout(saveSelectedLayout) });
+    }
+
     async postLayoutData(name, address) {
         var selectedEmail = this.props.auth0.user.email;
 
@@ -274,6 +318,28 @@ class AdminSelectLayout extends Component {
 
         if (await response.json()) {
             this.setState({ layoutCreatedOpen: true });
+        }
+
+        this.populateLayoutData();
+    }
+
+    async postDeleteLayout(layout) {
+        var response = await fetch('adminselectlayout/deletelayout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Credentials": true
+            },
+            body: JSON.stringify({
+                name: layout.name,
+                address: layout.address
+            })
+        });
+
+        if (await response.json()) {
+            this.setState({ layoutDeletedOpen: true });
         }
 
         this.populateLayoutData();
