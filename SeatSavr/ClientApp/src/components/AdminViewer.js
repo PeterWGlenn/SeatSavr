@@ -21,10 +21,12 @@ import Loading from './loading';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-//import { ToggleButton } from '@material-ui/lab';
+import { ToggleButton } from '@material-ui/lab';
+
 
 import './AdminViewer.css';
 import '../custom.css';
+
 
 export class AdminViewer extends Component {
     static displayName = AdminViewer.name;
@@ -151,37 +153,40 @@ export class AdminViewer extends Component {
         return true;
     }
 
-    async populateReservationPopup() {
-        console.log('Hits populateReservationPopup')
-        var selectedArea = this.state.selectedArea;
-        if (selectedArea == null) {
-            console.log('Hits populateReservationPopup --> is null')
-            return null;
-        }
+    async populateReservationPopup(x, y) {
+        var selectedAddress = this.props.selectedLayoutAddress;
+        var selectedX = this.props.selectedArea.xLoc;
+        var selectedY = this.props.selectedArea.yLoc;
+        var selectedName = this.props.selectedLayout.name;
+        if (selectedAddress == null)
+            return false;
 
-        var response = await fetch('selectarea/getreservationsforarea', {
-            method: 'POST',
+        var fetchString = 'selectarea/getreservationsforarea/?x=' + selectedX + selectedY + selectedName + selectedAddress;
+        const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": true
-            },
-            body: JSON.stringify({
-                areaLocX: this.state.selectedArea.areaLocX,
-                areaLocY: this.state.selectedArea.areaLocY,
-                address: this.state.layout.address,
-                layoutName: this.state.layout.name
-            })
+                'Accept': 'application/json'
+            }
         });
-
         const reservations = await response.json();
-        this.setState({ selectedReservations: reservations });
-        console.log("Finishes populateReservationPopup");
+
+        this.setState({
+            selectedReservations: reservations
+        });
+        return true;
     }
 
+    handleReservationPopUp = () => {
+        var x = this.state.selectedArea.xLoc;
+        var y = this.state.selectedArea.yLoc;
+
+        this.populateReservationPopup(x, y);
+    }
+
+
+    
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName) {
-        var response = await fetch('AdminViewer/savereservation', {
+        var response = await fetch('selectarea/savereservation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -206,8 +211,11 @@ export class AdminViewer extends Component {
             this.openReservedAreaSuccess();
         }
 
-        this.renderAreas();
     }
+
+    
+
+
 
     static drawAreaIcon(context, area, isRes) {
 
@@ -238,7 +246,7 @@ export class AdminViewer extends Component {
         this.state.layout.areas.forEach(area => {
             var areaLoc = AdminViewer.convertAreaLocToCanvasLoc(area);
             if (this.isNumberWithin(x, areaLoc.x, AdminViewer.areaRadius) && this.isNumberWithin(y, areaLoc.y, AdminViewer.areaRadius)) {
-                if (!this.isAreaReserved(area)) {
+                if (!this.isAreaReserved(area) || !this.state.inputReservation) {
                     this.setState({ selectedArea: area });
                     console.log(this.selectedArea)
                     this.openReserveDialog();
@@ -330,7 +338,7 @@ export class AdminViewer extends Component {
                 </div>;
         } else {
             output = <div>
-                <Dialog onEnter={this.populateReservationPopup()} open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
+                <Dialog  open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
                     <DialogContent orientation='vertical'>
                         <DialogContentText>
@@ -357,15 +365,15 @@ export class AdminViewer extends Component {
         return (
             
             <div>
-                {/*<ToggleButton*/}
-                {/*    value="check"*/}
-                {/*    selected={this.state.inputReservation}*/}
-                {/*    onChange={() => {*/}
-                {/*        this.handleInputChange();*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    Input Reservations*/}
-                {/*</ToggleButton>*/}
+                <ToggleButton
+                    value="check"
+                    selected={this.state.inputReservation}
+                    onChange={() => {
+                        this.handleInputChange();
+                    }}
+                >
+                    Input Reservations
+                </ToggleButton>
                 {canvasOrLoading}
                 <Box maxWidth={AdminViewer.layoutWidth}>
                     <Box maxWidth={AdminViewer.layoutWidth}>
@@ -431,8 +439,8 @@ export class AdminViewer extends Component {
 
     
     openReserveDialog() {
-        console.log('Hits openReserveDialog')
-        console.log(this.state.selectedArea + " location goes here ")
+        console.log('Hits openReserveDialog');
+        console.log(this.selectedArea.xLoc + " location goes here ");
         
         this.setState({ reserveAreaDialogOpen: true });
         
