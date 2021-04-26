@@ -21,7 +21,10 @@ import Loading from './loading';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { ToggleButton } from '@material-ui/lab';
+import Switch from '@material-ui/core/Switch';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 
 
 import './AdminViewer.css';
@@ -52,7 +55,7 @@ export class AdminViewer extends Component {
             reservedAreaSuccessOpen: false,
             errors: { email: false, first: false, last: false },
             errorMessages: { email: '', first: '', last: '' },
-            inputReservation: true,
+            inputReservation: false,
             selectedReservations: []
         };
     }
@@ -158,12 +161,8 @@ export class AdminViewer extends Component {
         var selectedX = this.state.selectedArea.areaLocation.x;
         var selectedY = this.state.selectedArea.areaLocation.y;
         var selectedName = this.props.selectedLayout.name;
-        //if (selectedAddress == null)
-            //return false;
-        //+ '?y=' + selectedY + '?name=' + selectedName + '?address=' +selectedAddress
-        console.log("right before fetch")
+
         var fetchString = 'SelectArea/getreservationsforarea?x=' + selectedX + '&y=' + selectedY + '&name=' + selectedName + '&address=' + selectedAddress;
-        console.log(fetchString);
         const response = await fetch(fetchString, {
             headers: {
                 'Content-Type': 'application/json',
@@ -175,7 +174,6 @@ export class AdminViewer extends Component {
         this.setState({
             selectedReservations: reservations
         });
-        console.log("Successful Pull from Reservations");
         return true;
     }
 
@@ -246,15 +244,12 @@ export class AdminViewer extends Component {
         this.state.layout.areas.forEach(area => {
             var areaLoc = AdminViewer.convertAreaLocToCanvasLoc(area);
             if (this.isNumberWithin(x, areaLoc.x, AdminViewer.areaRadius) && this.isNumberWithin(y, areaLoc.y, AdminViewer.areaRadius)) {
-                console.log(this.state.inputReservation)
                 if (!this.state.inputReservation) {
-                    console.log("Hits false inputReservation")
                     this.setState({ selectedArea: area }, this.openReserveDialog);
                     return;
                 }
                 if (!this.isAreaReserved(area)) {
                     this.setState({ selectedArea: area }, this.openReserveDialog);
-                    console.log("Reserve")
                     return;
                 } else {
                     this.openReservedAreaWarning();
@@ -370,21 +365,25 @@ export class AdminViewer extends Component {
                 </Dialog>
             </div>;
         }
-        console.log(this.state.inputReservation)
         return (
-            
             <div>
-                <ToggleButton
-                    value="check"
-                    selected={this.state.inputReservation}
-                    onChange={() => {
-                        this.handleInputChange();
-                    }}
-                >
-                    Input Reservations
-                </ToggleButton>
                 {canvasOrLoading}
                 <Box maxWidth={AdminViewer.layoutWidth}>
+                    <FormGroup row>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={this.state.inputReservation}
+                                    onChange={() => {
+                                        this.handleInputChange();
+                                    }}
+                                    name="viewReservationSwitch"
+                                    color="primary"
+                                />
+                            }
+                            label="Make Reservations Mode"
+                        />
+                    </FormGroup>
                     <Box maxWidth={AdminViewer.layoutWidth}>
                         <Typography id="sliderLabel" className="duration-slider-label small">
                             Duration (hours)
@@ -406,7 +405,7 @@ export class AdminViewer extends Component {
                             width={100}
                         />
                     </Box>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils} width={200}>
                         <KeyboardDatePicker
                             disableToolbar
                             variant="inline"
@@ -448,14 +447,11 @@ export class AdminViewer extends Component {
 
     
     openReserveDialog() {
-        console.log('Hits openReserveDialog');
-
         if (!this.state.inputReservation) {
             this.handleReservationPopUp();
         }
                 
         this.setState({ reserveAreaDialogOpen: true });
-        
     }
 
     handleReserveDialogClose = () => {
