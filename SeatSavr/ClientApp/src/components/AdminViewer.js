@@ -155,7 +155,7 @@ export class AdminViewer extends Component {
 
     async populateReservationPopup(x, y) {
         var selectedAddress = this.props.selectedLayoutAddress;
-        var selectedX = this.props.selectedArea.xLoc;
+        var selectedX = this.props.selectedArea.areaLocX;
         var selectedY = this.props.selectedArea.yLoc;
         var selectedName = this.props.selectedLayout.name;
         if (selectedAddress == null)
@@ -173,6 +173,7 @@ export class AdminViewer extends Component {
         this.setState({
             selectedReservations: reservations
         });
+        console.log("Successful Pull from Reservations");
         return true;
     }
 
@@ -338,7 +339,7 @@ export class AdminViewer extends Component {
                 </div>;
         } else {
             output = <div>
-                <Dialog  open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
+                <Dialog onEnter={this.handleReservationPopUp} open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
                     <DialogContent orientation='vertical'>
                         <DialogContentText>
@@ -440,8 +441,7 @@ export class AdminViewer extends Component {
     
     openReserveDialog() {
         console.log('Hits openReserveDialog');
-        console.log(this.selectedArea.xLoc + " location goes here ");
-        
+                
         this.setState({ reserveAreaDialogOpen: true });
         
     }
