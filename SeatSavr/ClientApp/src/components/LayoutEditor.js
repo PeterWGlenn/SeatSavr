@@ -163,10 +163,10 @@ export class LayoutEditor extends Component {
         context.arc(x, y, LayoutEditor.areaRadius, 0, 2 * Math.PI, false);
 
         if (isNew) {
-            context.fillStyle = 'rgba(52, 235, 168, 0.75)';
+            context.fillStyle = 'rgba(52, 235, 168, 0.95)';
         }
         else {
-            context.fillStyle = 'rgba(0, 100, 0, 0.75)';
+            context.fillStyle = 'rgba(0, 100, 0, 0.95)';
         }
 
         context.fill();
@@ -200,10 +200,9 @@ export class LayoutEditor extends Component {
                             imgExtension={['.jpg', '.gif', '.png']}
                             maxFileSize={2000000}
                             singleImage={true} />
-                        <Button onClick={this.onRenderDrawImage} className="form-buttons">Draw Layout</Button>
                         <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
+                        <Button onClick={this.onRenderDrawImage} className="form-buttons">Draw Layout</Button>
                         <Button onClick={this.onClearEdits} className="form-buttons">Clear Edits</Button>
-
                     </Box>
                 </div>
             );

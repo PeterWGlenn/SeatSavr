@@ -182,10 +182,10 @@ export class SelectArea extends Component {
         context.arc(cLoc.x, cLoc.y, SelectArea.areaRadius, 0, 2 * Math.PI, false);
 
         if (isRes) {
-            context.fillStyle = 'rgba(100, 100, 100, 0.75)';
+            context.fillStyle = 'rgba(100, 100, 100, 0.95)';
         }
         else {
-            context.fillStyle = 'rgba(0, 100, 0, 0.75)';
+            context.fillStyle = 'rgba(0, 100, 0, 0.95)';
         }
 
         context.fill();

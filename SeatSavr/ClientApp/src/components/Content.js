@@ -208,7 +208,7 @@ export default class Content extends React.Component {
                         ref={this.canvasOverlayRef} />
                 </div>
             </div>
-                <Button onClick={this.onContinue} className="form-buttons">Continue to Place Areas </Button>
+                {/* <Button onClick={this.onContinue} className="form-buttons">Continue to Place Areas </Button> TODO PG -> Implement this!*/}
                 <Button onClick={this.onSaveLayout} className="form-buttons">Save Layout</Button>
                 <Snackbar open={this.state.saveDrawOpen} autoHideDuration={3000} onClose={this.handleSaveDrawClose}>
                     <Alert onClose={this.handleReservedAreaWarningClose} severity="success">
