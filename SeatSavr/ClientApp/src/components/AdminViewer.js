@@ -182,6 +182,8 @@ export class AdminViewer extends Component {
 
     
     async postCustomerData(email, firstName, lastName, duration, dateString, areaX, areaY, address, layoutName) {
+        var localDate = new Date(dateString);
+
         var response = await fetch('selectarea/savereservation', {
             method: 'POST',
             headers: {
@@ -195,7 +197,8 @@ export class AdminViewer extends Component {
                 firstName: firstName,
                 lastName: lastName,
                 duration: duration,
-                date: dateString,
+                utcDate: dateString,
+                localDate: localDate.toLocaleString(),
                 areaLocX: areaX,
                 areaLocY: areaY,
                 address: address,
