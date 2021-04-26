@@ -35,7 +35,7 @@ namespace SeatSavr.Controllers
             // Send confirmation email if successful
             if (Database.AddReservation(d.ToLayout(), r, d.ToArea(), c))
             {
-                SendConfirmationEmail(r);
+                SendConfirmationEmail(d, r.Id);
                 return true;
             }
             else
@@ -50,7 +50,7 @@ namespace SeatSavr.Controllers
             return Database.GetReservations(x, y, name, address).Result;
         }
 
-        private async Task<bool> SendConfirmationEmail(Reservation r)
+        private async Task<bool> SendConfirmationEmail(ReservationData d, string reservationId)
         {
             if (!File.Exists(_sendGridKeyFile)) {
                 return false;
@@ -60,10 +60,10 @@ namespace SeatSavr.Controllers
             SendGridClient client = new SendGridClient(apiKey);
 
             EmailAddress from = new EmailAddress(_sendGridEmail, _sendGridName);
-            EmailAddress to = new EmailAddress(r.Customer.Email, $"{r.Customer.FirstName} {r.Customer.LastName}");
+            EmailAddress to = new EmailAddress(d.Email, $"{d.FirstName} {d.LastName}");
 
-            string subject = $"Reservation Confirmation - {r.ReservedAreaName} - {r.Date}";
-            string content = $"You successfully reserved an area at {r.ReservedAreaName}! Your reservation starts at {r.Date} and lasts {r.Duration} hour(s). You can cancel your reservation using this link: {_cancelationLink}{r.Id}";
+            string subject = $"Reservation Confirmation - {d.LayoutName} - {d.LocalDate}";
+            string content = $"You successfully reserved an area at {d.LayoutName}! Your reservation starts at {d.LocalDate} and lasts {d.Duration} hour(s). You can cancel your reservation using this link: {_cancelationLink}{reservationId}";
 
             SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, content, content);
             Response response = await client.SendEmailAsync(msg);
@@ -77,7 +77,8 @@ namespace SeatSavr.Controllers
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public float Duration { get; set; }
-            public string Date { get; set; }
+            public string UtcDate { get; set; }
+            public string LocalDate { get; set; }
             public float AreaLocX { get; set; }
             public float AreaLocY { get; set; }
             public string Address { get; set; }
@@ -105,7 +106,7 @@ namespace SeatSavr.Controllers
                 return new Reservation()
                 {
                     Id = Reservation.GenerateId(),
-                    Date = DateTime.Parse(Date).ToUniversalTime(),
+                    Date = DateTime.Parse(UtcDate).ToUniversalTime(),
                     Duration = Duration,
                     Customer = c,
                     ReservedAreaName = LayoutName,
