@@ -343,23 +343,30 @@ export class AdminViewer extends Component {
                     </Dialog>
                 </div>;
         } else {
+
+            var reservationsListUI = <p>No reservations to show.</p>;
+            if (this.state.selectedReservations.length > 0) {
+                reservationsListUI =
+                    this.state.selectedReservations.map(reservations =>
+                        <ListItem key={reservations.id} >
+                            <ListItemText primary={reservations.customer.firstName + ' ' + reservations.customer.lastName}
+                                secondary={this.convertFromUTC(reservations.date, reservations.duration)} />
+                        </ListItem>
+                    );
+            }
+
             output = <div>
                 <Dialog onEnter={this.handleReservationPopUp} open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
                     <DialogTitle id="reserveAreaDialog">List of Reservations for this Area</DialogTitle>
                     <DialogContent orientation='vertical'>
                         <List id='reservationList'
                             className='button-nav'>
-                            {this.state.selectedReservations.map(reservations =>
-                                <ListItem key={reservations.id} >
-                                    <ListItemText primary={reservations.customer.firstName + ' ' + reservations.customer.lastName}
-                                        secondary={this.convertFromUTC(reservations.date, reservations.duration)} />
-                                </ListItem>
-                            )}
+                            {reservationsListUI}
                         </List>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleReserveDialogClose} className='button-nav'>
-                            Cancel
+                            Close
                         </Button>                     
                     </DialogActions>
                 </Dialog>
