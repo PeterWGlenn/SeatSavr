@@ -40,7 +40,6 @@ export default class Content extends React.Component {
 
     async renderContent() {
         if (this.state.loading === true) {
-            console.log("hitting populate content");
             await this.populateContent();
         }
     }
@@ -243,9 +242,7 @@ export default class Content extends React.Component {
     async postLayout() {
         var canvas = document.getElementById('background');
         this.state.canvasImageDataURL = canvas.toDataURL();
-        console.log("Canvas Url");
-        console.log(this.state.canvasImageDataURL);
-
+        
         if (this.state.loading)
             return;
 

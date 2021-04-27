@@ -222,7 +222,6 @@ export class LayoutEditor extends Component {
     onRenderDrawImage = () => {
         this.setState({ renderDrawImage: true });
         this.renderAreas();
-        console.log(this.state.renderDrawImage);
     }
 
     onSaveLayout = () => {

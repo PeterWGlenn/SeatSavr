@@ -451,9 +451,6 @@ export class AdminViewer extends Component {
         var endDate = new Date(startDate);
         endDate.setTime(endDate.getTime() + (duration * millisecondsInAnHour));
 
-
-        console.log("Start Date: " + startDate);
-        console.log("End Date: " + endDate);
         let dateFormat = new Intl.DateTimeFormat('en', {
             year: 'numeric',
             month: 'short',

@@ -19,8 +19,6 @@ export class CancelReservation extends Component {
     componentDidMount() {
         var searchSplit = this.props.location.search.split('id=');
 
-        console.log(searchSplit);
-
         if (searchSplit.length >= 2) {
             this.getReservation(searchSplit[1]);
         }
@@ -28,8 +26,6 @@ export class CancelReservation extends Component {
 
     async getReservation(id) {
         var fetchString = 'cancelreservation/getreservation/?id=' + id;
-
-        console.log(fetchString)
 
         const response = await fetch(fetchString, {
             headers: {
