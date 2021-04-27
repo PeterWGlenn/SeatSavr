@@ -75,6 +75,8 @@ export default class Content extends React.Component {
         let canvasOverlayRef = this.canvasOverlayRef.current;
         let canvasRect = canvasRef.getBoundingClientRect();
         this.ctx = canvasRef.getContext("2d");
+        this.ctx.fillStyle = "white";
+        this.ctx.fillRect(0, 0, this.canvasRef.width, this.canvasRef.height);
         this.ctxOverlay = canvasOverlayRef.getContext("2d");
         this.setState({ offsetX: canvasRect.left, offsetY: canvasRect.top, loading: false });
     }
@@ -240,8 +242,15 @@ export default class Content extends React.Component {
     }
 
     async postLayout() {
-        var canvas = document.getElementById('background');
-        this.state.canvasImageDataURL = canvas.toDataURL();
+        var back = document.getElementById('background');
+        var ctx1 = back.getContext('2d');
+
+        var fore = document.getElementById('overlay');
+        //var ctx2 = fore.getContext('2d');
+
+        ctx1.drawImage(fore, 0, 0);
+
+        this.state.canvasImageDataURL = back.toDataURL();
         
         if (this.state.loading)
             return;
