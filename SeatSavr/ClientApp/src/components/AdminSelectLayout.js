@@ -39,8 +39,6 @@ class AdminSelectLayout extends Component {
         };
     }
 
-
-
     componentDidMount() {
         this.populateLayoutData();
     }
@@ -269,6 +267,10 @@ class AdminSelectLayout extends Component {
     }
 
     handleCreateLayout = () => {
+        this.handleCreateLayoutAsync();
+    }
+
+    async handleCreateLayoutAsync() {
         var nameElem = document.getElementById('name');
         var addressElem = document.getElementById('address');
 
@@ -276,19 +278,46 @@ class AdminSelectLayout extends Component {
         var address = addressElem.value;
 
         var nHasError = name == null || name === "";
-        var aHasError = address == null || address === "" || address.includes("'");
 
-        var aErrorMessage = 'Layout address is a required field.';
-        if (address.includes("'")) {
+        var nErrorMessage = '';
+        if (name == null || name === "") {
+            nErrorMessage = 'Layout name is a required field.';
+        }
+
+        var aErrorMessage = '';
+        if (address == null || address === "") {
+            aErrorMessage = 'Layout address is a required field.';
+        }
+        else if (address.includes("'")) {
             aErrorMessage = 'Layout address cannot contain \''
         }
+
+        // Validate against ALL layouts
+        const response = await fetch('userselectlayout/getlayouts', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        const getAllLayoutsForValidation = await response.json();
+        getAllLayoutsForValidation.forEach((l) => {
+            if (l.address == address) {
+                aErrorMessage = 'This layout address already exists!';
+            }
+            if (l.name == name) {
+                nErrorMessage = 'This layout name is already taken!';
+            }
+        });
+
+        var nHasError = nErrorMessage.length > 0;
+        var aHasError = aErrorMessage.length > 0;
 
         // Do not post or close form if errors exist!
         if (nHasError || aHasError) {
             this.setState({
                 errors: { layoutName: nHasError, layoutAddress: aHasError },
                 errorMessages: {
-                    layoutName: nHasError ? 'Layout name is a required field.' : '',
+                    layoutName: nHasError ? nErrorMessage : '',
                     layoutAddress: aHasError ? aErrorMessage : ''
                 }
             });

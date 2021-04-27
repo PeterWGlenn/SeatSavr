@@ -19,7 +19,7 @@ CREATE TABLE Layout
   BuildingAddress VARCHAR(255) NOT NULL,
   LayoutImage VARCHAR(255),
   PRIMARY KEY (BuildingAddress, Name),
-  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address) ON DELETE CASCADE
+  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
 );
 
 CREATE TABLE Area
@@ -49,7 +49,7 @@ CREATE TABLE Manages
   BuildingAddress VARCHAR(255) NOT NULL,
   PRIMARY KEY (Email, BuildingAddress),
   FOREIGN KEY (Email) REFERENCES Admin(Email),
-  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address) ON DELETE CASCADE
+  FOREIGN KEY (BuildingAddress) REFERENCES Building(Address)
 );
 
 CREATE TABLE Reserves

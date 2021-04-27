@@ -582,13 +582,13 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string buildingSql = $"INSERT INTO Building (Address) VALUES(\'{Sanitize(l.Address)}\');";
+            string buildingSql = $"INSERT OR REPLACE INTO Building (Address) VALUES(\'{Sanitize(l.Address)}\');";
 
             string layoutSql = "INSERT INTO Layout (Name, BuildingAddress) VALUES(\'" +
                 Sanitize(l.Name) + "\', \'" +
                 Sanitize(l.Address) + "\');";
 
-            string managesSql = "INSERT INTO Manages (Email, BuildingAddress) VALUES(\'" +
+            string managesSql = "INSERT OR REPLACE INTO Manages (Email, BuildingAddress) VALUES(\'" +
                 Sanitize(a.Email) + "\', \'" +
                 Sanitize(l.Address) + "\');";
 
