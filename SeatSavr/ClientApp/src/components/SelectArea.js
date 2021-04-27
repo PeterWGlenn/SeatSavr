@@ -376,7 +376,9 @@ export class SelectArea extends Component {
         var areaLoc = this.state.selectedArea.areaLocation;
 
         // Validate text fields
-        var validEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        // Full validity range: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+        // Apostrophe excluded here since it can cause problems with fetching
+        var validEmailRegex = /^[a-zA-Z0-9.!#$%&*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
         var eHasError = email == null || email === "" || !email.match(validEmailRegex);
         var fHasError = first == null || first === "";

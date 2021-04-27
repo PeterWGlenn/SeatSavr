@@ -276,7 +276,12 @@ class AdminSelectLayout extends Component {
         var address = addressElem.value;
 
         var nHasError = name == null || name === "";
-        var aHasError = address == null || address === "";
+        var aHasError = address == null || address === "" || address.includes("'");
+
+        var aErrorMessage = 'Layout address is a required field.';
+        if (address.includes("'")) {
+            aErrorMessage = 'Layout address cannot contain \''
+        }
 
         // Do not post or close form if errors exist!
         if (nHasError || aHasError) {
@@ -284,7 +289,7 @@ class AdminSelectLayout extends Component {
                 errors: { layoutName: nHasError, layoutAddress: aHasError },
                 errorMessages: {
                     layoutName: nHasError ? 'Layout name is a required field.' : '',
-                    layoutAddress: aHasError ? 'Layout address is a required field.' : ''
+                    layoutAddress: aHasError ? aErrorMessage : ''
                 }
             });
             return;
