@@ -345,16 +345,14 @@ export class AdminViewer extends Component {
         } else {
             output = <div>
                 <Dialog onEnter={this.handleReservationPopUp} open={this.state.reserveAreaDialogOpen} onClose={this.handleReserveDialogClose} aria-labelledby="reserveAreaDialog">
-                    <DialogTitle id="reserveAreaDialog">Reserve Area</DialogTitle>
+                    <DialogTitle id="reserveAreaDialog">List of Reservations for this Area</DialogTitle>
                     <DialogContent orientation='vertical'>
-                        <DialogContentText>
-                            Toggle Button Works
-                        </DialogContentText>
                         <List id='reservationList'
                             className='button-nav'>
                             {this.state.selectedReservations.map(reservations =>
                                 <ListItem key={reservations.id} >
-                                    <ListItemText primary={reservations.name} secondary={reservations.date} />
+                                    <ListItemText primary={reservations.customer.firstName + ' ' + reservations.customer.lastName}
+                                        secondary={this.convertFromUTC(reservations.date, reservations.duration)} />
                                 </ListItem>
                             )}
                         </List>
@@ -447,6 +445,26 @@ export class AdminViewer extends Component {
         );
     }
 
+    convertFromUTC = (dateStart, duration) => {
+        var millisecondsInAnHour = 1000 * 60 * 60;
+        var startDate = new Date(dateStart + "Z");
+        var endDate = new Date(startDate);
+        endDate.setTime(endDate.getTime() + (duration * millisecondsInAnHour));
+
+
+        console.log("Start Date: " + startDate);
+        console.log("End Date: " + endDate);
+        let dateFormat = new Intl.DateTimeFormat('en', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        }).formatRange(startDate, endDate);
+
+        return (dateFormat);
+    }
     
     openReserveDialog() {
         if (!this.state.inputReservation) {
