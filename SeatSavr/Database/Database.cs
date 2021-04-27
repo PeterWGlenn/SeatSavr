@@ -39,7 +39,8 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Reserves WHERE AreaX =  \'{areaLocationX}\' AND  AreaY =  \'{areaLocationY}\' AND AreaBuildingAddress = \'{layoutAddress}\' AND AreaLayoutName = \'{layoutName}\';");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Reserves WHERE AreaX =  \'{areaLocationX}\' AND  AreaY =  \'{areaLocationY}\' " +
+                                                                       $"AND AreaBuildingAddress = \'{Sanitize(layoutAddress)}\' AND AreaLayoutName = \'{Sanitize(layoutName)}\';");
 
             List<Reservation> list = new List<Reservation>();
             while (sqlite_datareader.Read())
@@ -53,7 +54,7 @@ namespace SeatSavr
                 // Customer fetching
                 string customerEmail = sqlite_datareader.GetString(3);
                 Customer c = new Customer();
-                SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + Sanitize(customerEmail) + "\";");
                 while (customerReader.Read())
                 {
                     c.Email = customerReader.GetString(0);
@@ -76,7 +77,7 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Layout WHERE BuildingAddress = \"" + layoutAddress + "\";");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Layout WHERE BuildingAddress = \"" + Sanitize(layoutAddress) + "\";");
             Layout l = new Layout();
 
             // Initialize Layout Data
@@ -94,7 +95,7 @@ namespace SeatSavr
             }
 
             // Initialize Areas 
-            sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\";");
+            sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + Sanitize(l.Name) + "\";");
             List<Area> areas = new List<Area>();
 
             while (sqlite_datareader.Read())
@@ -132,7 +133,7 @@ namespace SeatSavr
                     // Customer fetching
                     string customerEmail = sqlite_datareader.GetString(3);
                     Customer c = new Customer();
-                    SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                    SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + Sanitize(customerEmail) + "\";");
                     while (customerReader.Read())
                     {
                         c.Email = customerReader.GetString(0);
@@ -179,7 +180,7 @@ namespace SeatSavr
                 }
 
                 // Initialize Areas 
-                SqliteDataReader areaDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\";");
+                SqliteDataReader areaDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + Sanitize(l.Name) + "\";");
                 List<Area> areas = new List<Area>();
 
                 while (areaDatareader.Read())
@@ -217,7 +218,7 @@ namespace SeatSavr
                         // Customer fetching
                         string customerEmail = areaDatareader.GetString(3);
                         Customer c = new Customer();
-                        SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                        SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + Sanitize(customerEmail) + "\";");
                         while (customerReader.Read())
                         {
                             c.Email = customerReader.GetString(0);
@@ -246,7 +247,7 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             List<Layout> layoutList = new List<Layout>();
-            SqliteDataReader layoutsDatareader = ReadFrom(sqlite_conn, $"SELECT * FROM Layout l, Manages m WHERE l.BuildingAddress = m.BuildingAddress AND m.Email = \'{adminEmail}\';");
+            SqliteDataReader layoutsDatareader = ReadFrom(sqlite_conn, $"SELECT * FROM Layout l, Manages m WHERE l.BuildingAddress = m.BuildingAddress AND m.Email = \'{Sanitize(adminEmail)}\';");
 
             // Initialize Layout Data
             while (layoutsDatareader.Read())
@@ -264,7 +265,7 @@ namespace SeatSavr
                 }
 
                 // Initialize Areas 
-                SqliteDataReader areasDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + l.Name + "\";");
+                SqliteDataReader areasDatareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + Sanitize(l.Name) + "\";");
                 List<Area> areas = new List<Area>();
 
                 while (areasDatareader.Read())
@@ -301,7 +302,7 @@ namespace SeatSavr
                         // Customer fetching
                         string customerEmail = areasDatareader.GetString(3);
                         Customer c = new Customer();
-                        SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                        SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + Sanitize(customerEmail) + "\";");
                         while (customerReader.Read())
                         {
                             c.Email = customerReader.GetString(0);
@@ -330,7 +331,7 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             // Initialize Areas 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + layout + "\";");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Area WHERE LayoutName = \"" + Sanitize(layout) + "\";");
             List<Area> areas = new List<Area>();
 
             while (sqlite_datareader.Read())
@@ -365,7 +366,7 @@ namespace SeatSavr
                     // Customer fetching
                     string customerEmail = sqlite_datareader.GetString(3);
                     Customer c = new Customer();
-                    SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + customerEmail + "\";");
+                    SqliteDataReader customerReader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + Sanitize(customerEmail) + "\";");
                     while (customerReader.Read())
                     {
                         c.Email = customerReader.GetString(0);
@@ -391,7 +392,8 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             // Initialize Areas 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Area WHERE LayoutName = \'{l.Name}\' AND BuildingAddress = \'{l.Address}\' AND X = \'{a.AreaLocation.X}\' AND Y = \'{a.AreaLocation.Y}\';");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, $"SELECT * FROM Area WHERE LayoutName = \'{Sanitize(l.Name)}\' " +
+                                                                       $"AND BuildingAddress = \'{Sanitize(l.Address)}\' AND X = \'{a.AreaLocation.X}\' AND Y = \'{a.AreaLocation.Y}\';");
             Area retrievedArea = new Area();
 
             while (sqlite_datareader.Read())
@@ -423,7 +425,7 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             // Initialize Areas 
-            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + email + "\";");
+            SqliteDataReader sqlite_datareader = ReadFrom(sqlite_conn, "SELECT * FROM Customer WHERE Email = \"" + Sanitize(email) + "\";");
             Customer retrievedCustomer = new Customer();
 
             while (sqlite_datareader.Read())
@@ -494,12 +496,12 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string clear = "DELETE FROM Area WHERE EXISTS (SELECT * FROM Area WHERE LayoutName = \'" + l.Name + "\')";
+            string clear = "DELETE FROM Area WHERE EXISTS (SELECT * FROM Area WHERE LayoutName = \'" + Sanitize(l.Name) + "\')";
             // TODO PG -> Commenting this out for now until we can fix errors
             //bool didClear = InsertData(sqlite_conn, clear, 1);
 
             // This does not update the layout name, only the layout image.
-            string sqlLayout = "UPDATE Layout SET LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + l.Address + "\'";
+            string sqlLayout = "UPDATE Layout SET LayoutImage = \'" + l.LayoutImage + "\' WHERE BuildingAddress = \'" + Sanitize(l.Address) + "\'";
             bool didSucceed = InsertData(sqlite_conn, sqlLayout, 1);
 
             // Insert Areas
@@ -519,7 +521,7 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string sql = $"DELETE FROM Layout WHERE Name = \'{l.Name}\' AND BuildingAddress = \'{l.Address}\'";
+            string sql = $"DELETE FROM Layout WHERE Name = \'{Sanitize(l.Name)}\' AND BuildingAddress = \'{Sanitize(l.Address)}\'";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();
@@ -529,17 +531,17 @@ namespace SeatSavr
         public static bool AddReservation(Layout l, Reservation r, Area a, Customer c)
         {
             // Add customer if needed
-            string sqlCustomer = $"INSERT OR REPLACE INTO Customer (Email, First, Last) VALUES(\'{c.Email}\', \'{c.FirstName}\', \'{c.LastName}\');";
+            string sqlCustomer = $"INSERT OR REPLACE INTO Customer (Email, First, Last) VALUES(\'{Sanitize(c.Email)}\', \'{Sanitize(c.FirstName)}\', \'{Sanitize(c.LastName)}\');";
 
             string sqlReservation = "INSERT INTO Reserves (Id, Date, Duration, CustomerEmail, AreaX, AreaY, AreaBuildingAddress, AreaLayoutName) VALUES(\'" +
                 r.Id + "\', \'" +
                 r.Date.ToString() + "\', \'" +
                 r.Duration.ToString() + "\', \'" +
-                r.Customer.Email.ToString() + "\', \'" +
+                Sanitize(r.Customer.Email) + "\', \'" +
                 a.AreaLocation.X + "\', \'" +
                 a.AreaLocation.Y + "\', \'" +
-                l.Address + "\', \'" +
-                l.Name + "\');";
+                Sanitize(l.Address) + "\', \'" +
+                Sanitize(l.Name) + "\');";
 
             int rowsModified = 0;
             using (SqliteConnection conn = new SqliteConnection("Data Source=" + _dbLocation + ";"))
@@ -565,9 +567,9 @@ namespace SeatSavr
                 a.AreaLocation.X + "\', \'" +
                 a.AreaLocation.Y + "\', \'" +
                 a.NumberOfSeats + "\', \'" +
-                a.Name + "\', \'" +
-                l.Name + "\', \'" +
-                l.Address + "\');";
+                Sanitize(a.Name) + "\', \'" +
+                Sanitize(l.Name) + "\', \'" +
+                Sanitize(l.Address) + "\');";
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
 
             sqlite_conn.Close();
@@ -580,15 +582,15 @@ namespace SeatSavr
             SqliteConnection sqlite_conn = new SqliteConnection("Data Source=" + _dbLocation + ";");
             sqlite_conn.Open();
 
-            string buildingSql = $"INSERT INTO Building (Address) VALUES(\'{l.Address}\');";
+            string buildingSql = $"INSERT INTO Building (Address) VALUES(\'{Sanitize(l.Address)}\');";
 
             string layoutSql = "INSERT INTO Layout (Name, BuildingAddress) VALUES(\'" +
-                l.Name + "\', \'" +
-                l.Address + "\');";
+                Sanitize(l.Name) + "\', \'" +
+                Sanitize(l.Address) + "\');";
 
             string managesSql = "INSERT INTO Manages (Email, BuildingAddress) VALUES(\'" +
-                a.Email + "\', \'" +
-                l.Address + "\');";
+                Sanitize(a.Email) + "\', \'" +
+                Sanitize(l.Address) + "\');";
 
             bool didSucceed = InsertData(sqlite_conn, buildingSql, 1) && InsertData(sqlite_conn, layoutSql, 1) && InsertData(sqlite_conn, managesSql, 1);
 
@@ -603,7 +605,7 @@ namespace SeatSavr
             sqlite_conn.Open();
 
             string sql = "INSERT OR REPLACE INTO Admin (Email, Privilege) VALUES(\'" +
-                a.Email + "\', \'" +
+                Sanitize(a.Email) + "\', \'" +
                 a.Privilege + "\');";
 
             bool didSucceed = InsertData(sqlite_conn, sql, 1);
@@ -633,6 +635,12 @@ namespace SeatSavr
             sqlite_cmd.CommandText = command;
 
             return sqlite_cmd.ExecuteNonQuery() == expectedExReturn;
+        }
+
+        // Sanitize input to SQL command
+        private static string Sanitize(string s)
+        {
+            return s?.Replace("\'", "\'\'").Replace("\"", "\"\"") ?? null;
         }
         #endregion
     }

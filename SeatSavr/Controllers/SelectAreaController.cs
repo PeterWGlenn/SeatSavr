@@ -32,6 +32,8 @@ namespace SeatSavr.Controllers
             Customer c = d.ToCustomer();
             Reservation r = d.ToReservation(c);
 
+            // TODO PG -> add test here to make sure a duplicate reservation is not made!
+
             // Send confirmation email if successful
             if (Database.AddReservation(d.ToLayout(), r, d.ToArea(), c))
             {
@@ -121,7 +123,20 @@ namespace SeatSavr.Controllers
 
             public bool IsValid()
             {
-                return Email != null && Email != string.Empty;
+                return Email != null && IsValidEmail(Email);
+            }
+
+            private bool IsValidEmail(string email)
+            {
+                try
+                {
+                    var addr = new System.Net.Mail.MailAddress(email);
+                    return addr.Address == email;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
     }
