@@ -277,8 +277,6 @@ class AdminSelectLayout extends Component {
         var name = nameElem.value;
         var address = addressElem.value;
 
-        var nHasError = name == null || name === "";
-
         var nErrorMessage = '';
         if (name == null || name === "") {
             nErrorMessage = 'Layout name is a required field.';
@@ -301,10 +299,10 @@ class AdminSelectLayout extends Component {
         });
         const getAllLayoutsForValidation = await response.json();
         getAllLayoutsForValidation.forEach((l) => {
-            if (l.address == address) {
+            if (l.address === address) {
                 aErrorMessage = 'This layout address already exists!';
             }
-            if (l.name == name) {
+            if (l.name === name) {
                 nErrorMessage = 'This layout name is already taken!';
             }
         });
