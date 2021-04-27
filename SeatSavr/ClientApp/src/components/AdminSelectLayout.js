@@ -234,7 +234,7 @@ class AdminSelectLayout extends Component {
             <div>
                 <h2>
                     {name}
-                    <Button onClick={() => { this.setState({ selectedLayout: null, layoutOpenMode: 'NONE' }); }}>(Change Layout)</Button>
+                    <Button onClick={() => { this.setState({ selectedLayout: null, displayedLayouts: this.state.allLayouts, layoutOpenMode: 'NONE' }); }}>(Change Layout)</Button>
                 </h2>
                 <h5>{address}</h5>
                 {layoutComponentType}

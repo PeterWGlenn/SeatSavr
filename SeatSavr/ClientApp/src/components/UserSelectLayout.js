@@ -104,7 +104,7 @@ export class UserSelectLayout extends Component {
             <div>
                 <h1>
                     {name}
-                    <Button className='button-nav' onClick={() => { this.setState({ selectedLayout: null }); }}>(Change Layout)</Button>
+                    <Button className='button-nav' onClick={() => { this.setState({ selectedLayout: null, availableLayouts: this.state.allLayouts }); }}>(Change Layout)</Button>
                 </h1>
                 <h6>{address}</h6>
 
