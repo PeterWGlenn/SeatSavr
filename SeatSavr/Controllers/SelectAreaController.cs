@@ -54,6 +54,7 @@ namespace SeatSavr.Controllers
 
         private async Task<bool> SendConfirmationEmail(ReservationData d, string reservationId)
         {
+            // SendGridKey.txt is needed for email functionality to work! This key is private, and therefore does not come included when cloning from GitHub.
             if (!File.Exists(_sendGridKeyFile)) {
                 return false;
             }
