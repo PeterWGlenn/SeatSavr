@@ -67,6 +67,13 @@ CREATE TABLE Reserves
   FOREIGN KEY (AreaX, AreaY, AreaBuildingAddress, AreaLayoutName) REFERENCES Area(X, Y, BuildingAddress, LayoutName) ON DELETE CASCADE
 );
 
+
+--CREATE TRIGGER Reserves_Before_Insert BEFORE INSERT ON Reserves
+--BEGIN
+--	SELECT RAISE(ABORT, 'Duplicate Reservation')
+--	WHERE EXISTS(SELECT * FROM Reserves WHERE Date = New.date AND Duration = New.Duration AND AreaX = new.areax AND AreaY = new.areaY AND AreaLayoutName = NEW.AreaLayoutName)
+--END; 
+
 /* Insert Sample Data */
 --INSERT INTO Admin VALUES ('sampleAdmin123@gmail.com', 23);
 --INSERT INTO Admin VALUES ('sampleAdmin456@gmail.com', 25);
